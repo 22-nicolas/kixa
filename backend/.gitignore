@@ -1,0 +1,4 @@
+.env
+deployDB.sql
+node_modules/
+.vscode/

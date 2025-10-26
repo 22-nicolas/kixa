@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="styles/general.css">
+    <link rel="stylesheet" href="styles/header.css">
+    <link rel="stylesheet" href="styles/item.css">
+    <link rel="stylesheet" href="styles/footer.css">
+
+    <script defer type="module" src="scripts/pages/main.js"></script>
+    <script defer type="module" src="scripts/pages/item.js"></script>   
+
+    <meta charset="UTF-d8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KIXA</title>
+</head>
+<body id="body">
+    <div class="container">
+        <div class="header">
+            <a href="index.html"><img src="imgs/logo.png"></a>
+            <div>
+                <a href="" class="header-link"><p>Woman</p></a>
+                <div class="dropdown-menu" id="Woman">
+                    <div>
+                        <h1>Shoes</h1>
+                        <a href="">Running</a>
+                        <a href="">Hiking</a>
+                        <a href="">Skating</a>
+                    </div>
+                    <div>
+                        <h1>Accesoires</h1>
+                        <a href="">Hats</a>
+                        <a href="">Bags</a>
+                    </div>
+                </div>
+                <a href="" class="header-link"><p>Men</p></a>
+                <div class="dropdown-menu" id="Men">
+                    <div>
+                        <h1>Men</h1>
+                        <a href="">Running</a>
+                        <a href="">Hiking</a>
+                        <a href="">Skating</a>
+                    </div>
+                    <div>
+                        <h1>Accesoires</h1>
+                        <a href="">Hats</a>
+                        <a href="">Bags</a>
+                    </div>
+                </div>
+                <a href="" class="header-link"><p>Kids</p></a>
+                <div class="dropdown-menu" id="Kids">
+                    <div>
+                        <h1>Kids</h1>
+                        <a href="">Running</a>
+                        <a href="">Hiking</a>
+                        <a href="">Skating</a>
+                    </div>
+                    <div>
+                        <h1>Accesoires</h1>
+                        <a href="">Hats</a>
+                        <a href="">Bags</a>
+                    </div>
+                </div>
+                <a href="" class="header-link"><p>Offers</p></a>
+                <div class="dropdown-menu" id="Offers">
+                    <div>
+                        <h1>Kids</h1>
+                        <a href="">Running</a>
+                        <a href="">Hiking</a>
+                        <a href="">Skating</a>
+                    </div>
+                    <div>
+                        <h1>Accesoires</h1>
+                        <a href="">Hats</a>
+                        <a href="">Bags</a>
+                    </div>
+                </div>
+            </div>
+            <div class="right-header">
+                <div class="search-div">
+                    <img src="imgs/search_icon.png">
+                    <input type="text" id="searchbar">
+                </div>
+                <a href="cart.html">
+                    <p>0</p>
+                    <img src="imgs/cart_icon.png">
+                </a>
+                <div class="login-btn">
+                    <img src="imgs/user_icon.png">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="product-container">
+            <div class="item-view">
+                <div style="display: flex; align-items: center; justify-content: center;">
+                    <div class="slider">
+                        <img src="imgs/loading_icon.gif" class="placeholder">
+                        <div class="track">
+                            <div class="slide">
+                                <img src="imgs/loading_icon.gif">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="thumbnails">
+                    <div class="thumbnail">
+                        <img src="imgs/loading_icon.gif">
+                    </div>
+                    <div class="thumbnail">
+                        <img src="imgs/loading_icon.gif">
+                    </div>
+                    <div class="thumbnail">
+                        <img src="imgs/loading_icon.gif">
+                    </div>
+                </div>
+            </div>
+            
+            
+            <div style="display: grid; grid-template-rows: 1fr; width: fit-content;">
+                <div>
+                    <h1 id="product-name"></h1>
+                    <p id="product-description">
+                        
+                    </p>  
+                    <div class="color-ways">
+                        
+                    </div>
+                    <p style="font-weight: bold;">Select Size</p>
+                    <div class="size-select">
+                    </div>
+                    <p class="price"></p>
+                    <div class="add-cart-button">
+                        <p>Add to cart</p>
+                        <img src="imgs/cart_icon.png">
+                    </div>
+                </div>
+            </div>    
+        </div>
+    </div>
+
+    <footer>
+        <input type="checkbox" class="currency-button" id="check">
+        <label for="check">
+            <img src="imgs/world_icon.png">
+            <p>Currency $</p>
+        </label>
+        <div class="currency-window">
+           
+        </div>
+        <div class="links">
+            <a href="">Terms of Sale</a>
+            <a href="">Terms of Use</a>
+            <a href="">Help</a>
+        </div>
+        <p>© 2025 KIXA All rights reserved.</p>
+    </footer>   
+</body>

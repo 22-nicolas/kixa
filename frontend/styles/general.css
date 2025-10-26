@@ -1,0 +1,50 @@
+.container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 3ch;
+    color: black;
+}
+
+/* xs */
+@media (min-width: 320px) {
+    .container {
+        max-width: 320px;
+    }
+}
+    
+/* sm */
+@media (min-width: 375px) {
+    .container {
+        max-width: 375px;
+    }
+}
+    
+/* md */
+@media (min-width: 425px) {
+    .container {
+        max-width: 425px;
+    }
+}
+    
+/* lg */
+@media (min-width: 768px) {
+    .container {
+        max-width: 768px;
+    }
+}
+    
+/* xl */
+@media (min-width: 1024px) {
+    .container {
+        max-width: 1280px;
+    }
+}
+    
+/* 2xl */
+@media (min-width: 1440px) {
+    .container {
+        max-width: 1440px;
+    }
+}
+  

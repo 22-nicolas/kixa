@@ -1,0 +1,356 @@
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    z-index: 1;
+    position: relative;
+    z-index: 10;
+}
+
+.header img{
+    width: 100px;
+}
+
+.header-link p{
+    color: black;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-left: 0.5ch;
+    margin-right: 0.5ch;
+    margin-top: 0;
+    margin-bottom: 0;
+    width: fit-content;
+    text-decoration: none;
+    text-align: center;
+    display: inline-block;
+}
+
+.header-link p:hover{
+    /*text-decoration: underline;*/
+}
+
+.search-div {
+    display: flex;
+    align-items: center;
+    width: 25ch;
+    justify-content: center;
+    border: 1px, black, solid;
+    border-radius: 100px;
+    overflow: hidden;
+    padding: 5px;
+}
+
+.search-div input{
+    width: 90%;
+    border: none;
+    font-size: 1rem;
+}
+
+.search-div input:focus{
+    outline: none;
+}
+
+.dropdown-menu{
+    display: none;
+}
+
+.dropdown-menu.shown{
+    display: flex;
+    align-items: top;
+    justify-content: left;
+    gap: 50px;
+    position: absolute;
+    background-color: white;
+    width: 100%;
+    left: 0;
+    padding: 25px;
+    overflow: hidden;
+    z-index: 10;
+}
+
+.dropdown-menu a{
+    display: block;
+    color: black;
+    font-family: Arial, Helvetica, sans-serif;
+    text-decoration: none;
+    margin-top: 0.5ch;
+    margin-bottom: 0.5ch;
+}
+
+.dropdown-menu h1{
+    color: black;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-top: 0.5ch;
+    margin-bottom: 0.5ch;
+    font-size: 1.5rem;
+}
+
+/* Initial state for child elements */
+.dropdown-menu div,
+.dropdown-menu h1,
+.dropdown-menu a {
+    transform: translateY(-20px);
+    opacity: 0;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+/* Animate in after menu opens */
+.dropdown-menu.animate-in div,
+.dropdown-menu.animate-in h1,
+.dropdown-menu.animate-in a {
+    transform: translateY(0);
+    opacity: 1;
+    z-index: 10;
+}
+
+.right-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1ch;
+}
+
+.right-header img{
+    width: 2ch;
+}
+
+.right-header a img, .account-btn img{
+    filter: invert();
+}
+
+.right-header a img{
+    margin-left: 1ch;
+}
+
+.right-header a, .account-btn{
+    background-color: rgb(25, 25, 27);
+    padding: 1ch;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 200ms;
+}
+
+.right-header a:hover, .account-btn:hover{
+    filter: invert();
+    box-shadow: 5px 5px 15px rgba(214, 214, 214, 0.295);
+}
+
+.right-header p{
+    all: initial;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+}
+
+.login-popup{
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background-color: white;
+    width: fit-content;
+    height: fit-content;
+    z-index: 10;
+    transform: translate(-50%, -50%);
+    padding: 3ch;
+}
+
+.register {
+    display: none;
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin-top: 1ch;
+  margin-bottom: 1ch;
+  color: #666;       /*    text color */
+}
+
+.login-popup .line{
+    height: 0;
+    width: 20ch;
+    border-bottom: 1px solid #666;
+    margin-left: 0.5ch;
+    margin-right: 0.5ch;
+}
+
+.login-popup .register-btn, .login-popup .login-btn, .sumbit-register-btn{
+    background-color: rgb(25, 25, 27);
+    padding: 1ch;
+    width: calc(100% - 3ch);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5ch;
+    cursor: pointer;
+    transition: 200ms;
+}
+
+.login-popup .register-btn:hover,  .login-popup .login-btn:hover, .sumbit-register-btn:hover{
+    filter: invert();
+    box-shadow: 5px 5px 15px rgba(214, 214, 214, 0.295);
+}
+
+.login-popup .register-btn p, .login-popup  .login-btn p, .sumbit-register-btn p{
+    color: white;
+}
+
+.login-popup .register-btn div,.login-popup  .login-btn div, .sumbit-register-btn div{
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.sumbit-register-btn {
+    margin-top: 1ch;
+}
+
+.register input{
+    border: 1px solid;
+    border-radius: 2ch;
+    padding: 0.7ch;
+    display: block;
+}
+
+.register input:focus{
+    outline: none;
+}
+
+.name, .place, .house {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    gap: 5ch;
+}
+
+.input-details {
+    font-weight: 100;
+    font-size: 12px;
+    color: #666;
+}
+
+.zip-code, .house-number{
+    max-width: 8ch;
+}
+
+.phone-number{
+    border: 1px solid;
+    border-radius: 2ch;
+    padding: 0.7ch;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    height: 2ch;
+    width: fit-content;
+    position: relative;
+}
+
+.phone-number input{
+    border: none;
+    border-radius: 0;
+    padding: none;
+}
+
+.country-selector{
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    gap: 0.5ch;
+    border-right: 1px solid;
+    padding-right: 1ch;
+    cursor: pointer;
+    
+}
+
+.country-selector img, .country img{
+    height: 1ch;
+}
+
+.country-selector p{
+    font-size: 14px;
+}
+
+.country-dropdown-input{
+    display: none;
+}
+
+.country-dropdown{
+    display: none;
+    background-color: white;
+
+}
+
+.country-dropdown-input:checked ~ .country-dropdown{
+    display: block;
+    position: absolute; 
+    bottom: 0;
+}
+
+.country-dropdown-input:checked ~ .country-dropdown{
+    display: block;
+    position: absolute; 
+    top: 100%;
+}
+
+.arrow{
+    transition: 200ms;
+}
+
+.country-dropdown-input:checked ~ .arrow{
+    transform: rotate(180deg);
+}
+
+.country-dropdown{
+    height: 15ch;
+    overflow-y: scroll;
+    border: 1px solid;
+    border-bottom: none;
+    z-index: 2;
+}
+
+.country {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    background-color: white;
+    gap: 0.5ch;
+    border-bottom: 1px solid;
+    padding-left: 1ch;
+    padding-right: 1ch;
+    padding-top: 0.3ch;
+    padding-bottom: 0.3ch;
+    cursor: pointer;
+}
+.country:hover{
+    background-color: #dddddd;
+}
+
+.password, .repeat-password{
+    border: 1px solid;
+    border-radius: 2ch;
+    padding: 0.7ch;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    height: 2ch;
+    width: fit-content;
+    position: relative;
+}
+
+.password img, .repeat-password img{
+    height: 2ch;
+    cursor: pointer;
+}
+
+.password input, .repeat-password input{
+    border: none;
+    border-radius: 0;
+    padding: none;
+}
