@@ -1,0 +1,77 @@
+footer .links{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+footer a{
+    color: grey;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 0.8rem;
+    margin-left: 0.5ch;
+    margin-right: 0.5ch;
+    text-decoration: none;
+}
+
+footer a:hover{
+    text-decoration: underline;
+}
+
+footer p{
+    color: grey;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 0.8rem;
+    margin-left: 0.5ch;
+    margin-right: 0.5ch;
+    text-decoration: none;
+    text-align: center;
+}
+
+footer{
+    padding: 100px;
+    position: relative;
+}
+
+.currency-button{
+    display: none;
+}
+
+footer label{
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 15ch;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px, black, solid;
+    border-radius: 100px;
+    padding: 0;
+    cursor: pointer;
+}
+
+footer label img{
+    width: 10%;
+}
+
+.currency-window{
+    display: none;
+}
+
+footer:has(input:checked) .currency-window{
+    display: grid;
+    position: fixed;
+    background-color: white;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 10;
+}
+
+footer:has(input:checked) label{
+    display: none;
+}
+
