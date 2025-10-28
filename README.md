@@ -1,6 +1,11 @@
 # 📌 Ecommerce Website "Kixa"
+Full stack e-commerce website.
 
-My approach for this project was to learn by doing. I wasn't very familiar with JavaScript or backend development, so I decided to throw myself into a project that seemed challenging but achievable.
+## 🚧 Roadmap
+-Make mobile compatible
+-Login system
+-Admin interface to add products
+-Header category links
 
 ## 🚀 Demo  
 [Live Demo](https://kixa-ecommerce.netlify.app)  
