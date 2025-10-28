@@ -2,23 +2,21 @@ import mysql from 'mysql2'
 
 import dotenv from 'dotenv'
 dotenv.config({ path: "backend/.env" });
-//`mysql://root:lalqzvKOzgaXTAnxMJoniaSMviLQLlDY@centerbeam.proxy.rlwy.net:23674/railway`
 
-/*
-{
-    host: process.env.MYSQL_HOST,
-    user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD,
-    database: process.env.MYSQL_DATABASE
+let connectionConfig;
+if (process.env.DATABASE_URL) {
+    connectionConfig = process.env.MYSQL_URL;
+} else {
+    // Use individual env vars (for local)
+    connectionConfig = {
+        host: process.env.MYSQL_HOST,
+        user: process.env.MYSQL_USER,
+        password: process.env.MYSQL_PASSWORD,
+        database: process.env.MYSQL_DATABASE,
+    };
 }
-*/
 
-const pool = mysql.createPool({
-    host: process.env.MYSQL_HOST,
-    user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD,
-    database: process.env.MYSQL_DATABASE
-}).promise();
+const pool = mysql.createPool(connectionConfig).promise();
 
 
 export async function getProductData () {
