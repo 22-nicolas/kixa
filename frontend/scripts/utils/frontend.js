@@ -3,7 +3,7 @@ let API_BASE_URL;
 if (window.location.hostname === "127.0.0.1") {
     API_BASE_URL = "http://localhost:3000/api"
 } else {
-    API_BASE_URL = "http://kixa-production.up.railway.app/api"
+    API_BASE_URL = "https://kixa-production.up.railway.app/api"
 }
 
 export async function getRequiredFields() {
