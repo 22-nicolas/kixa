@@ -227,7 +227,6 @@ export async function createItems() {
         //check for matching request with item/product data
         let isVisible = true;
         if (params.size > 1) {
-
             //acounts for searchtext == ""
             let matchesText = true;
             if (searchText.length != 0) {
@@ -247,6 +246,10 @@ export async function createItems() {
             const matchesBrand = activeBrands.length === 0 || activeBrands.includes(brand);
 
             isVisible = matchesText && matchesPrice && matchesColor && matchesBrand; 
+        } else {
+            if (searchText.length != 0) {
+                isVisible = format(name).includes(format(searchText));
+            }
         }
         
         
