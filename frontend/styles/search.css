@@ -385,3 +385,17 @@ p{
     width: fit-content;
     cursor: pointer;
 }
+
+.no-results-item-container {
+    display: grid;
+    grid-template-rows: 20%, 80%;
+}
+
+.no-results {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px #666 solid;
+    padding: 5ch;
+    margin-bottom: 5ch;
+}

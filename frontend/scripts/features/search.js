@@ -176,10 +176,10 @@ async function applySort() {
     }
 }
 
-export async function createItems() {
+export async function createItems(ignoreParams) {
     //gets search params from the url
     const params = new URLSearchParams(window.location.search);
-    const itemContainer = document.querySelector(".item-container");
+    let itemContainer = document.querySelector(".item-container");
 
     //keeps searchbar text content and filters consistent with the last page
     let searchText = params.get("searchText");
@@ -226,7 +226,7 @@ export async function createItems() {
     data.forEach(({id, name, price, colors, brand, sizes, description, variants}) => {
         //check for matching request with item/product data
         let isVisible = true;
-        if (params.size > 1) {
+        if (params.size > 1 && !ignoreParams) {
             //acounts for searchtext == ""
             let matchesText = true;
             if (searchText.length != 0) {
@@ -246,7 +246,7 @@ export async function createItems() {
             const matchesBrand = activeBrands.length === 0 || activeBrands.includes(brand);
 
             isVisible = matchesText && matchesPrice && matchesColor && matchesBrand; 
-        } else {
+        } else if(!ignoreParams) {
             if (searchText.length != 0) {
                 isVisible = format(name).includes(format(searchText));
             }
@@ -312,6 +312,23 @@ export async function createItems() {
 
     // update item count
     document.getElementById('items-found').textContent = `${visibleCount} item(s) found for "${searchbar.value}"`;
+
+    //if no results found display no results and all avaible items
+    if (visibleCount == 0) {
+        itemContainer.classList.remove("item-container");
+        itemContainer.classList.add("no-results-item-container");
+        
+        itemContainer.innerHTML = 
+        `
+        <div class="no-results">
+            <p>No results found.</p>
+        </div>
+        <div class="item-container"></div>
+        `;
+        
+        itemContainer = document.querySelector("item-container");
+        createItems(true);
+    }
 
     applySort();
     
