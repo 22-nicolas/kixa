@@ -15,11 +15,11 @@ export function initSearchbar() {
 export function initPriceSlider() {
     const slider = getSlider();
 
-    slider.min.addEventListener('input', updateRange);
-    slider.max.addEventListener('input', updateRange);
+    slider.minRange.addEventListener('input', updateRange);
+    slider.maxRange.addEventListener('input', updateRange);
 
-    slider.minInput.addEventListener('input', updateSlider);
-    slider.maxInput.addEventListener('input', updateSlider);
+    slider.minNum.addEventListener('input', updateSlider);
+    slider.maxNum.addEventListener('input', updateSlider);
 
     window.addEventListener('resize', updateRange);
 
@@ -31,10 +31,10 @@ export function initPriceSlider() {
 
 function getSlider() {
     const slider = {
-        min: document.getElementById('min'),
-        max: document.getElementById('max'),
-        minInput: document.getElementById('minNum'),
-        maxInput: document.getElementById('maxNum'),
+        minRange: document.getElementById('min'),
+        maxRange: document.getElementById('max'),
+        minNum: document.getElementById('minNum'),
+        maxNum: document.getElementById('maxNum'),
         range: document.getElementById('range'),
     }
 
@@ -44,53 +44,67 @@ function getSlider() {
 function updateRange() {
     const slider = getSlider();
 
-    let minValue = parseInt(slider.min.value);
-    let maxValue = parseInt(slider.max.value);
+    let minValue = parseInt(slider.minRange.value);
+    let maxValue = parseInt(slider.maxRange.value);
 
     if (minValue > maxValue) {
-        minValue = slider.max.value;
-        maxValue = slider.min.value;
+        minValue = slider.maxRange.value;
+        maxValue = slider.minRange.value;
     } else{
-        minValue = slider.min.value;
-        maxValue = slider.max.value;
+        minValue = slider.minRange.value;
+        maxValue = slider.maxRange.value;
     }
 
 
-    slider.minInput.value = minValue;
-    slider.maxInput.value = maxValue;
+    slider.minNum.value = minValue;
+    slider.maxNum.value = maxValue;
 
-    const minInPixels = (minValue - slider.min.min) / (slider.min.max - slider.min.min) * slider.min.offsetWidth
-    const maxInPixels = (maxValue - slider.max.min) / (slider.max.max - slider.max.min) * slider.max.offsetWidth
+    const minInPixels = (minValue - slider.minRange.min) / (slider.minRange.max - slider.minRange.min) * slider.minRange.offsetWidth
+    const maxInPixels = (maxValue - slider.maxRange.min) / (slider.maxRange.max - slider.maxRange.min) * slider.maxRange.offsetWidth
 
     const rangeInPixels = maxInPixels-minInPixels;
 
-    slider.range.style.transform = `translateX(${minInPixels}px) scaleX(${(rangeInPixels) / (min.offsetWidth)})`;
+    slider.range.style.transform = `translateX(${minInPixels}px) scaleX(${(rangeInPixels) / (slider.minRange.offsetWidth)})`;
 
 }
 
-function updateSlider() {
+function updateSlider(minValue, maxValue) {
     const slider = getSlider();
 
-    slider.min.value = slider.minInput.value;
-    slider.max.value = slider.maxInput.value;
+    if (!minValue || !maxValue) {
+        minValue = slider.minNum.value;
+        maxValue = slider.maxValue.value;
+    }
+
+    slider.minRange.value = minValue;
+    slider.maxRange.value = maxValue;
 
     updateRange();
 }
 
 export function initChecks() {
+    initColorSpans()
+
+    let colorChecks = document.querySelectorAll('.color input');
+    bindClickToSearch(colorChecks)
+
+    let brandChecks = document.querySelectorAll('.brand input');
+    bindClickToSearch(brandChecks)
+}
+
+function bindClickToSearch(checks) {
+    for (let i = 0; i < checks.length; i++) {
+        checks[i].addEventListener('click', () => search());
+    }
+}
+
+function initColorSpans() {
     const spans = document.querySelectorAll('.color span');
     for (let i = 0; i < spans.length; i++) {
         spans[i].style.backgroundColor = spans[i].parentElement.htmlFor;
     }
 
-    let colorChecks = document.querySelectorAll('.color input');
-    for (let i = 0; i < colorChecks.length; i++) {
-        colorChecks[i].addEventListener('click', () => search());
-    }
-    let brandChecks = document.querySelectorAll('.brand input');
-    for (let i = 0; i < brandChecks.length; i++) {
-        brandChecks[i].addEventListener('click', () => search());
-    } 
+    return spans
 }
 
 export function initSort() {
@@ -106,33 +120,42 @@ export function initSort() {
 
         //hide dropdown
         checkInput.checked = false;
-        //sort params in alphabetical order
-        const sortDropdown = document.querySelector('.sort-dropdown');
-        const sorted = Array.from(params).sort((a, b) => {
-            return a.textContent.localeCompare(b.textContent);
-        });
-        sortDropdown.innerHTML = "";
-        sorted.forEach(item => sortDropdown.appendChild(item));
+        
+        sortFilters(params);
 
         applySort();
     }));
 }
 
+function sortFilters(params) {
+    //sort params in alphabetical order
+    const sortDropdown = document.querySelector('.sort-dropdown');
+    const sorted = Array.from(params).sort((a, b) => {
+        return a.textContent.localeCompare(b.textContent);
+    });
+    sortDropdown.innerHTML = "";
+    sorted.forEach(param => sortDropdown.appendChild(param));
+}
+
 async function applySort() {
-    const list = document.querySelector('.item-container');
+    const itemContainer = document.querySelector('.item-container');
     const itemsData = await getProductData();
-    const items = Array.from(list.querySelectorAll('.item'));
+    const items = Array.from(itemContainer.querySelectorAll('.item'));
     const params = document.getElementById('sort-params').textContent.trim();
     const searchTerm = document.getElementById('searchbar').value.trim().toLowerCase();
+    const sortBy = getSortFuncs();
 
     function sortItems(compareFn) {
         const sorted = [...itemsData].sort(compareFn);
-        list.innerHTML = "";
+        //clear itemContainer
+        itemContainer.innerHTML = "";
+        
+        //append sorted list of items
         sorted.forEach(itemsData => {
             const {id} = itemsData;
             items.forEach(item => {
                 if (item.id == id) {
-                    list.appendChild(item);
+                    itemContainer.appendChild(item);
                 }
             });
         });
@@ -141,113 +164,67 @@ async function applySort() {
     if (params === "best match") {
         //Fallback: alphabetical order
         if (searchTerm === "" || !searchTerm) {
-            sortItems((a, b) => {
-                const nameA = (a.name).toLowerCase();
-                const nameB = (b.name).toLowerCase();
-                return nameA.localeCompare(nameB);
-            });
+            sortItems((a, b) => sortBy.alphabeticalOrder(a, b));
         } else {
-            sortItems((a, b) => {
-                const nameA = (a.name).toLowerCase();
-                const nameB = (b.name).toLowerCase();
-
-                const indexA = nameA.indexOf(searchTerm);
-                const indexB = nameB.indexOf(searchTerm);
-
-                if (indexA === -1 && indexB === -1) return 0;
-                if (indexA === -1) return 1;
-                if (indexB === -1) return -1;
-
-                return indexA - indexB;
-            });
+            sortItems((a, b) => sortBy.bestMatch(a, b));
         }
     }
 
     if (params === "price (lowest to highest)") {
-        sortItems((a, b) => {
-            return parseFloat(a.price) - parseFloat(b.price);
-        });
+        sortItems((a, b) => sortBy.lowestToHighest(a, b));
     }
 
     if (params === "price (highest to lowest)") {
-        sortItems((a, b) => {
+        sortItems((a, b) => sortBy.highestToLowest(a, b));
+    }
+}
+
+function getSortFuncs() {
+    return {
+        alphabeticalOrder: function (a, b) {
+            const nameA = (a.name).toLowerCase();
+            const nameB = (b.name).toLowerCase();
+            return nameA.localeCompare(nameB);
+        },
+        bestMatch: function (a, b) {
+            let searchTerm = document.getElementById('searchbar').value.trim().toLowerCase();
+            const nameA = (a.name).toLowerCase();
+            const nameB = (b.name).toLowerCase();
+
+            const indexA = nameA.indexOf(searchTerm);
+            const indexB = nameB.indexOf(searchTerm);
+
+            if (indexA === -1 && indexB === -1) return 0;
+            if (indexA === -1) return 1;
+            if (indexB === -1) return -1;
+
+            return indexA - indexB;
+        },
+        lowestToHighest: function (a, b) {
+            return parseFloat(a.price) - parseFloat(b.price);
+        },
+        highestToLowest: function (a, b) {
             return parseFloat(b.price) - parseFloat(a.price);
-        });
+        }
     }
 }
 
 export async function createItems(ignoreParams) {
     //gets search params from the url
-    const params = new URLSearchParams(window.location.search);
+    let rawParams = new URLSearchParams(window.location.search);
     let itemContainer = document.querySelector(".item-container");
 
     //keeps searchbar text content and filters consistent with the last page
-    let searchText = params.get("searchText");
-    searchbar.value = searchText;
-    
-    const slider = getSlider();
-    let min = params.get("min");
-    let max = params.get("max");
-    if(params.get("min")) {
-        slider.minInput.value = min;
-        slider.maxInput.value = max;
-    }
-    updateSlider();
-    
-    // get active color and brand IDs (as integers to match dataset)
-    let colorChecks = document.querySelectorAll('.color input');
-    let activeColors = params.get("colors") || [];
-    if(activeColors){
-        for (let i = 0; i < activeColors.length; i++) {
-            colorChecks[activeColors[i]].checked = true
-        }
-    }
-
-    let brandChecks = document.querySelectorAll('.brand input');
-    let activeBrands = params.get("brands") || [];
-    if(activeBrands){
-        //activeBrands = activeBrands.split()
-        for (let i = 0; i < activeBrands.length; i++) {
-            brandChecks[activeBrands[i]].checked = true
-        }
-    }
-
-
+    let {params, searchbar} = keepSearchFilters(rawParams); 
+    let {searchText, minValue, maxValue, activeColors} = params;
+  
     let visibleCount = 0;
 
     //fetches product data and compares with search request
     const data = await getProductData();
-    data.forEach(({id, name, price, colors, brand, sizes, description, variants}) => {
-        //check for matching request with item/product data
-        let isVisible = true;
-        if (params.size > 1 && !ignoreParams) {
-            //acounts for searchtext == ""
-            let matchesText = true;
-            if (searchText.length != 0) {
-                matchesText = format(name).includes(format(searchText));
-            }
-            const matchesPrice = price >= parseFloat(min) && price <= parseFloat(max);
-            let matchesColor = false;
-            if (activeColors.length === 0) {
-                matchesColor = true
-            } else {
-                for(let i = 0; i < colors.length; i++) {
-                    if (!matchesColor && activeColors.includes(colors[i])) {
-                        matchesColor = true;
-                    }
-                }
-            }
-            const matchesBrand = activeBrands.length === 0 || activeBrands.includes(brand);
-
-            isVisible = matchesText && matchesPrice && matchesColor && matchesBrand; 
-        } else if(!ignoreParams) {
-            if (searchText && searchText.length != 0) {
-                isVisible = format(name).includes(format(searchText));
-            }
-        }
-        
-        
-
+    data.forEach((item) => {
+        let isVisible = matchWithParams(item, params, ignoreParams);
+        let {id, name, price, colors, brand, sizes, description, variants} = item
         
         //if matches create a new html element by template
         if (isVisible) {
@@ -279,10 +256,6 @@ export async function createItems(ignoreParams) {
             let itemHtmlElement = wrapper.firstElementChild;
 
             itemContainer.appendChild(itemHtmlElement);
-
-
-
-            
             
             //sets up the item
             itemHtmlElement = document.getElementById(id);
@@ -326,6 +299,76 @@ export async function createItems(ignoreParams) {
 
     applySort();
     
+}
+
+function keepSearchFilters(rawParams) {
+    const searchbar = document.getElementById('searchbar');
+    let searchText = rawParams.get("searchText");
+    searchbar.value = searchText;
+    
+    const slider = getSlider();
+    let minValue = rawParams.get("min");
+    let maxValue = rawParams.get("max");
+    if(rawParams.get("min")) {
+        updateSlider(minValue, maxValue);
+    }
+    
+    // get active color and brand IDs (as integers to match dataset)
+    let colorChecks = document.querySelectorAll('.color input');
+    let activeColors = rawParams.get("colors") || [];
+    if(activeColors){
+        for (let i = 0; i < activeColors.length; i++) {
+            colorChecks[activeColors[i]].checked = true
+        }
+    }
+
+    let brandChecks = document.querySelectorAll('.brand input');
+    let activeBrands = rawParams.get("brands") || [];
+    if(activeBrands){
+        //activeBrands = activeBrands.split()
+        for (let i = 0; i < activeBrands.length; i++) {
+            brandChecks[activeBrands[i]].checked = true
+        }
+    }
+    let params = {searchText: searchText, minValue: minValue, maxValue: maxValue, activeColors: activeColors, activeBrands: activeBrands}
+    return {params, searchbar, slider, colorChecks, brandChecks}
+}
+
+function matchWithParams(item, params, ignoreParams) {
+    let {id, name, price, colors, brand} = item
+    let {searchText, minValue, maxValue, activeColors, activeBrands} = params;
+
+    if (ignoreParams) {
+        return true
+    }
+
+    if (minValue) {
+        //acounts for searchtext == ""
+        let matchesText = true;
+        if (searchText.length != 0) {
+            matchesText = format(name).includes(format(searchText));
+        }
+        const matchesPrice = price >= parseFloat(minValue) && price <= parseFloat(maxValue);
+        let matchesColor = false;
+        if (activeColors.length === 0) {
+            matchesColor = true
+        } else {
+            for(let i = 0; i < colors.length; i++) {
+                if (!matchesColor && activeColors.includes(colors[i])) {
+                    matchesColor = true;
+                }
+            }
+        }
+        const matchesBrand = activeBrands.length === 0 || activeBrands.includes(brand);
+        //console.log({matchesText: matchesText, matchesPrice: matchesPrice, matchesColor: matchesColor, matchesBrand: matchesBrand})
+        return matchesText && matchesPrice && matchesColor && matchesBrand; 
+    }
+
+    if (searchText && searchText.length != 0) {
+        return format(name).includes(format(searchText));
+    }
+
+    return false
 }
 
 function search() {
