@@ -213,12 +213,6 @@ export async function createItems(ignoreParams) {
     }
 
 
-    console.log("UrlSearchParams: " + params)
-    console.log("UrlSearchParams length: " + params.size);
-    console.log("Search text: " + searchText);
-    console.log("Active colors: " + activeColors);
-    console.log("Active brands: " + activeBrands)
-
     let visibleCount = 0;
 
     //fetches product data and compares with search request
