@@ -247,7 +247,7 @@ export async function createItems(ignoreParams) {
 
             isVisible = matchesText && matchesPrice && matchesColor && matchesBrand; 
         } else if(!ignoreParams) {
-            if (searchText.length != 0) {
+            if (searchText && searchText.length != 0) {
                 isVisible = format(name).includes(format(searchText));
             }
         }
