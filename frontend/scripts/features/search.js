@@ -222,58 +222,18 @@ export async function createItems(ignoreParams) {
 
     //fetches product data and compares with search request
     const data = await getProductData();
-    data.forEach((item) => {
-        let isVisible = matchWithParams(item, params, ignoreParams);
-        let {id, name, price, colors, brand, sizes, description, variants} = item
+    data.forEach((itemData) => {
+        let isVisible = matchWithParams(itemData, params, ignoreParams);
+        let {id, name, price, colors, brand, sizes, description, variants} = itemData;
         
         //if matches create a new html element by template
         if (isVisible) {
             visibleCount++;
 
-            let mainHTML = `
-                <div class="item" id="${id}" data-href="${id}.html">
-                    <div class="href">
-                        <div style="display: flex; align-items:center; justify-content:center; aspect-ratio: 1/1; overflow: hidden;">
-                            <img class="item-img" src="imgs/shoes/${id}/${id}_1_1.png">
-                        </div>
-                        <p class="name">${name}</p>
-                        <p class="price">${price}$</p>
-                    </div>`;
-
-            let colorways = `<div class="color-ways">`;
-            for (let i = 0; i < variants; i++) {
-                colorways += `
-                <div class="color-way" data-color="${i}">
-                    <img src="imgs/shoes/${id}/${id}_${i+1}_1.png">
-                </div>`;   
-            }
-            colorways += "</div> </div>";
-
-            mainHTML += colorways;
-
-            const wrapper = document.createElement("div");
-            wrapper.innerHTML = mainHTML.trim();
-            let itemHtmlElement = wrapper.firstElementChild;
+            let itemHtmlElement = createItemElement(itemData);
+            addItemListeners(itemHtmlElement, itemData);
 
             itemContainer.appendChild(itemHtmlElement);
-            
-            //sets up the item
-            itemHtmlElement = document.getElementById(id);
-
-
-            const colorwaySelectors = itemHtmlElement.querySelectorAll('.color-way');
-            colorwaySelectors.forEach(colorwaySelector => colorwaySelector.addEventListener('click', (event) => changeColorway(parseInt(colorwaySelector.dataset.color), id)));
-
-            if (activeColors.length === 0) {
-                changeColorway(0, id);
-            } else {
-                for (let i = 0; i < variants; i++) {
-                    if (activeColors.includes(colors[i]) && !colorways.includes('active')) { 
-                        changeColorway(i, id)
-                    }
-                }
-            }
-            itemHtmlElement.querySelector('.href').addEventListener('click', (event) => linkToItem(id));
         }
     });
 
@@ -334,8 +294,8 @@ function keepSearchFilters(rawParams) {
     return {params, searchbar, slider, colorChecks, brandChecks}
 }
 
-function matchWithParams(item, params, ignoreParams) {
-    let {id, name, price, colors, brand} = item
+function matchWithParams(itemData, params, ignoreParams) {
+    let {id, name, price, colors, brand} = itemData
     let {searchText, minValue, maxValue, activeColors, activeBrands} = params;
 
     if (ignoreParams) {
@@ -368,7 +328,61 @@ function matchWithParams(item, params, ignoreParams) {
         return format(name).includes(format(searchText));
     }
 
-    return false
+    return true
+}
+
+function createItemElement(itemData) {
+    let {id, name, price, colors, brand, sizes, description, variants} = itemData;
+    let mainHTML = `
+        <div class="item" id="${id}" data-href="${id}.html">
+            <div class="href">
+                <div style="display: flex; align-items:center; justify-content:center; aspect-ratio: 1/1; overflow: hidden;">
+                    <img class="item-img" src="imgs/shoes/${id}/${id}_1_1.png">
+                </div>
+                <p class="name">${name}</p>
+                <p class="price">${price}$</p>
+            </div>`;
+
+    let colorways = `<div class="color-ways">`;
+    for (let i = 0; i < variants; i++) {
+        colorways += `
+        <div class="color-way" data-color="${i}">
+            <img src="imgs/shoes/${id}/${id}_${i+1}_1.png">
+        </div>`;   
+    }
+    colorways += "</div> </div>";
+
+    mainHTML += colorways;
+
+    const wrapper = document.createElement("div");
+    wrapper.innerHTML = mainHTML.trim();
+    let itemHtmlElement = wrapper.firstElementChild;
+
+    let params = new URLSearchParams(window.location.search);
+    let activeColors = params.get("colors")
+    if (!activeColors) {
+        return itemHtmlElement
+    }
+    
+    if (activeColors.length === 0) {
+        changeColorway(0, itemHtmlElement);
+    } else {
+        for (let i = 0; i < variants; i++) {
+            if (activeColors.includes(colors[i]) && !colorways.includes('active')) { 
+                changeColorway(i, itemHtmlElement);
+            }
+        }
+    }
+
+    return itemHtmlElement;
+}
+
+function addItemListeners(itemHtmlElement, itemData) {
+    let {id} = itemData;
+    const colorwaySelectors = itemHtmlElement.querySelectorAll('.color-way');
+    colorwaySelectors.forEach(colorwaySelector => colorwaySelector.addEventListener('click', () => changeColorway(parseInt(colorwaySelector.dataset.color), id)));
+
+    itemHtmlElement.querySelector('.href').addEventListener('click', () => linkToItem(id));
 }
 
 function search() {
@@ -412,10 +426,9 @@ function search() {
     window.location.href = href
 }
 
-function changeColorway(color, id) {
-    const item = document.getElementById(id);
-    let colors = item.querySelectorAll('.color-way');
-    let ItemImg = item.querySelector('.item-img');
+function changeColorway(color, itemHtmlElement) {
+    let colors = itemHtmlElement.querySelectorAll('.color-way');
+    let ItemImg = itemHtmlElement.querySelector('.item-img');
     for (let i = 0; i < colors.length; i++) {
         colors[i].classList.remove('active');
     }
