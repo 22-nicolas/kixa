@@ -34,7 +34,7 @@ export function updateSlider(minValue, maxValue) {
 
     if (!minValue || !maxValue) {
         minValue = slider.minNum.value;
-        maxValue = slider.maxValue.value;
+        maxValue = slider.minNum.value;
     }
 
     slider.minRange.value = minValue;
