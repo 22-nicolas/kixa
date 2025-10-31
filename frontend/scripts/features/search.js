@@ -1,6 +1,7 @@
 import { format } from "../utils/utils.js";
 import { replaceCharAt } from "../utils/utils.js";
 import { getProductData } from "../utils/frontend.js";
+import { getSlider, updateSlider } from "./price-slider.js"
 
 export function initSearchbar() {
     const searchbar = document.getElementById('searchbar');
@@ -10,76 +11,6 @@ export function initSearchbar() {
             search();
         }
     })
-}
-
-export function initPriceSlider() {
-    const slider = getSlider();
-
-    slider.minRange.addEventListener('input', updateRange);
-    slider.maxRange.addEventListener('input', updateRange);
-
-    slider.minNum.addEventListener('input', updateSlider);
-    slider.maxNum.addEventListener('input', updateSlider);
-
-    window.addEventListener('resize', updateRange);
-
-    updateRange();
-
-    let applyButton = document.querySelector('.apply-button');
-    applyButton.addEventListener('click', () => search())
-}
-
-function getSlider() {
-    const slider = {
-        minRange: document.getElementById('min'),
-        maxRange: document.getElementById('max'),
-        minNum: document.getElementById('minNum'),
-        maxNum: document.getElementById('maxNum'),
-        range: document.getElementById('range'),
-    }
-
-    return slider;
-}
-
-function updateRange() {
-    const slider = getSlider();
-
-    let minValue = parseInt(slider.minRange.value);
-    let maxValue = parseInt(slider.maxRange.value);
-
-    if (minValue > maxValue) {
-        minValue = slider.maxRange.value;
-        maxValue = slider.minRange.value;
-    } else{
-        minValue = slider.minRange.value;
-        maxValue = slider.maxRange.value;
-    }
-
-
-    slider.minNum.value = minValue;
-    slider.maxNum.value = maxValue;
-
-    const minInPixels = (minValue - slider.minRange.min) / (slider.minRange.max - slider.minRange.min) * slider.minRange.offsetWidth
-    const maxInPixels = (maxValue - slider.maxRange.min) / (slider.maxRange.max - slider.maxRange.min) * slider.maxRange.offsetWidth
-
-    const rangeInPixels = maxInPixels-minInPixels;
-
-    slider.range.style.transform = `translateX(${minInPixels}px) scaleX(${(rangeInPixels) / (slider.minRange.offsetWidth)})`;
-
-}
-
-function updateSlider(minValue, maxValue) {
-    const slider = getSlider();
-
-    if (!minValue || !maxValue) {
-        minValue = slider.minNum.value;
-        maxValue = slider.maxValue.value;
-    }
-
-    slider.minRange.value = minValue;
-    slider.maxRange.value = maxValue;
-
-    updateRange();
 }
 
 export function initChecks() {
@@ -385,7 +316,7 @@ function addItemListeners(itemHtmlElement, itemData) {
     itemHtmlElement.querySelector('.href').addEventListener('click', () => linkToItem(id));
 }
 
-function search() {
+export function search() {
     let searchText = "" + searchbar.value;
     let href = `search.html?searchText=${searchText}`
 
