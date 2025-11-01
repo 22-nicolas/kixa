@@ -311,7 +311,7 @@ function createItemElement(itemData) {
 function addItemListeners(itemHtmlElement, itemData) {
     let {id} = itemData;
     const colorwaySelectors = itemHtmlElement.querySelectorAll('.color-way');
-    colorwaySelectors.forEach(colorwaySelector => colorwaySelector.addEventListener('click', () => changeColorway(parseInt(colorwaySelector.dataset.color), id)));
+    colorwaySelectors.forEach(colorwaySelector => colorwaySelector.addEventListener('click', () => changeColorway(parseInt(colorwaySelector.dataset.color), itemHtmlElement)));
 
     itemHtmlElement.querySelector('.href').addEventListener('click', () => linkToItem(id));
 }
