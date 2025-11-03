@@ -2,6 +2,7 @@
 Full stack e-commerce website.
 
 ## 🚧 Roadmap
+- [ ] Migrate to react
 - [ ] Make mobile compatible
 - [ ] Login system
 - [ ] Admin interface to add products
