@@ -9,6 +9,7 @@ export async function initLoginPopup() {
     //toggle visibility
     const accountBTN = document.querySelector('.account-btn');
     let controller = new AbortController();
+    const register = document.querySelector('.register');
     accountBTN.addEventListener('click', () => {
         if (loginPopup.style.display == 'block') {
             hide();
@@ -35,9 +36,17 @@ export async function initLoginPopup() {
         controller = new AbortController();
     }
 
-    //register
+    initRegister(register, defaultLoginDiv);
+
+    initSumbitBTN();
+
+    initPasswordInputs();
+
+    initNumDropdown();
+}
+
+async function initRegister(register, defaultLoginDiv) {
     const registerBTN = document.querySelector('.register-btn');
-    const register = document.querySelector('.register');
     registerBTN.addEventListener('click', () => {
         register.style.display = 'block';
         defaultLoginDiv.style.display = 'none';
@@ -63,12 +72,6 @@ export async function initLoginPopup() {
             });
         }
     })
-
-    initSumbitBTN();
-
-    initPasswordInputs();
-
-    initNumDropdown();
 }
 
 async function initSumbitBTN() {
