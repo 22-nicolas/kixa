@@ -10,11 +10,13 @@ export async function initLoginPopup() {
     const accountBTN = document.querySelector('.account-btn');
     let controller = new AbortController();
     const register = document.querySelector('.register');
+    const login = document.querySelector('.login');
     accountBTN.addEventListener('click', () => {
         if (loginPopup.style.display == 'block') {
             hide();
         } else {
             register.style.display = 'none'
+            login.style.display = 'none'
             defaultLoginDiv.style.display = 'block'
             loginPopup.style.display = 'block';
             //if user clicks outside the login popup => close/hide
@@ -38,11 +40,21 @@ export async function initLoginPopup() {
 
     initRegister(register, defaultLoginDiv);
 
+    initLogin(login, defaultLoginDiv);
+
     initSumbitBTN();
 
     initPasswordInputs();
 
     initNumDropdown();
+}
+
+function initLogin(login, defaultLoginDiv) {
+    const loginBTN = document.querySelector('.login-btn');
+    loginBTN.addEventListener('click', () => {
+        login.style.display = 'block';
+        defaultLoginDiv.style.display = 'none';
+    });
 }
 
 async function initRegister(register, defaultLoginDiv) {
