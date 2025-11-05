@@ -367,7 +367,13 @@ function changeColorway(color, itemHtmlElement) {
 function linkToItem(id) {
     let item = document.getElementById(id)
 
-    let color = item.querySelector('.color-way.active').dataset.color;
+    let activeColorWaySelector = item.querySelector('.color-way.active');
+    let color
+    if (!activeColorWaySelector) {
+        color = 0
+    } else {
+        color = activeColorWaySelector.dataset.color
+    }
     
     window.location.href = "item.html" + "?id=" + id + '&color=' + color;
 }
