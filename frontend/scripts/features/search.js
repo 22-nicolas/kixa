@@ -290,10 +290,7 @@ function createItemElement(itemData) {
     let itemHtmlElement = wrapper.firstElementChild;
 
     let params = new URLSearchParams(window.location.search);
-    let activeColors = params.get("colors")
-    if (!activeColors) {
-        return itemHtmlElement
-    }
+    let activeColors = params.get("colors") || []
     
     if (activeColors.length === 0) {
         changeColorway(0, itemHtmlElement);
