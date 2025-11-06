@@ -367,9 +367,10 @@ function changeColorway(color, itemHtmlElement) {
 function linkToItem(id) {
     let item = document.getElementById(id)
 
+    //link with active colorway
     let activeColorWaySelector = item.querySelector('.color-way.active');
     let color
-    if (!activeColorWaySelector) {
+    if (!activeColorWaySelector) { //default to colorway 0
         color = 0
     } else {
         color = activeColorWaySelector.dataset.color
