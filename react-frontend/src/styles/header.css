@@ -1,6 +1,6 @@
 .header {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: space-between;
     padding: 20px;
     z-index: 1;
@@ -10,6 +10,20 @@
 
 .header img{
     width: 100px;
+}
+
+
+.header-links-container{
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+}
+
+.header-link{
+    height: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .header-link p{
@@ -25,10 +39,6 @@
     text-decoration: none;
     text-align: center;
     display: inline-block;
-}
-
-.header-link p:hover{
-    /*text-decoration: underline;*/
 }
 
 .search-div {
@@ -54,10 +64,6 @@
 
 .dropdown-menu{
     display: none;
-}
-
-.dropdown-menu.shown{
-    display: flex;
     align-items: top;
     justify-content: left;
     gap: 50px;
@@ -68,6 +74,10 @@
     padding: 25px;
     overflow: hidden;
     z-index: 10;
+}
+
+.dropdown-menu.show{
+    display: flex;
 }
 
 .dropdown-menu a{
@@ -97,9 +107,15 @@
 }
 
 /* Animate in after menu opens */
-.dropdown-menu.animate-in div,
-.dropdown-menu.animate-in h1,
-.dropdown-menu.animate-in a {
+.dropdown-menu.show div,
+.dropdown-menu.show h1,
+.dropdown-menu.show a {
+    transform: translateY(0);
+    opacity: 1;
+    z-index: 10;
+}
+
+.dropdown-menu:hover div, h1, a {
     transform: translateY(0);
     opacity: 1;
     z-index: 10;

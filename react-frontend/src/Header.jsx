@@ -1,20 +1,53 @@
 import './styles/general.css'
 import './styles/header.css'
+import PropTypes from 'prop-types'
 
 //images
 import logo from './assets/logo.png'
 import search_icon from './assets/search_icon.png'
 import cart_icon from './assets/cart_icon.png'
 import user_icon from './assets/user_icon.png'
+import { useState } from 'react'
 
 function Header() {
+    //copy and pasted just as placeholders
+    const LinkDropdownsList = Object.entries({
+        Women: [{title: "Shoes", links: ["Running", "Hiking", "Skating"]},
+                {title: "Accesories", links: ["Hats", "Bags"]}    
+            ],
+        Men: [{title: "Shoes", links: ["Running", "Hiking", "Skating"]},
+                {title: "Accesories", links: ["Hats", "Bags"]}    
+            ],
+        Kids: [{title: "Shoes", links: ["Running", "Hiking", "Skating"]},
+                {title: "Accesories", links: ["Hats", "Bags"]}    
+            ],
+        Offers: [{title: "Shoes", links: ["Running", "Hiking", "Skating"]},
+                {title: "Accesories", links: ["Hats", "Bags"]}    
+            ],
+    });
+
+
+    
+    const LinkDropdownElements = LinkDropdownsList.map(([key, categories]) => {
+    return (
+            <LinkDropdown
+                key={key}
+                title={key}
+                categories={categories}
+            />
+        );
+    });
+
     return(
         <div className="header">
             <a href="index.html"><img src={logo} alt="logo" /></a>
+            <div className='header-links-container'>
+                {LinkDropdownElements}
+            </div>
             <div className="right-header">
                 <div className="search-div">
                     <img src={search_icon} alt="search icon" />
-                    <input type="text" id="searchbar" enterkeyhint="search" />
+                    <input type="text" id="searchbar" enterKeyHint="search" />
                 </div>
                 <a href="cart.html">
                     <p>0</p>
@@ -29,3 +62,29 @@ function Header() {
 }
 
 export default Header;
+
+function LinkDropdown({title, categories}) {
+    const [isOpen, setIsOpen] = useState(false)
+
+    const dropdownElements = categories.map((categorie) => {
+        const categorieLinks = categorie.links.map(link => <a key={link}>{link}</a>)
+        return(
+            <div key={categorie.title}>
+                <h1>{categorie.title}</h1>
+                {categorieLinks}
+            </div>
+        );
+    })
+    return(
+        <div onMouseEnter={() => setIsOpen(true)} onMouseLeave={() => setIsOpen(false)}>
+            <a className="header-link"><p>{title}</p></a>
+            <div className={`dropdown-menu${isOpen ? " show" : ""}`} id={title}>
+                {dropdownElements}
+            </div>
+        </div>
+    );
+}
+LinkDropdown.propTypes = {
+    title: PropTypes.string,
+    categories: PropTypes.array
+}
