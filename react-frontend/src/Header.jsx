@@ -8,6 +8,7 @@ import search_icon from './assets/search_icon.png'
 import cart_icon from './assets/cart_icon.png'
 import user_icon from './assets/user_icon.png'
 import { useState } from 'react'
+import { fireAccountBtnEvent } from './modules/AccountBtnEvent.js'
 
 function Header() {
     //copy and pasted just as placeholders
@@ -55,7 +56,7 @@ function Header() {
                     <p>0</p>
                     <img src={cart_icon} alt="cart icon" />
                 </a>
-                <div className="account-btn">
+                <div onMouseDown={fireAccountBtnEvent} className="account-btn">
                     <img src={user_icon} alt="user icon" />
                 </div>
             </div>
