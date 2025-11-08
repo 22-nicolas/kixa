@@ -12,22 +12,24 @@ import { useState } from 'react'
 function Header() {
     //copy and pasted just as placeholders
     const LinkDropdownsList = Object.entries({
-        Women: [{title: "Shoes", links: ["Running", "Hiking", "Skating"]},
-                {title: "Accesories", links: ["Hats", "Bags"]}    
-            ],
-        Men: [{title: "Shoes", links: ["Running", "Hiking", "Skating"]},
-                {title: "Accesories", links: ["Hats", "Bags"]}    
-            ],
-        Kids: [{title: "Shoes", links: ["Running", "Hiking", "Skating"]},
-                {title: "Accesories", links: ["Hats", "Bags"]}    
-            ],
-        Offers: [{title: "Shoes", links: ["Running", "Hiking", "Skating"]},
-                {title: "Accesories", links: ["Hats", "Bags"]}    
-            ],
-    });
+        Women: [
+            {title: "Shoes", links: ["Running", "Hiking", "Skating"]},
+            {title: "Accesories", links: ["Hats", "Bags"]}
+        ],
+        Men: [
+            {title: "Shoes", links: ["Running", "Hiking", "Skating"]},
+            {title: "Accesories", links: ["Hats", "Bags"]}    
+        ],
+        Kids: [
+            {title: "Shoes", links: ["Running", "Hiking", "Skating"]},
+            {title: "Accesories", links: ["Hats", "Bags"]}    
+        ],
+        Offers: [
+            {title: "Shoes", links: ["Running", "Hiking", "Skating"]},
+            {title: "Accesories", links: ["Hats", "Bags"]}    
+        ]
+    })
 
-
-    
     const LinkDropdownElements = LinkDropdownsList.map(([key, categories]) => {
     return (
             <LinkDropdown
@@ -66,15 +68,8 @@ export default Header;
 function LinkDropdown({title, categories}) {
     const [isOpen, setIsOpen] = useState(false)
 
-    const dropdownElements = categories.map((categorie) => {
-        const categorieLinks = categorie.links.map(link => <a key={link}>{link}</a>)
-        return(
-            <div key={categorie.title}>
-                <h1>{categorie.title}</h1>
-                {categorieLinks}
-            </div>
-        );
-    })
+    const dropdownElements = mapCategories(categories);
+
     return(
         <div onMouseEnter={() => setIsOpen(true)} onMouseLeave={() => setIsOpen(false)}>
             <a className="header-link"><p>{title}</p></a>
@@ -87,4 +82,16 @@ function LinkDropdown({title, categories}) {
 LinkDropdown.propTypes = {
     title: PropTypes.string,
     categories: PropTypes.array
+}
+
+function mapCategories(categories) {
+    return categories.map((categorie) => {
+        const categorieLinks = categorie.links.map(link => <a key={link}>{link}</a>)
+        return(
+            <div key={categorie.title}>
+                <h1>{categorie.title}</h1>
+                {categorieLinks}
+            </div>
+        );
+    })
 }
