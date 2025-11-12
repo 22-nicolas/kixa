@@ -65,10 +65,6 @@
     display: block;
 }
 
-.register {
-    display: none;
-}
-
 .separator {
   display: flex;
   align-items: center;
