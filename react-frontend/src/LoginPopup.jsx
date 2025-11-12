@@ -9,9 +9,11 @@ function LoginPopup() {
 
     const [isOpen, setIsOpen] = useState(false)
     const [interfaceType, setInterfaceType] = useState('default')
-
-
     
+    useEffect(() => {
+        suscribeToAccountBtn(toggleIsOpen);
+    }, []);
+
     useEffect(() => {
         let controller = new AbortController
         window.addEventListener('mousedown', (event) => {
@@ -19,16 +21,15 @@ function LoginPopup() {
                 controller.abort()
                 return
             }
-            console.log(loginPopup.current)
             if (!(isDescandentOf(event.target, loginPopup.current) || isDescandentOf(event.target, document.querySelector('.account-btn')))) {
-                console.log("fired")
                 toggleIsOpen(false)
                 controller.abort()
-                return
             }
         }, { signal: controller.signal });
     }, [isOpen]);
 
+    let CurrentInterface = getInterfaceFromType();
+    
     function toggleIsOpen(setState) {
         if (setState) {
             setIsOpen(setState)
@@ -41,21 +42,6 @@ function LoginPopup() {
         });
     }
 
-    useEffect(() => {
-        suscribeToAccountBtn(toggleIsOpen);
-    }, []);
-
-    let CurrentInterface;
-    switch (interfaceType) {
-        case "register":
-            //CurrentInterface = Register;
-            //break;
-        case "login":
-            //CurrentInterface = Login;
-            //break;
-        default:
-            CurrentInterface = Default;
-    }
     return(
         <div className={`login-popup${isOpen ? " show" : ""}`} ref={loginPopup}>
             <CurrentInterface setInterfaceType={setInterfaceType} />
@@ -76,6 +62,19 @@ function Default({ setInterfaceType }) {
             <div className="login-btn" onMouseDown={() => setInterfaceType('login')}><p>login</p></div>
         </div>
     )
+}
+
+function getInterfaceFromType(interfaceType) {
+    switch (interfaceType) {
+        case "register":
+            //CurrentInterface = Register;
+            //break;
+        case "login":
+            //CurrentInterface = Login;
+            //break;
+        default:
+            return Default;
+    }
 }
 
 export default LoginPopup
