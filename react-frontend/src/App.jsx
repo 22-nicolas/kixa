@@ -1,12 +1,14 @@
-import Header from "./elements/general/Header.jsx"
-import LoginPopup from "./elements/general/LoginPopup.jsx"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import Index from "./pages/Index.jsx"
+
 
 function App() {
   return (
-    <>
-      <Header></Header>
-      <LoginPopup></LoginPopup>
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Index />} />
+      </Routes>
+    </Router>
   )
 }
 
