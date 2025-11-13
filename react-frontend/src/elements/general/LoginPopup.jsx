@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { suscribeToAccountBtn } from "./modules/AccountBtnEvent";
-import { isDescandentOf } from "./modules/utils";
-import './styles/general.css'
+import { suscribeToAccountBtn } from "../../modules/AccountBtnEvent";
+import { isDescandentOf } from "../../modules/utils";
+import '../../styles/general.css'
 
 
 function LoginPopup() {

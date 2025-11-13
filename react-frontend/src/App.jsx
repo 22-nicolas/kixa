@@ -1,5 +1,5 @@
-import Header from "./Header.jsx"
-import LoginPopup from "./LoginPopup.jsx"
+import Header from "./elements/general/Header.jsx"
+import LoginPopup from "./elements/general/LoginPopup.jsx"
 
 function App() {
   return (

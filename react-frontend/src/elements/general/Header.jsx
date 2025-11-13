@@ -1,14 +1,14 @@
-import './styles/general.css'
-import './styles/header.css'
+import '../../styles/general.css'
+import '../../styles/header.css'
 import PropTypes from 'prop-types'
 
 //images
-import logo from './assets/logo.png'
-import search_icon from './assets/search_icon.png'
-import cart_icon from './assets/cart_icon.png'
-import user_icon from './assets/user_icon.png'
+import logo from '../../assets/logo.png'
+import search_icon from '../../assets/search_icon.png'
+import cart_icon from '../../assets/cart_icon.png'
+import user_icon from '../../assets/user_icon.png'
 import { useState } from 'react'
-import { fireAccountBtnEvent } from './modules/AccountBtnEvent.js'
+import { fireAccountBtnEvent } from '../../modules/AccountBtnEvent.js'
 
 function Header() {
     //copy and pasted just as placeholders
