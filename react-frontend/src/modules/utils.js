@@ -8,3 +8,11 @@ export function isDescandentOf(parentElement, searchElement) {
         }
     }
 }
+
+export function isImage(src) {
+  return /\.(jpeg|jpg|gif|png|webp|svg)$/i.test(src);
+};
+
+export function isVideo(src) {
+  return /\.(mp4|webm|ogg|mov)$/i.test(src);
+};
