@@ -55,7 +55,7 @@ function Slider() {
             let isActive = false
             if (i === currentSlide) isActive = true
 
-            return <Dot key={i} className={isActive ? "active" : ""} onMouseDown={() => goToSlide(i)}/>
+            return <span key={i} className={isActive ? "active" : ""} onMouseDown={() => goToSlide(i)}/>
         })
     }
 
@@ -67,7 +67,6 @@ function Slider() {
     function nextSlide() {
         let nextSlide = currentSlide + 1
         if(nextSlide >= slidesData.length) nextSlide = 0
-        console.log(nextSlide)
         goToSlide(nextSlide)
     }
 
@@ -95,8 +94,5 @@ function Slider() {
         </Container>
     )
 }
-export default Slider
 
-function Dot({ className, onMouseDown}) {
-    return <span className={className} onMouseDown={onMouseDown}></span>
-}
+export default Slider
