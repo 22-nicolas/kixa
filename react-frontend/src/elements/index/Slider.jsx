@@ -14,21 +14,24 @@ function Slider() {
         {src: skateVid, txt: "Built to Shred. Made to Last."},
         {src: runningImg, txt: "Built for Speed. Born to Race."}
     ]
-
+    const delay = 3200
     const [currentSlide, setCurrentSlide] = useState(0)
     const slider = useRef()
     const track = useRef()
     const contents = useRef([])
     const slides = initSlides()
+    let sliderInterval = useRef()
     let dots = initDots()
     
     useEffect(() => {
         matchWidth()
+        start()
         window.addEventListener('resize', matchWidth);
     }, [])
     
     useEffect(() => {
         dots = initDots()
+        start()
     }, [currentSlide])
 
     function initSlides() {
@@ -50,12 +53,22 @@ function Slider() {
     function initDots(){
         return slidesData.map((_, i) => {
             let isActive = false
-            if (i === currentSlide) {
-                isActive = true
-            }
+            if (i === currentSlide) isActive = true
 
             return <Dot key={i} className={isActive ? "active" : ""} onMouseDown={() => goToSlide(i)}/>
         })
+    }
+
+    function start() {
+        clearInterval(sliderInterval.current); // clear existing interval if any
+        sliderInterval.current = setInterval(() => nextSlide(), delay);
+    }
+
+    function nextSlide() {
+        let nextSlide = currentSlide + 1
+        if(nextSlide >= slidesData.length) nextSlide = 0
+        console.log(nextSlide)
+        goToSlide(nextSlide)
     }
 
     function goToSlide(i){
