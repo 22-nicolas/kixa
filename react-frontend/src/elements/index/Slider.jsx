@@ -1,20 +1,18 @@
 import Container from "../general/Container"
 import '../../styles/index.css'
-import hikingVid from "../../assets/hiking.mp4"
-import skateVid from "../../assets/skate.mp4"
-import runningImg from "../../assets/running.jpg"
 import { isVideo } from "../../modules/utils"
 import { useEffect, useRef, useState } from "react"
+import PropTypes from "prop-types"
+import { MissingPropError } from "../../modules/utils"
 
 
-function Slider() {
+function Slider({ slidesData, autoScrollDelay = 5000 }) {
     
-    const slidesData = [
-        {src: hikingVid, txt: "Long Way? Your Shoes Can Handle It."},
-        {src: skateVid, txt: "Built to Shred. Made to Last."},
-        {src: runningImg, txt: "Built for Speed. Born to Race."}
-    ]
-    const delay = 3200
+    if (slidesData === undefined) {
+        throw new MissingPropError("Slider requires the 'slidesData' prop.");
+    }
+
+    const delay = autoScrollDelay
     const [currentSlide, setCurrentSlide] = useState(0)
     const slider = useRef()
     const track = useRef()
@@ -93,6 +91,10 @@ function Slider() {
             </div>
         </Container>
     )
+}
+Slider.PropTypes = {
+    slideData: PropTypes.array.isRequired,
+    autoScrollDelay: PropTypes.number
 }
 
 export default Slider

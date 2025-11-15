@@ -10,9 +10,16 @@ export function isDescandentOf(parentElement, searchElement) {
 }
 
 export function isImage(src) {
-  return /\.(jpeg|jpg|gif|png|webp|svg)$/i.test(src);
+    return /\.(jpeg|jpg|gif|png|webp|svg)$/i.test(src);
 };
 
 export function isVideo(src) {
-  return /\.(mp4|webm|ogg|mov)$/i.test(src);
+    return /\.(mp4|webm|ogg|mov)$/i.test(src);
 };
+
+export class MissingPropError extends Error {
+    constructor(message) {
+        super(message)
+        this.name = "MissingPropError"
+    }
+}

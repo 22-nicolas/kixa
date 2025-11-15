@@ -4,16 +4,24 @@ import Slider from "../elements/index/Slider"
 import Promo from "../elements/index/Promo"
 
 //assets
+import hikingVid from "../assets/hiking.mp4"
+import skateVid from "../assets/skate.mp4"
+import runningImg from "../assets/running.jpg"
 import neymarPromo from "../assets/neymar.png"
 
 function Index() {
-    const i = 0
     return(
         <>
             <Header/>
             <LoginPopup/>
-            <Slider/>
+
+            <Slider slidesData={[
+                {src: hikingVid, txt: "Long Way? Your Shoes Can Handle It."},
+                {src: skateVid, txt: "Built to Shred. Made to Last."},
+                {src: runningImg, txt: "Built for Speed. Born to Race."}
+            ]} autoScrollDelay={3200}/>
             <Promo headline="Check out our sortiment!" info="Future 8 Ultimate Creativity FG" imgSrc={neymarPromo} />
+            
         </>
     )
 }

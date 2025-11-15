@@ -2,8 +2,7 @@ import PropTypes from "prop-types"
 import { Link } from "react-router-dom"
 import { isImage } from "../../modules/utils"
 
-function Promo({ headline, info, buttonLabel, imgSrc, link }) {
-    if (!buttonLabel) buttonLabel = "Shop now"
+function Promo({ headline, info, buttonLabel = "Shop now", imgSrc, link }) {
     if (!isImage(imgSrc)) {
         console.warn(`${imgSrc} is not an image`)
         imgSrc = null
