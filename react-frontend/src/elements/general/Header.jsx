@@ -1,4 +1,3 @@
-import '../../styles/general.css'
 import '../../styles/header.css'
 import PropTypes from 'prop-types'
 

@@ -1,5 +1,4 @@
 import Container from "../general/Container"
-import '../../styles/index.css'
 import { isVideo } from "../../modules/utils"
 import { useEffect, useRef, useState } from "react"
 import PropTypes from "prop-types"
