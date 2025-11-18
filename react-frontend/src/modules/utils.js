@@ -23,3 +23,10 @@ export class MissingPropError extends Error {
         this.name = "MissingPropError"
     }
 }
+
+export class InvalidPropTypeError extends Error {
+    constructor(message) {
+        super(message)
+        this.name = "InvalidPropTypeError"
+    }
+}

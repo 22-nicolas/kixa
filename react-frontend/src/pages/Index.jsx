@@ -3,15 +3,23 @@ import Header from "../elements/general/Header"
 import LoginPopup from "../elements/general/LoginPopup"
 import Slider from "../elements/index/Slider"
 import Promo from "../elements/index/Promo"
+import ImgLinks from "../elements/index/ImgLinks"
 
 //styles
 import "../styles/index.css"
 
 //assets
+//slider
 import hikingVid from "../assets/hiking.mp4"
 import skateVid from "../assets/skate.mp4"
 import runningImg from "../assets/running.jpg"
+//promo
 import neymarPromo from "../assets/neymar.png"
+//img links
+import speedcatPreview from "../assets/speedcat_preview.png"
+import adidasXbraindeadPreview from "../assets/adidas_x_brain_dead.png"
+import gelcumulusPreview from "../assets/asics.png"
+import jordansPreview from "../assets/nike_sb.jpg"
 
 function Index() {
     return(
@@ -25,6 +33,12 @@ function Index() {
                 {src: runningImg, txt: "Built for Speed. Born to Race."}
             ]} autoScrollDelay={3200}/>
             <Promo headline="Check out our sortiment!" info="Future 8 Ultimate Creativity FG" imgSrc={neymarPromo} />
+            <ImgLinks linksData={[
+                {link: null, imgSrc: speedcatPreview, headline: "Puma Speedcat OG", info: "Live Fast"},
+                {link: null, imgSrc: adidasXbraindeadPreview, headline: "Adidas x Brain Dead", info: "A slam of sport and subculture."},
+                {link: null, imgSrc: gelcumulusPreview, headline: "Gel-Cumulus 16", info: "Feel Comfort, Find Energy"},
+                {link: null, imgSrc: jordansPreview, headline: "Jordan 1 Chicago SB Dunks", info: "A timless look."}
+            ]} />
         </>
     )
 }

@@ -2,13 +2,16 @@ import Container from "../general/Container"
 import { isVideo } from "../../modules/utils"
 import { useEffect, useRef, useState } from "react"
 import PropTypes from "prop-types"
-import { MissingPropError } from "../../modules/utils"
+import { MissingPropError, InvalidPropTypeError } from "../../modules/utils"
 
 
 function Slider({ slidesData, autoScrollDelay = 5000 }) {
     
     if (slidesData === undefined) {
         throw new MissingPropError("Slider requires the 'slidesData' prop.");
+    }
+    if (!Array.isArray(slidesData)) {
+        throw new InvalidPropTypeError("'slidesData' must be an array.")
     }
 
     const delay = autoScrollDelay
