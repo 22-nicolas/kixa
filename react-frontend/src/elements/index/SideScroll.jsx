@@ -1,5 +1,8 @@
 import PropTypes from "prop-types"
+import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
+import { getProductIdFromSrc } from "../../modules/utils.js"
+import { getProductById } from "../../modules/api.js"
 
 export default function SideScroll({ items }) {
     if (!Array.isArray(items)) {
@@ -7,16 +10,9 @@ export default function SideScroll({ items }) {
         return null
     }
 
-    const itemElements = items.map(({link, imgSrc, headline}, i) => {
+    const itemElements = items.map(({link, imgSrc}, i) => {
         return(
-            <Link key={i} to={link}>
-                <div className="gradient"/>
-                <img src={imgSrc} />
-                <div className="corner-info">
-                    <h1>{headline}</h1>
-                    <button>Shop now</button>
-                </div>
-            </Link>
+            <Item key={i} link={link} imgSrc={imgSrc} />
         )
     })
 
@@ -30,4 +26,35 @@ export default function SideScroll({ items }) {
 }
 SideScroll.PropTypes = {
     items: PropTypes.array.isRequired
+}
+
+function Item({ link, imgSrc }) {
+    
+    const [headline, setHeadline] = useState("")
+
+    useEffect(() => {
+        getHeadline()
+    }, [imgSrc])
+
+    async function getHeadline() {
+        const id = await getProductIdFromSrc(imgSrc)
+        const {name} = await getProductById(id)
+        setHeadline(name)
+        console.log(name)
+    }
+
+    return(
+        <Link to={link}>
+            <div className="gradient"/>
+            <img src={imgSrc} />
+            <div className="corner-info">
+                <h1>{headline}</h1>
+                <button>Shop now</button>
+            </div>
+        </Link>
+    )
+}
+Item.PropTypes = {
+    link: PropTypes.string,
+    imgSrc: PropTypes.string.isRequired
 }

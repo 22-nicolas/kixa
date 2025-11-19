@@ -44,8 +44,8 @@ function Index() {
                 {link: null, imgSrc: jordansPreview, headline: "Jordan 1 Chicago SB Dunks", info: "A timless look."}
             ]} />
             <SideScroll items={[
-                {link: null, imgSrc: predator_elite_sg, headline: "Predator Elite SG"},
-                {link: null, imgSrc: nike_air_max_plus, headline: "Nike Air Max Plus"}
+                {link: null, imgSrc: predator_elite_sg},
+                {link: null, imgSrc: nike_air_max_plus}
             ]} />
         </>
     )

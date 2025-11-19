@@ -1,3 +1,5 @@
+import { getProductData } from "./api";
+
 export function isDescandentOf(parentElement, searchElement) {
     let currentElement = parentElement;
     while (currentElement) {
@@ -16,3 +18,13 @@ export function isImage(src) {
 export function isVideo(src) {
     return /\.(mp4|webm|ogg|mov)$/i.test(src);
 };
+
+export async function getProductIdFromSrc(src) {
+    const products = await getProductData()
+    for (const { id } of products) {
+        if (src.includes(id)) {
+            return id
+        }
+    }
+    return null
+}

@@ -21,7 +21,6 @@ export async function getProductData() {
 export async function  getProductById(id) {
     const response = await fetch(`${API_BASE_URL}/products/${id}`);
     const product = await response.json();
-    console.log(product)
     return product;
 }
 
