@@ -2,7 +2,6 @@ import Container from "../general/Container"
 import { isVideo } from "../../modules/utils"
 import { useEffect, useRef, useState } from "react"
 import PropTypes from "prop-types"
-import { MissingPropError, InvalidPropTypeError } from "../../modules/utils"
 
 
 function Slider({ slidesData, autoScrollDelay = 5000 }) {
