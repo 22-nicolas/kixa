@@ -3,10 +3,9 @@ import Index from "./pages/Index.jsx"
 
 import "./styles/general.css"
 
-
 function App() {
   return (
-    <Router>
+    <Router basename="/kixa">
       <Routes>
         <Route path="/" element={<Index />} />
       </Routes>

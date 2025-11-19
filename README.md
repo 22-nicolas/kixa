@@ -9,4 +9,4 @@ Full stack e-commerce website.
 - [ ] Header category links
 
 ## 🚀 Demo  
-[Live Demo](https://kixa-ecommerce.netlify.app)  
+[Live Demo](https://22-nicolas.github.io/kixa)  
