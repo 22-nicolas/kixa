@@ -40,7 +40,6 @@ function Item({ link, imgSrc }) {
         const id = await getProductIdFromSrc(imgSrc)
         const {name} = await getProductById(id)
         setHeadline(name)
-        console.log(name)
     }
 
     return(
