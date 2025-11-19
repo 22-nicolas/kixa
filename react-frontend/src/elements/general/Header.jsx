@@ -2,12 +2,14 @@ import '../../styles/header.css'
 import PropTypes from 'prop-types'
 import { useState } from 'react'
 import { fireAccountBtnEvent } from '../../modules/AccountBtnEvent.js'
+import { Link } from 'react-router-dom'
 import SearchBar from './Searchbar.jsx'
 
 //images
 import logo from '../../assets/logo.png'
 import cart_icon from '../../assets/cart_icon.png'
 import user_icon from '../../assets/user_icon.png'
+
 
 function Header() {
     //copy and pasted just as placeholders
@@ -42,16 +44,16 @@ function Header() {
 
     return(
         <div className="header">
-            <a href="index.html"><img src={logo} alt="logo" /></a>
+            <Link to="/"><img src={logo} alt="logo" /></Link>
             <div className='header-links-container'>
                 {LinkDropdownElements}
             </div>
             <div className="right-header">
                 <SearchBar/>
-                <a href="cart.html">
+                <Link to="">
                     <p>0</p>
                     <img src={cart_icon} alt="cart icon" />
-                </a>
+                </Link>
                 <div onMouseDown={fireAccountBtnEvent} className="account-btn">
                     <img src={user_icon} alt="user icon" />
                 </div>
