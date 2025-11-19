@@ -24,6 +24,9 @@ import jordansPreview from "../assets/nike_sb.jpg"
 //side scroll
 import predator_elite_sg from "../assets/shoes/predator_elite_sg/predator_elite_sg_1_1.png"
 import nike_air_max_plus from "../assets/shoes/nike_air_max_plus/nike_air_max_plus_1_1.png"
+import adidas_campus from "../assets/shoes/adidas_campus/adidas_campus_1_1.png"
+import japan_lo_brain_dead from "../assets/shoes/japan_lo_brain_dead/japan_lo_brain_dead_1_1.png"
+import nike_air_force from "../assets/shoes/nike_air_force/nike_air_force_1_1.png"
 
 function Index() {
     return(
@@ -45,7 +48,10 @@ function Index() {
             ]} />
             <SideScroll items={[
                 {link: null, imgSrc: predator_elite_sg},
-                {link: null, imgSrc: nike_air_max_plus}
+                {link: null, imgSrc: nike_air_max_plus},
+                {link: null, imgSrc: adidas_campus},
+                {link: null, imgSrc: japan_lo_brain_dead},
+                {link: null, imgSrc: nike_air_force}
             ]} />
         </>
     )
