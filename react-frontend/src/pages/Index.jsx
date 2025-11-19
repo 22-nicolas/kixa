@@ -1,6 +1,7 @@
 //components
 import Header from "../elements/general/Header"
 import LoginPopup from "../elements/general/LoginPopup"
+import Footer from "../elements/general/Footer"
 import Slider from "../elements/index/Slider"
 import Promo from "../elements/index/Promo"
 import ImgLinks from "../elements/index/ImgLinks"
@@ -53,6 +54,8 @@ function Index() {
                 {link: null, imgSrc: japan_lo_brain_dead},
                 {link: null, imgSrc: nike_air_force}
             ]} />
+
+            <Footer/>
         </>
     )
 }
