@@ -1,13 +1,13 @@
 import '../../styles/header.css'
 import PropTypes from 'prop-types'
+import { useState } from 'react'
+import { fireAccountBtnEvent } from '../../modules/AccountBtnEvent.js'
+import SearchBar from './Searchbar.jsx'
 
 //images
 import logo from '../../assets/logo.png'
-import search_icon from '../../assets/search_icon.png'
 import cart_icon from '../../assets/cart_icon.png'
 import user_icon from '../../assets/user_icon.png'
-import { useState } from 'react'
-import { fireAccountBtnEvent } from '../../modules/AccountBtnEvent.js'
 
 function Header() {
     //copy and pasted just as placeholders
@@ -47,10 +47,7 @@ function Header() {
                 {LinkDropdownElements}
             </div>
             <div className="right-header">
-                <div className="search-div">
-                    <img src={search_icon} alt="search icon" />
-                    <input type="text" id="searchbar" enterKeyHint="search" />
-                </div>
+                <SearchBar/>
                 <a href="cart.html">
                     <p>0</p>
                     <img src={cart_icon} alt="cart icon" />
