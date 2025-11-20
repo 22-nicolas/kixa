@@ -188,6 +188,23 @@ p{
     margin-right: 10px;
 }
 
+.pricing p {
+    color: black;
+}
+
+.pricing .separator{
+    margin-left: 1ch;
+    margin-right: 1ch;
+}
+
+.pricing .text{
+    display: flex; align-items: center; justify-content: space-between;
+}
+
+.pricing .num-inputs{
+    display: flex; align-items: center; justify-content: center;
+}
+
 .pricing button{
     color: white;
     text-decoration: none;
