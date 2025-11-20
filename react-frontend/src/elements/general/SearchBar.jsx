@@ -19,8 +19,6 @@ export default function SearchBar() {
         
     
         navigate("/search?" + params)
-        //window.history.replaceState({}, "", "/search?" + params);
-        //window.location.pathname = "/search?" + params
     }
 
     return(

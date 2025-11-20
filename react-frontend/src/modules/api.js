@@ -1,6 +1,6 @@
 let API_BASE_URL;
 
-if (window.location.hostname === "127.0.0.1") {
+if (window.location.hostname === "localhost") {
     API_BASE_URL = "http://localhost:3000/api"
 } else {
     API_BASE_URL = "https://kixa-production.up.railway.app/api"
