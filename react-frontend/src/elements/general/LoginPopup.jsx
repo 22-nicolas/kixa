@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { suscribeToAccountBtn } from "../../modules/AccountBtnEvent";
+import { suscribeToAccountBtn, unSuscribe } from "../../modules/AccountBtnEvent";
 import { isDescandentOf } from "../../modules/utils";
 
 
@@ -11,6 +11,7 @@ function LoginPopup() {
     
     useEffect(() => {
         suscribeToAccountBtn(toggleIsOpen);
+        return () => unSuscribe(toggleIsOpen)
     }, []);
 
     useEffect(() => {
