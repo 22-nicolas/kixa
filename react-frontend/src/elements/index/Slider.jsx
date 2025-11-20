@@ -28,6 +28,7 @@ function Slider({ slidesData, autoScrollDelay = 5000 }) {
         matchWidth()
         start()
         window.addEventListener('resize', matchWidth);
+        return () => clearInterval(sliderInterval.current);
     }, [])
     
     useEffect(() => {
