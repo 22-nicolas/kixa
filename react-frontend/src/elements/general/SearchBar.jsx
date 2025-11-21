@@ -10,12 +10,6 @@ export default function SearchBar() {
         if (e.key !== "Enter") return
         const params = new URLSearchParams(window.location.search)
         params.set("searchText", searchbar.current.value) 
-        
-        //if user is on search.html additional filters get passed
-        if (window.location.pathname.includes("search")) {
-            // TODO: pass additional filters 
-        }
-        
 
         navigate("/search?" + params)
     }
