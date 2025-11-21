@@ -12,7 +12,7 @@ export default function SearchBar() {
         const params = new URLSearchParams(window.location.search)
         const searchText = params.get("searchText")
         
-        searchbar.value = searchText
+        searchbar.current.value = searchText
     }
     
     function search() {
