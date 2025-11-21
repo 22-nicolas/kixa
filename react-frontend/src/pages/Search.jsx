@@ -7,13 +7,7 @@ import Pricing from "../elements/search/Pricing"
 import "../styles/search.css"
 
 function Search() {
-    useEffect(() => {
-        const params = new URLSearchParams(window.location.search)
-        const searchText = params.get("searchText")
-        const searchbar = document.getElementById("searchbar")
-        
-        searchbar.value = searchText
-    }, [])
+    
 
     return(
         <>
