@@ -1,4 +1,5 @@
 import { useRef } from "react"
+import { useNavigate } from "react-router-dom"
 
 export default function Pricing() {
     const minSlider = useRef()
@@ -6,6 +7,7 @@ export default function Pricing() {
     const minNum = useRef()
     const maxNum = useRef()
     const range = useRef()
+    const navigate = useNavigate()
     //TODO: fix wierd behaviour when inputing number values
     function updateRange() {
         
@@ -37,6 +39,14 @@ export default function Pricing() {
         updateRange()
     }
 
+    function applyPricing() {
+        const params = new URLSearchParams(window.location.search)
+        params.set("max", minSlider.current.value) 
+        params.set("min", maxSlider.current.value)
+
+        navigate("/search?" + params)
+    }
+
     return(
         <div className="pricing">
             <div className="text">
@@ -59,7 +69,7 @@ export default function Pricing() {
                 <input type="range" min="0" max="500" defaultValue="500" className="backslider"/>
                 <div ref={range} className="range" id="range"></div>
             </div>
-            <button className="apply-button">Apply</button>
+            <button className="apply-button" onClick={applyPricing}>Apply</button>
         </div>
     )
 }
