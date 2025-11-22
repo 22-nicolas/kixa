@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { useState } from 'react'
 import { fireAccountBtnEvent } from '../../modules/AccountBtnEvent.js'
 import { Link } from 'react-router-dom'
-import SearchBar from './Searchbar.jsx'
+import SearchBar from './SearchBar.jsx'
 
 //images
 import logo from '../../assets/logo.png'
