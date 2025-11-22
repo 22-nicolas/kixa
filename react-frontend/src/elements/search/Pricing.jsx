@@ -55,6 +55,8 @@ export default function Pricing() {
         const min = params.get("min")
         const max = params.get("max")
         
+        if (!min || !max) return
+
         minNum.current.value = min
         maxNum.current.value = max
 
