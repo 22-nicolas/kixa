@@ -38,7 +38,7 @@ Brand.PropTypes = {
 
 const BrandSelector = forwardRef(function brandSelector({ brand, onChange }, ref) {
     const stringBrand = string(brand)
-    console.log(stringBrand)
+    //console.log(stringBrand)
     return(
         <label ref={ref} data-brand={brand} htmlFor={stringBrand} onChange={onChange}>
             <span className="custom-checkbox"><input type="checkbox" id={stringBrand}/><img src={check}/></span>

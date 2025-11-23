@@ -79,6 +79,14 @@
     height: 100vh;
 }
 
+.item .img-container {
+    display: flex;
+    align-items:center;
+    justify-content:center;
+    aspect-ratio: 1/1;
+    overflow: hidden;
+}
+
 .item img {
     width: 100%;
     object-fit: contain;
