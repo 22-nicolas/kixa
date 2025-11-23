@@ -14,7 +14,7 @@ export default function Color({ colors }) {
         let activeColors = ""
         colorSelectors.current.forEach((selector) => {
             if (selector.querySelector("input").checked) {
-                activeColors += selector.dataset.color
+                activeColors += selector.dataset.color + "a"
             }
         })
 
