@@ -23,14 +23,20 @@ export default function SearchBar() {
     }
 
     function handleKey(e) {
-        if (e.key !== "Enter") return
-        search()
+        if (window.location.pathname.includes("search")) {
+            console.log(searchbar.current.value)
+            search()
+        } else {
+            if (e.key !== "Enter") return
+            search() 
+        }
+        
     }
 
     return(
         <div className="search-div">
             <img src={search_icon} alt="search icon" />
-            <input onKeyDown={handleKey} ref={searchbar} type="text" id="searchbar" enterKeyHint="search" />
+            <input onKeyUp={handleKey} ref={searchbar} type="text" id="searchbar" enterKeyHint="search" />
         </div>
     )
 }
