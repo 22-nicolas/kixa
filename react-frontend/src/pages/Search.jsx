@@ -5,8 +5,10 @@ import LoginPopup from "../elements/general/LoginPopup"
 import Container from "../elements/general/Container"
 import Pricing from "../elements/search/Pricing"
 import Color from "../elements/search/Color"
+import Brand from "../elements/search/Brand"
 import "../styles/search.css"
 import { Colors } from "../modules/colors"
+import { Brands } from "../modules/brands"
 
 function Search() {
     
@@ -21,6 +23,7 @@ function Search() {
                     <div className="filters">
                         <Pricing/>
                         <Color colors={Colors}/>
+                        <Brand brands={Brands} />
                     </div>
                     <div></div>
                 </div>
