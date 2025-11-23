@@ -18,8 +18,6 @@ export default function Color({ colors }) {
             }
         })
 
-        if (activeColors.length === 0) return
-
         const params = new URLSearchParams(window.location.search)
         params.set("colors", activeColors) 
 
