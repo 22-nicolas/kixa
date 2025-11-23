@@ -107,6 +107,10 @@
     cursor: pointer;
 }
 
+.item.hidden {
+    display: none;
+}
+
 .href{
     text-decoration: none;
     transition: 200ms;

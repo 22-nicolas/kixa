@@ -44,8 +44,8 @@ export default function Pricing() {
 
     function applyPricing() {
         const params = new URLSearchParams(window.location.search)
-        params.set("max", minSlider.current.value) 
-        params.set("min", maxSlider.current.value)
+        params.set("min", minSlider.current.value) 
+        params.set("max", maxSlider.current.value)
 
         navigate("/search?" + params)
     }
