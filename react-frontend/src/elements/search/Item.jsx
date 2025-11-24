@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, forwardRef } from "react"
 import { useSearchParams } from "react-router-dom"
 import { format } from "../../../../old-frontend/scripts/utils/utils"
 
+const shoeAssetsPath = "public/shoes"
 
 export default function Item({ itemData }) {
 
@@ -11,19 +12,15 @@ export default function Item({ itemData }) {
     const colorwaySelectors = useRef([])
     const [activeColorway, setActiveColorway] = useState()
 
-    const shoeAssetsPath = "public/shoes"
-
-    const colorways = Array.from({ length: variants }).map((_, i) => 
-    <div key={i} ref={el => colorwaySelectors.current[i] = el} className="color-way" data-color={i} onClick={() => setColorway(i)}>
-        <img src={`${shoeAssetsPath}/${id}/${id}_${i+1}_1.png`}/>
-    </div>)
+    const colorways = Array.from({ length: variants }).map((_, i) => <ColorwaySelector key={i} i={i} ref={el => colorwaySelectors.current[i] = el} id={id} onClick={setColorway}/>)
     
     useEffect(() => {
         const params = getParams()
         
-        //console.log({searchText: searchText, min: min, max: max, colors: activeColors, brands: activeBrands})
-        setVisible(matchParamsWithData(params))
-        setColorway(0)
+        const isVisible = matchParamsWithData(params)
+        setVisible(isVisible)
+        
+        setColorway(0) //set first colorway as default
     }, [searchParams])
 
     function matchParamsWithData(params) {
@@ -44,12 +41,14 @@ export default function Item({ itemData }) {
     }
 
     function getParams() {
+        //get params
         const searchText = searchParams.get("searchText")
         const min = searchParams.get("min")
         const max = searchParams.get("max")
         let colors = searchParams.get("colors")
         let brands = searchParams.get("brands")
         
+        //format
         if (colors) {
             colors = colors.split("a")
             colors.pop() //due to the separator being after every color the last entry of the array will be: "" => remove that
@@ -87,3 +86,11 @@ export default function Item({ itemData }) {
         </div>
     )
 }
+
+const ColorwaySelector = forwardRef(function ColorwaySelector({ i, onClick, id }, ref) {
+    return(
+        <div ref={ref} className="color-way" data-color={i} onClick={() => onClick(i)}>
+            <img src={`${shoeAssetsPath}/${id}/${id}_${i+1}_1.png`}/>
+        </div>
+    )
+})
