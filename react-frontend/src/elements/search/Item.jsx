@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useSearchParams } from "react-router-dom"
 import { format } from "../../../../old-frontend/scripts/utils/utils"
 
@@ -8,22 +8,22 @@ export default function Item({ itemData }) {
     const [searchParams] = useSearchParams()
     const [visible, setVisible] = useState(true)
     const {id, name, price, colors, brand, sizes, description, variants} = itemData
+    const colorwaySelectors = useRef([])
+    const [activeColorway, setActiveColorway] = useState()
 
     const shoeAssetsPath = "public/shoes"
 
     const colorways = Array.from({ length: variants }).map((_, i) => 
-    <div key={i} className="color-way" data-color={i}>
+    <div key={i} ref={el => colorwaySelectors.current[i] = el} className="color-way" data-color={i} onClick={() => setColorway(i)}>
         <img src={`${shoeAssetsPath}/${id}/${id}_${i+1}_1.png`}/>
     </div>)
-    
-    
     
     useEffect(() => {
         const params = getParams()
         
         //console.log({searchText: searchText, min: min, max: max, colors: activeColors, brands: activeBrands})
         setVisible(matchParamsWithData(params))
-
+        setColorway(0)
     }, [searchParams])
 
     function matchParamsWithData(params) {
@@ -62,17 +62,27 @@ export default function Item({ itemData }) {
         return {searchText: searchText, min: min, max: max, activeColors: colors, activeBrands: brands}
     }
 
+    function setColorway(color) {
+        //deselect all other selectors
+        colorwaySelectors.current.forEach(selector => {
+            selector.classList.remove('active')
+        });
+
+        colorwaySelectors.current[color].classList.add('active')
+        setActiveColorway(color + 1) //file colorway denumeration starts at 1 => +1
+    }
+
     return(
         <div className={visible ? "item" : "item hidden"} id={id}>
             <div className="href">
                 <div className="img-container">
-                    <img className="item-img" src={`${shoeAssetsPath}/${id}/${id}_1_1.png`}/>
+                    <img className="item-img" src={`${shoeAssetsPath}/${id}/${id}_${activeColorway}_1.png`}/>
                 </div>
                 <p className="name">{name}</p>
                 <p className="price">{price}$</p>
             </div>
             <div className="color-ways">
-                 {colorways}
+                {colorways}
             </div>
         </div>
     )
