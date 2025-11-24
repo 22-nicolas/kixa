@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState, forwardRef } from "react"
 import { useSearchParams } from "react-router-dom"
 import { format } from "../../../../old-frontend/scripts/utils/utils"
-
-const shoeAssetsPath = "public/shoes"
+import { shoeAssetsPath } from "../../modules/utils"
 
 export default function Item({ itemData }) {
 
@@ -19,7 +18,7 @@ export default function Item({ itemData }) {
         
         const isVisible = matchParamsWithData(params)
         setVisible(isVisible)
-        
+
         setColorway(0) //set first colorway as default
     }, [searchParams])
 
