@@ -1,6 +1,6 @@
 import { getProductData } from "./api";
 
-export const shoeAssetsPath = "public/shoes"
+export const shoeAssetsPath = "shoes"
 
 export function isDescandentOf(parentElement, searchElement) {
     let currentElement = parentElement;
