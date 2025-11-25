@@ -50,11 +50,9 @@ export default function Item({ itemData }) {
         //format
         if (colors) {
             colors = colors.split("a")
-            colors.pop() //due to the separator being after every color the last entry of the array will be: "" => remove that
         }
         if (brands) {
             brands = brands.split("a")
-            brands.pop() //due to the separator being after every color the last entry of the array will be: "" => remove that
         }
         
         return {searchText: searchText, min: min, max: max, activeColors: colors, activeBrands: brands}
