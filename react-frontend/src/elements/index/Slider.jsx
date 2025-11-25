@@ -78,6 +78,12 @@ function Slider({ slidesData, autoScrollDelay = 5000 }) {
     }
 
     function matchWidth() {
+        //disconnect if slider doesn't exist
+        if (!slider.current) {
+            window.removeEventListener("resize", matchWidth)
+            return
+        }
+
         for (let i = 0; i < contents.current.length; i++) {
             contents.current[i].style.width = slider.current.offsetWidth + 'px';
         }
