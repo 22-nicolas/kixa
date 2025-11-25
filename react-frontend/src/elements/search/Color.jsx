@@ -24,6 +24,10 @@ export default function Color({ colors }) {
         navigate("/search?" + params)
     }
 
+    function reapplyColors() {
+        
+    }
+
     return(
         <div className="color">
             <h1>Color</h1>

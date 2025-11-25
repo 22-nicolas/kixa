@@ -1,29 +1,53 @@
-import { useEffect, useRef, forwardRef } from "react"
+import { useEffect, useState } from "react"
+import { useSearchParams } from "react-router-dom"
 import PropTypes from "prop-types"
 import { useNavigate } from "react-router-dom"
-import { Brands, string } from "../../modules/brands.js"
 import check from "../../assets/check.png"
 
 export default function Brand({ brands }) {
 
-    brands = Object.entries(brands)
-    const brandSelectors = useRef([])
-    const brandSelectorsComponents = brands.map(brand => <BrandSelector key={brand[1]} ref={el => brandSelectors.current[brand[1]] = el} brand={brand[1]} onChange={applyBrands}/>)
+    const [activeBrands, setActiveBrands] = useState([])
+    const [searchParams] = useSearchParams()
     const navigate = useNavigate()
 
-    function applyBrands() {
-        let activeBrands = ""
-        brandSelectors.current.forEach((selector) => {
-            if (selector.querySelector("input").checked) {
-                activeBrands += selector.dataset.brand + "a"
-            }
+    brands = Object.entries(brands)
+    const brandSelectorsComponents = brands.map(brand => {
+        const brandId = brand[1]
+        const brandName = brand[0]
+        return <BrandSelector
+                    key={brandId}
+                    brandName={brandName}
+                    brandId={brandId}
+                    activeBrands={activeBrands}
+                    onChange={(e) => applyBrands(brandId, e.target.checked)}
+                />
+    })
+
+    useEffect(() => {
+        reapplyBrands()
+    }, [searchParams])
+
+    useEffect(() => {
+        //forward searchParams
+        searchParams.set("brands", activeBrands.join("a")) 
+        navigate("/search?" + searchParams)
+    }, [activeBrands])
+
+    function applyBrands(brandId, checked) {
+        setActiveBrands(prev =>{
+            if (checked) return [...prev, brandId] //add brandId
+            return prev.filter(id => id !== String(brandId)) //remove brandId
         })
+    }
 
+    function reapplyBrands() {
+        let brands = searchParams.get("brands")
+        
+        if (!brands) return
 
-        const params = new URLSearchParams(window.location.search)
-        params.set("brands", activeBrands) 
+        brands = brands.split("a")
 
-        navigate("/search?" + params)
+        setActiveBrands(brands)
     }
 
     return(
@@ -36,16 +60,15 @@ Brand.PropTypes = {
     brands: PropTypes.object.isRequired
 }
 
-const BrandSelector = forwardRef(function brandSelector({ brand, onChange }, ref) {
-    const stringBrand = string(brand)
-    //console.log(stringBrand)
+function BrandSelector({ brandId, brandName, onChange, activeBrands }) {
+    const isActive = activeBrands.includes(String(brandId))
     return(
-        <label ref={ref} data-brand={brand} htmlFor={stringBrand} onChange={onChange}>
-            <span className="custom-checkbox"><input type="checkbox" id={stringBrand}/><img src={check}/></span>
-            <p>{stringBrand}</p>
+        <label htmlFor={brandName}>
+            <span className="custom-checkbox"><input type="checkbox" id={brandName} checked={isActive} onChange={onChange}/><img src={check}/></span>
+            <p>{brandName}</p>
         </label>
     )
-})
+}
 BrandSelector.PropTypes = {
     brand: PropTypes.number.isRequired,
     onChange: PropTypes.func.isRequired
