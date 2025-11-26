@@ -31,10 +31,8 @@ export default function Color({ colors }) {
     }, [activeColors])
 
     function applyColors(colorId, checked) {
-        console.log(checked)
         setActiveColors(prev =>{
             if (checked) return [...prev, colorId] //add colorId
-            console.log({prev: prev, colorId: colorId})
             return prev.filter(id => id !== String(colorId)) //remove colorId
         })
     }

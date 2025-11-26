@@ -24,7 +24,6 @@ export default function SearchBar() {
 
     function handleKey(e) {
         if (window.location.pathname.includes("search")) {
-            console.log(searchbar.current.value)
             search()
         } else {
             if (e.key !== "Enter") return
