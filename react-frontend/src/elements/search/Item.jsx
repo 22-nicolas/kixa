@@ -1,25 +1,30 @@
-import { useEffect, useRef, useState, forwardRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useSearchParams } from "react-router-dom"
 import { format } from "../../../../old-frontend/scripts/utils/utils"
 import { shoeAssetsPath } from "../../modules/utils"
+import { string } from "../../modules/colors"
 
 export default function Item({ itemData }) {
 
     const [searchParams] = useSearchParams()
     const [visible, setVisible] = useState(true)
-    const {id, name, price, colors, brand, sizes, description, variants} = itemData
+    const {id, name, price, colors, brand, variants} = itemData
     const colorwaySelectors = useRef([])
-    const [activeColorway, setActiveColorway] = useState()
+    const [colorway, setColorway] = useState(colors[0])
+    const colorwayId = colors.findIndex(color => color == colorway) + 1
 
-    const colorways = Array.from({ length: variants }).map((_, i) => <ColorwaySelector key={i} i={i} ref={el => colorwaySelectors.current[i] = el} id={id} onClick={setColorway}/>)
+    const colorways = Array.from({ length: variants }).map((_, i) => <ColorwaySelector
+                                                                        key={i}
+                                                                        i={i}
+                                                                        color={colors[i]}
+                                                                        id={id} colorway={colorway}
+                                                                        onClick={setColorway}/>)
     
     useEffect(() => {
         const params = getParams()
         
         const isVisible = matchParamsWithData(params)
         setVisible(isVisible)
-
-        setColorway(0) //set first colorway as default
     }, [searchParams])
 
     function matchParamsWithData(params) {
@@ -58,21 +63,11 @@ export default function Item({ itemData }) {
         return {searchText: searchText, min: min, max: max, activeColors: colors, activeBrands: brands}
     }
 
-    function setColorway(color) {
-        //deselect all other selectors
-        colorwaySelectors.current.forEach(selector => {
-            selector.classList.remove('active')
-        });
-
-        colorwaySelectors.current[color].classList.add('active')
-        setActiveColorway(color + 1) //file colorway denumeration starts at 1 => +1
-    }
-
     return(
         <div className={visible ? "item" : "item hidden"} id={id}>
             <div className="href">
                 <div className="img-container">
-                    <img className="item-img" src={`${shoeAssetsPath}/${id}/${id}_${activeColorway}_1.png`}/>
+                    <img className="item-img" src={`${shoeAssetsPath}/${id}/${id}_${colorwayId}_1.png`} alt={name} />
                 </div>
                 <p className="name">{name}</p>
                 <p className="price">{price}$</p>
@@ -84,10 +79,10 @@ export default function Item({ itemData }) {
     )
 }
 
-const ColorwaySelector = forwardRef(function ColorwaySelector({ i, onClick, id }, ref) {
+function ColorwaySelector({ i, color, onClick, id, colorway }) {
     return(
-        <div ref={ref} className="color-way" data-color={i} onClick={() => onClick(i)}>
-            <img src={`${shoeAssetsPath}/${id}/${id}_${i+1}_1.png`}/>
+        <div className={(color == colorway) ? "color-way active" : "color-way"} data-color={color} onClick={() => onClick(color)}>
+            <img src={`${shoeAssetsPath}/${id}/${id}_${i+1}_1.png`} alt={"colorway " + string(color)}/>
         </div>
     )
-})
+}
