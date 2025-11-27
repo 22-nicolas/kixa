@@ -10,14 +10,15 @@ export default function Item({ itemData }) {
     const [visible, setVisible] = useState(true)
     const {id, name, price, colors, brand, variants} = itemData
     const colorwaySelectors = useRef([])
-    const [colorway, setColorway] = useState(colors[0])
-    const colorwayId = colors.findIndex(color => color == colorway) + 1
+    const [colorway, setColorway] = useState({selectorIndex: 0, colorId: colors[0]})
+    //const colorIndex = colors.findIndex(color => color == colorway) + 1
 
     const colorways = Array.from({ length: variants }).map((_, i) => <ColorwaySelector
                                                                         key={i}
                                                                         i={i}
                                                                         color={colors[i]}
-                                                                        id={id} colorway={colorway}
+                                                                        id={id}
+                                                                        colorway={colorway}
                                                                         onClick={setColorway}/>)
     
     useEffect(() => {
@@ -67,7 +68,7 @@ export default function Item({ itemData }) {
         <div className={visible ? "item" : "item hidden"} id={id}>
             <div className="href">
                 <div className="img-container">
-                    <img className="item-img" src={`${shoeAssetsPath}/${id}/${id}_${colorwayId}_1.png`} alt={name} />
+                    <img className="item-img" src={`${shoeAssetsPath}/${id}/${id}_${colorway.selectorIndex + 1}_1.png`} alt={name} />
                 </div>
                 <p className="name">{name}</p>
                 <p className="price">{price}$</p>
@@ -81,7 +82,7 @@ export default function Item({ itemData }) {
 
 function ColorwaySelector({ i, color, onClick, id, colorway }) {
     return(
-        <div className={(color == colorway) ? "color-way active" : "color-way"} data-color={color} onClick={() => onClick(color)}>
+        <div className={(i == colorway.selectorIndex) ? "color-way active" : "color-way"} data-color={color} onClick={() => onClick({selectorIndex: i, colorId: colorway})}>
             <img src={`${shoeAssetsPath}/${id}/${id}_${i+1}_1.png`} alt={"colorway " + string(color)}/>
         </div>
     )
