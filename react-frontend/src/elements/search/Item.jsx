@@ -9,23 +9,23 @@ export default function Item({ itemData }) {
     const [searchParams] = useSearchParams()
     const [visible, setVisible] = useState(true)
     const {id, name, price, colors, brand, variants} = itemData
-    const colorwaySelectors = useRef([])
     const [colorway, setColorway] = useState({selectorIndex: 0, colorId: colors[0]})
-    //const colorIndex = colors.findIndex(color => color == colorway) + 1
-
-    const colorways = Array.from({ length: variants }).map((_, i) => <ColorwaySelector
-                                                                        key={i}
-                                                                        i={i}
-                                                                        color={colors[i]}
-                                                                        id={id}
-                                                                        colorway={colorway}
-                                                                        onClick={setColorway}/>)
+    const colorways = colors.map((colorId, selectorIndex) => <ColorwaySelector
+                                                key={selectorIndex}
+                                                selectorIndex={selectorIndex}
+                                                color={colorId}
+                                                id={id}
+                                                colorway={colorway}
+                                                onClick={setColorway}/>)
     
     useEffect(() => {
         const params = getParams()
         
         const isVisible = matchParamsWithData(params)
         setVisible(isVisible)
+        if (!isVisible) return
+
+        selectSearchedColorway(params)
     }, [searchParams])
 
     function matchParamsWithData(params) {
@@ -43,6 +43,19 @@ export default function Item({ itemData }) {
         
         if (activeBrands && !activeBrands.includes(String(brand))) return false
         return true
+    }
+
+    function selectSearchedColorway(params) {
+        if (params.activeColors.length === 0) {
+            setColorway({selectorIndex: 0, colorId: colors[0]});
+        } else {
+            for (let i = 0; i < variants; i++) {
+                if (params.activeColors.includes(String(colors[i]))) { 
+                    setColorway({selectorIndex: i, colorId: colors[i]});
+                    return
+                }
+            }
+        }
     }
 
     function getParams() {
@@ -80,10 +93,10 @@ export default function Item({ itemData }) {
     )
 }
 
-function ColorwaySelector({ i, color, onClick, id, colorway }) {
+function ColorwaySelector({ selectorIndex, colorId, onClick, id, colorway }) {
     return(
-        <div className={(i == colorway.selectorIndex) ? "color-way active" : "color-way"} data-color={color} onClick={() => onClick({selectorIndex: i, colorId: colorway})}>
-            <img src={`${shoeAssetsPath}/${id}/${id}_${i+1}_1.png`} alt={"colorway " + string(color)}/>
+        <div className={(selectorIndex == colorway.selectorIndex) ? "color-way active" : "color-way"} onClick={() => onClick({selectorIndex: selectorIndex, colorId: colorId})}>
+            <img src={`${shoeAssetsPath}/${id}/${id}_${selectorIndex+1}_1.png`} alt={"colorway " + string(colorId)}/>
         </div>
     )
 }
