@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react"
-import { useSearchParams } from "react-router-dom"
+import { useEffect, useState } from "react"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import { format } from "../../../../old-frontend/scripts/utils/utils"
 import { shoeAssetsPath } from "../../modules/utils"
 import { string } from "../../modules/colors"
@@ -7,6 +7,7 @@ import { string } from "../../modules/colors"
 export default function Item({ itemData }) {
 
     const [searchParams] = useSearchParams()
+    const navigate = useNavigate()
     const [visible, setVisible] = useState(true)
     const {id, name, price, colors, brand, variants} = itemData
     const [colorway, setColorway] = useState({selectorIndex: 0, colorId: colors[0]})
@@ -77,9 +78,16 @@ export default function Item({ itemData }) {
         return {searchText: searchText, min: min, max: max, activeColors: colors, activeBrands: brands}
     }
 
+    function redirect() {
+        const params = new URLSearchParams
+        params.set("id", id)
+        params.set("c", colorway.selectorIndex)
+        navigate("/item?" + params)
+    }
+
     return(
         <div className={visible ? "item" : "item hidden"} id={id}>
-            <div className="href">
+            <div className="href" onClick={redirect}>
                 <div className="img-container">
                     <img className="item-img" src={`${shoeAssetsPath}/${id}/${id}_${colorway.selectorIndex + 1}_1.png`} alt={name} />
                 </div>
