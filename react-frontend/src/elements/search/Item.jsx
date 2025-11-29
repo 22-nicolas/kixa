@@ -47,7 +47,7 @@ export default function Item({ itemData }) {
     }
 
     function selectSearchedColorway(params) {
-        if (params.activeColors.length === 0) {
+        if (!params.activeColors) {
             setColorway({selectorIndex: 0, colorId: colors[0]});
         } else {
             for (let i = 0; i < variants; i++) {
