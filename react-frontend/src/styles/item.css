@@ -26,6 +26,13 @@ h1 {
     grid-template-rows: 68vh 80px;
 }
 
+.slider-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
 .slider{
     overflow: hidden;
     position: relative;
