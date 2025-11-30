@@ -8,8 +8,7 @@ import Header from "../elements/general/Header"
 import LoginPopup from "../elements/general/LoginPopup"
 import Footer from "../elements/general/Footer"
 
-import "../styles/item.css"
-
+import styles from "../styles/item.module.css"
 
 export const ItemDataContext = createContext()
 
@@ -35,7 +34,7 @@ export default function Item() {
 
             <Container>
                 <ItemDataContext value={itemData}>
-                    <div className="product-container">
+                    <div className={styles.productContainer}>
                         <ItemView></ItemView>
                         <div>wads</div>
                     </div>

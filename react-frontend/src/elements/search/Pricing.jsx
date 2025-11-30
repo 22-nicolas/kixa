@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
+import styles from "../../styles/search.module.css"
 
 export default function Pricing() {
     const minSlider = useRef()
@@ -64,28 +65,28 @@ export default function Pricing() {
     }
 
     return(
-        <div className="pricing">
-            <div className="text">
+        <div className={styles.pricing}>
+            <div className={styles.text}>
                 <h1>Price</h1>
-                <div className="num-inputs">
-                    <div className="price-input">
+                <div className={styles.numInputs}>
+                    <div className={styles.priceInput}>
                         <p>€</p>
-                        <input ref={minNum} type="number" id="minNum" min="0" max="170" defaultValue="0" onChange={updatSliders} className="minNum"/>
+                        <input ref={minNum} type="number" id="minNum" min="0" max="170" defaultValue="0" onChange={updatSliders} className={styles.minNum}/>
                     </div>
-                    <p className="separator">-</p>
-                    <div className="price-input">
+                    <p className={styles.separator}>-</p>
+                    <div className={styles.priceInput}>
                         <p>€</p>
-                        <input ref={maxNum} type="number" id="maxNum" min="0" max="170" defaultValue="500" onChange={updatSliders} className="maxNum"/>
+                        <input ref={maxNum} type="number" id="maxNum" min="0" max="170" defaultValue="500" onChange={updatSliders} className={styles.maxNum}/>
                     </div>
                 </div>
             </div>
-            <div className="range-slider">
-                <input ref={minSlider} type="range" id="min" min="0" max="500" defaultValue="0" onChange={updateRange} className="min"/>
-                <input ref={maxSlider} type="range" id="max" min="0" max="500" defaultValue="500" onChange={updateRange} className="max"/>
-                <input type="range" min="0" max="500" defaultValue="500" className="backslider"/>
-                <div ref={range} className="range" id="range"></div>
+            <div className={styles.rangeSlider}>
+                <input ref={minSlider} type="range" id="min" min="0" max="500" defaultValue="0" onChange={updateRange} className={styles.min}/>
+                <input ref={maxSlider} type="range" id="max" min="0" max="500" defaultValue="500" onChange={updateRange} className={styles.max}/>
+                <input type="range" min="0" max="500" defaultValue="500" className={styles.backslider}/>
+                <div ref={range} className={styles.range} id="range"></div>
             </div>
-            <button className="apply-button" onClick={applyPricing}>Apply</button>
+            <button className={styles.applyButton} onClick={applyPricing}>Apply</button>
         </div>
     )
 }

@@ -1,6 +1,7 @@
 import Container from "../general/Container"
 import PropTypes from "prop-types"
 import { Link } from "react-router-dom"
+import styles from "../../styles/index.module.css"
 
 export default function ImgLinks({ linksData }) {
     if (!Array.isArray(linksData)) {
@@ -12,7 +13,7 @@ export default function ImgLinks({ linksData }) {
         return(
             <Link key={i} to={link}>
                 <img src={imgSrc}/>
-                <div className="corner-info">
+                <div className={styles.cornerInfo}>
                     <p>{info}</p>
                     <h1>{headline}</h1>
                     <button>Shop now</button>
@@ -23,7 +24,7 @@ export default function ImgLinks({ linksData }) {
 
     return(
         <Container>
-            <div className="img-links">
+            <div className={styles.imgLinks}>
                 {links}
             </div>
         </Container>

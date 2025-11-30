@@ -1,6 +1,7 @@
 import PropTypes from "prop-types"
 import { Link } from "react-router-dom"
 import { isImage } from "../../modules/utils"
+import styles from "../../styles/index.module.css"
 
 function Promo({ headline, info, buttonLabel = "Shop now", imgSrc, link }) {
     if (!isImage(imgSrc)) {
@@ -9,9 +10,9 @@ function Promo({ headline, info, buttonLabel = "Shop now", imgSrc, link }) {
     }
 
     return(
-        <Link className="promo" to={link}>
+        <Link className={styles.promo} to={link}>
             <img src={imgSrc} alt={headline} />
-            <div className="corner-info">
+            <div className={styles.cornerInfo}>
                 <p>{info}</p>
                 <h1>{headline}</h1>
                 <button>{buttonLabel}</button>

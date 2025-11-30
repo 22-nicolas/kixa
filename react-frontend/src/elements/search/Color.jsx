@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import PropTypes from "prop-types"
 import { useNavigate, useSearchParams } from "react-router-dom"
+import styles from "../../styles/search.module.css"
 
 export default function Color({ colors }) {
 
@@ -48,9 +49,9 @@ export default function Color({ colors }) {
     }
 
     return(
-        <div className="color">
+        <div className={styles.color}>
             <h1>Color</h1>
-            <div className="color-selectors">
+            <div className={styles.colorSelectors}>
                 {colorSelectorsComponents}
             </div>
         </div>

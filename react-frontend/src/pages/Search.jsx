@@ -7,10 +7,10 @@ import Pricing from "../elements/search/Pricing"
 import Color from "../elements/search/Color"
 import Brand from "../elements/search/Brand"
 import Item from "../elements/search/Item"
-import "../styles/search.css"
 import { Colors } from "../modules/colors"
 import { Brands } from "../modules/brands"
 import { getProductData } from "../modules/api"
+import styles from "../styles/search.module.css"
 
 function Search() {
     const [itemsData, setItemsData] = useState([])
@@ -36,17 +36,17 @@ function Search() {
             <LoginPopup/>
 
             <Container>
-                <div className="search-ui">
-                    <div className="filters">
+                <div className={styles.searchUi}>
+                    <div className={styles.filters}>
                         <Pricing/>
                         <Color colors={Colors}/>
                         <Brand brands={Brands} />
                     </div>
                     <div>
-                        <div className="item-header">
+                        <div className={styles.itemHeader}>
 
                         </div>
-                        <div className="item-container">
+                        <div className={styles.itemContainer}>
                             {items}
                         </div>
                     </div>

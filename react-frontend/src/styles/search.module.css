@@ -1,9 +1,9 @@
-.search-ui{
+.searchUi{
     display: grid;
     grid-template-columns: 15vw 1fr;
 }
 
-.item-header{
+.itemHeader{
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -70,7 +70,7 @@
 
 
 
-.item-container{
+.itemContainer{
     z-index: 4;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -79,7 +79,7 @@
     height: 100vh;
 }
 
-.item .img-container {
+.item .imgContainer {
     display: flex;
     align-items:center;
     justify-content:center;
@@ -93,7 +93,7 @@
 }
 
 /*@media (min-width: 1080px) {
-    .item-container {
+    .itemContainer {
         grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     }
 }*/
@@ -107,7 +107,7 @@
     cursor: pointer;
 }
 
-.item.hidden {
+.hidden {
     display: none;
 }
 
@@ -120,13 +120,13 @@
     transform: scale(1.02);
 }
 
-.color-ways{
+.colorways{
     display: flex;
     align-items: center;
     justify-content: left;
 }
 
-.color-way{
+.colorway{
     width: 20%;
     aspect-ratio: 1/1;
     overflow: hidden;
@@ -140,16 +140,16 @@
     transition: 200ms;
 }
 
-.color-way:hover {
+.colorway:hover {
     outline: 1px rgba(128, 128, 128, 0.397) solid;
 }
 
-.color-way img {
+.colorway img {
     width: 100%;
     cursor: pointer;
 }
 
-.color-way.active{
+.active{
     outline: 3px rgba(128, 128, 128, 0.397) solid;
 }
 
@@ -213,7 +213,7 @@ p{
     display: flex; align-items: center; justify-content: space-between;
 }
 
-.pricing .num-inputs{
+.pricing .numInputs{
     display: flex; align-items: center; justify-content: center;
 }
 
@@ -239,7 +239,7 @@ p{
     
 }
 
-.color-selectors{
+.colorSelectors{
     display: flex;
     align-items: center;
     justify-content: left;
@@ -266,7 +266,7 @@ p{
     outline-offset: 2px;
 }
 
-.range-slider{
+.rangeSlider{
     position: relative;
     margin-right: 4px;
 }
@@ -347,7 +347,7 @@ p{
 }
 
 
-.price-input{
+.priceInput{
     display: flex;
     align-items: center;
     justify-content: center;
@@ -357,7 +357,7 @@ p{
     padding: 5px;
 }
 
-.price-input p{
+.priceInput p{
     margin: 0;
 }
 
@@ -365,7 +365,7 @@ p{
     display: none;
 }
 
-.custom-checkbox{
+.customCheckbox{
     width: 12px;
     height: 12px;
     background-color: white;
@@ -376,7 +376,7 @@ p{
     margin-right: 5px;
 }
 
-.custom-checkbox img{
+.customCheckbox img{
     display: none;
 }
 
@@ -385,7 +385,7 @@ p{
     width: 100%;
 }
 
-/*.brand label:has(input:checked) + .custom-checkbox::after {
+/*.brand label:has(input:checked) + .customCheckbox::after {
     content: '';
     position: absolute;
     top: 2px;
@@ -415,12 +415,12 @@ p{
     cursor: pointer;
 }
 
-.no-results-item-container {
+.noResultsItemContainer {
     display: grid;
     grid-template-rows: 20%, 80%;
 }
 
-.no-results {
+.noResults {
     display: flex;
     align-items: center;
     justify-content: center;

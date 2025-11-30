@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { getProductIdFromSrc } from "../../modules/utils.js"
 import { getProductById } from "../../modules/api.js"
+import styles from "../../styles/index.module.css"
 
 export default function SideScroll({ items }) {
     if (!Array.isArray(items)) {
@@ -17,8 +18,8 @@ export default function SideScroll({ items }) {
     })
 
     return(
-        <div className="side-scroll">
-            <div className="side-scroll-slider">
+        <div className={styles.sideScroll}>
+            <div className={styles.sideScrollSlider}>
                 {itemElements}    
             </div>
         </div>
@@ -44,9 +45,9 @@ function Item({ link, imgSrc }) {
 
     return(
         <Link to={link}>
-            <div className="gradient"/>
+            <div className={styles.gradient}/>
             <img src={imgSrc} />
-            <div className="corner-info">
+            <div className={styles.cornerInfo}>
                 <h1>{headline}</h1>
                 <button>Shop now</button>
             </div>

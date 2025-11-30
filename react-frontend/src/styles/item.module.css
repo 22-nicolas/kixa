@@ -1,4 +1,4 @@
-.product-container{
+.productContainer{
     display: grid;
     grid-template-columns: 1fr 1fr;
     column-gap: 3%;
@@ -13,7 +13,7 @@ h1 {
     color: black;
 }
 
-.product-container p{
+.productContainer p{
     font-family: Arial, Helvetica, sans-serif;
     text-align: left;
     max-width: 45ch;
@@ -21,12 +21,12 @@ h1 {
     margin-left: 0;
 }
 
-.item-view{
+.itemView{
     display: grid;
     grid-template-rows: 68vh 80px;
 }
 
-.slider-container{
+.sliderContainer{
     display: flex;
     align-items: center;
     justify-content: center;

@@ -7,9 +7,6 @@ import Promo from "../elements/index/Promo"
 import ImgLinks from "../elements/index/ImgLinks"
 import SideScroll from "../elements/index/SideScroll"
 
-//styles
-import "../styles/index.css"
-
 //assets
 //slider
 import hikingVid from "../assets/hiking.mp4"

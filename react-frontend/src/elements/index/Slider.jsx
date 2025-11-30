@@ -2,7 +2,7 @@ import Container from "../general/Container"
 import { isVideo } from "../../modules/utils"
 import { useEffect, useRef, useState } from "react"
 import PropTypes from "prop-types"
-
+import styles from "../../styles/index.module.css"
 
 function Slider({ slidesData, autoScrollDelay = 5000 }) {
 
@@ -41,10 +41,10 @@ function Slider({ slidesData, autoScrollDelay = 5000 }) {
             slideData.isVideo = isVideo(slideData.src)
 
             return(
-            <div className="slide" key={i}>
+            <div className={styles.slide} key={i}>
                 {slideData.isVideo ? 
-                    <video className="contents" ref={content => contents.current[i] = content} src={slideData.src} autoPlay muted loop/> :
-                    <img className="contents" ref={content => contents.current[i] = content} src={slideData.src}/>
+                    <video className={styles.contents} ref={content => contents.current[i] = content} src={slideData.src} autoPlay muted loop/> :
+                    <img className={styles.contents} ref={content => contents.current[i] = content} src={slideData.src}/>
                 }
                 <h1>{slideData.txt}<p>KX</p></h1>
             </div>
@@ -57,7 +57,7 @@ function Slider({ slidesData, autoScrollDelay = 5000 }) {
             let isActive = false
             if (i === currentSlide) isActive = true
 
-            return <span key={i} className={isActive ? "active" : ""} onMouseDown={() => goToSlide(i)}/>
+            return <span key={i} className={isActive ? styles.active : ""} onMouseDown={() => goToSlide(i)}/>
         })
     }
 
@@ -80,7 +80,7 @@ function Slider({ slidesData, autoScrollDelay = 5000 }) {
     function matchWidth() {
         //disconnect if slider doesn't exist
         if (!slider.current) {
-            window.removeEventListener("resize", matchWidth)
+            window.removeEventListener(resize, matchWidth)
             return
         }
 
@@ -91,11 +91,11 @@ function Slider({ slidesData, autoScrollDelay = 5000 }) {
 
     return(
         <Container>
-            <div ref={slider} className="slider">
-                <div ref={track} className="slider-track" id="sliderTrack">
+            <div ref={slider} className={styles.slider}>
+                <div ref={track} className={styles.sliderTrack} id="sliderTrack">
                     {slides}
                 </div>
-                <div className="dots">
+                <div className={styles.dots}>
                     {dots}
                 </div>
             </div>

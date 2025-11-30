@@ -6,10 +6,6 @@
     color: black;
 }
 
-p {
-    color: white;
-}
-
 /* xs */
 @media (min-width: 320px) {
     .container {

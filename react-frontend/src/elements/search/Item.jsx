@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom"
 import { format } from "../../../../old-frontend/scripts/utils/utils"
 import { shoeAssetsPath } from "../../modules/utils"
 import { string } from "../../modules/colors"
+import styles from "../../styles/search.module.css"
 
 export default function Item({ itemData }) {
 
@@ -86,15 +87,15 @@ export default function Item({ itemData }) {
     }
 
     return(
-        <div className={visible ? "item" : "item hidden"} id={id}>
+        <div className={`${styles.item} ${!visible ? styles.hidden : ""}`} id={id}>
             <div className="href" onClick={redirect}>
-                <div className="img-container">
-                    <img className="item-img" src={`${shoeAssetsPath}/${id}/${id}_${colorway.selectorIndex + 1}_1.png`} alt={name} />
+                <div className={styles.imgContainer}>
+                    <img  src={`${shoeAssetsPath}/${id}/${id}_${colorway.selectorIndex + 1}_1.png`} alt={name} />
                 </div>
-                <p className="name">{name}</p>
-                <p className="price">{price}$</p>
+                <p className={styles.name}>{name}</p>
+                <p className={styles.price}>{price}$</p>
             </div>
-            <div className="color-ways">
+            <div className={styles.colorways}>
                 {colorways}
             </div>
         </div>
@@ -103,7 +104,7 @@ export default function Item({ itemData }) {
 
 function ColorwaySelector({ selectorIndex, colorId, onClick, id, colorway }) {
     return(
-        <div className={(selectorIndex == colorway.selectorIndex) ? "color-way active" : "color-way"} onClick={() => onClick({selectorIndex: selectorIndex, colorId: colorId})}>
+        <div className={`${styles.colorway} ${(selectorIndex == colorway.selectorIndex) ? styles.active : ""}`} onClick={() => onClick({selectorIndex: selectorIndex, colorId: colorId})}>
             <img src={`${shoeAssetsPath}/${id}/${id}_${selectorIndex+1}_1.png`} alt={"colorway " + string(colorId)}/>
         </div>
     )

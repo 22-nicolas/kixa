@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom"
 import PropTypes from "prop-types"
 import { useNavigate } from "react-router-dom"
 import check from "../../assets/check.png"
+import styles from "../../styles/search.module.css"
 
 export default function Brand({ brands }) {
 
@@ -51,7 +52,7 @@ export default function Brand({ brands }) {
     }
 
     return(
-        <div className="brand">
+        <div className={styles.brand}>
             {brandSelectorsComponents}
         </div>
     )
@@ -64,7 +65,7 @@ function BrandSelector({ brandId, brandName, onChange, activeBrands }) {
     const isActive = activeBrands.includes(String(brandId))
     return(
         <label htmlFor={brandName}>
-            <span className="custom-checkbox"><input type="checkbox" id={brandName} checked={isActive} onChange={onChange}/><img src={check}/></span>
+            <span className={styles.customCheckbox}><input type="checkbox" id={brandName} checked={isActive} onChange={onChange}/><img src={check}/></span>
             <p>{brandName}</p>
         </label>
     )
