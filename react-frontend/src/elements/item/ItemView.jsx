@@ -6,14 +6,24 @@ import styles from "../../styles/item.module.css"
 
 export default function ItemView() {
     const itemData = useContext(ItemDataContext)
-    
+
+    let [thumbnails, setThumbnails] = useState()
+
+    useEffect(() => {
+        if(!itemData) return
+
+        const {id, imgs_per_colorway, activeColor} = itemData
+        setThumbnails(Array.from({ length: imgs_per_colorway[activeColor] })
+                            .map((_, i) => <div className={styles.thumbnail} key={i}><img src={`${shoeAssetsPath}/${id}/${id}_${activeColor + 1}_${i + 1}.png`}/></div>))
+
+    }, [itemData])
 
     return(
         <div className={styles.itemView}>
             <Slider itemData={itemData}/>
 
             <div className={styles.thumbnails}>
-
+                {thumbnails}
             </div>
         </div>
     )
