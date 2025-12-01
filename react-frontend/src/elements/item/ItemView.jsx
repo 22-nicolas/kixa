@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react"
-import loadingGif from "../../assets/loading_icon.gif"
+import { string } from "../../modules/colors.js"
 import { ItemDataContext } from "../../pages/Item"
 import { shoeAssetsPath } from "../../modules/utils"
 import styles from "../../styles/item.module.css"
@@ -31,7 +31,7 @@ export default function ItemView() {
 
 function Slider({ itemData }) {
     if(!itemData) return
-    const {id, activeColor, colors} = itemData
+    const {id, name, activeColor, colors} = itemData
     const [imgSrc, setImgSrc] = useState(`${shoeAssetsPath}/${id}/${id}_${activeColor + 1}_1.png`)
     
 
@@ -42,7 +42,7 @@ function Slider({ itemData }) {
                 <img src={imgSrc} className={styles.placeholder}/>
                 <div className={styles.track}>
                     <div className={styles.slide}>
-                        <img src={imgSrc} alt="loading..." />
+                        <img src={imgSrc} alt={`${name}, color: ${string(activeColor)}`} />
                     </div>
                 </div>
             </div>
