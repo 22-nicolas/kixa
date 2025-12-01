@@ -14,7 +14,7 @@ export default function ItemView() {
 
         const {id, imgs_per_colorway, activeColor} = itemData
         setThumbnails(Array.from({ length: imgs_per_colorway[activeColor] })
-                            .map((_, i) => <div className={styles.thumbnail} key={i}><img src={`${shoeAssetsPath}/${id}/${id}_${activeColor + 1}_${i + 1}.png`}/></div>))
+                            .map((_, i) => <div className={styles.thumbnail} key={i}><img src={`${shoeAssetsPath}/${id}/${id}_${activeColor + 1}_${i + 1}.png`} alt={`image: ${i + 1}`} /></div>))
 
     }, [itemData])
 
