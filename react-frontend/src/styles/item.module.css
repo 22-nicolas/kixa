@@ -26,6 +26,12 @@ h1 {
     grid-template-rows: 68vh 80px;
 }
 
+.itemInfo{
+    display: grid;
+    grid-template-rows: 1fr;
+    width: fit-content;
+}
+
 .sliderContainer{
     display: flex;
     align-items: center;
@@ -112,7 +118,7 @@ h1 {
 }
 
 
-.color-ways{
+.colorways{
     display: flex;
     align-items: center;
     justify-content: left;
@@ -143,7 +149,11 @@ h1 {
     outline: 3px rgba(128, 128, 128, 0.397) solid;
 }
 
-.size-select {
+.sizeSelectLabel {
+    font-weight: bold;
+}
+
+.sizeSelect {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-template-rows: 5ch 5ch 5ch 5ch;
@@ -170,12 +180,11 @@ h1 {
     border-color: black;
 }
 
-.add-cart-button{
+.addCartButton{
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: rgb(25, 25, 27);
-    color: white;
     /*width: fit-content;*/
     margin-left: auto;
     margin-right: auto;
@@ -188,16 +197,17 @@ h1 {
     transition: filter 200ms;
 }
 
-.add-cart-button:hover {
+.addCartButton:hover {
     filter: invert();
     box-shadow: 5px 5px 15px rgba(214, 214, 214, 0.295);
 }
 
-.add-cart-button p{
+.addCartButton p{
     margin: 0;
+    color: white;
 }
 
-.add-cart-button img{
+.addCartButton img{
     filter: invert();
     width: 2ch;
     margin-left: 1ch;

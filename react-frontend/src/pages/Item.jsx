@@ -4,6 +4,7 @@ import { useNavigate, useSearchParams } from "react-router-dom"
 
 import Container from "../elements/general/Container"
 import ItemView from "../elements/item/ItemView"
+import ItemInfo from "../elements/item/ItemInfo"
 import Header from "../elements/general/Header"
 import LoginPopup from "../elements/general/LoginPopup"
 import Footer from "../elements/general/Footer"
@@ -36,7 +37,7 @@ export default function Item() {
                 <ItemDataContext value={itemData}>
                     <div className={styles.productContainer}>
                         <ItemView></ItemView>
-                        <div>wads</div>
+                        <ItemInfo></ItemInfo>
                     </div>
                 </ItemDataContext>
             </Container>
