@@ -62,11 +62,11 @@ function LoadingItemView() {
     )
 }
 
-function Slider({ itemData }) {
+function Slider() {
 
-    if(!itemData) return <LoadingSlider/>
+    if(!useContext(ItemDataContext)) return <LoadingSlider/>
 
-    const {id, name, paramColor, colors, imgs_per_colorway} = itemData
+    const {id, paramColor, imgs_per_colorway} = useContext(ItemDataContext)
 
     //map slides
     const slidesArray = Array.from({ length: imgs_per_colorway[paramColor] })
