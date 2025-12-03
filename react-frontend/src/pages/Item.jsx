@@ -24,7 +24,7 @@ export default function Item() {
 
     async function getItemData(id, color) {
         const itemsData = await getProductById(id)
-        itemsData.activeColor = Number(color)
+        itemsData.paramColor = Number(color)
         setItemData(itemsData)
     }
 
