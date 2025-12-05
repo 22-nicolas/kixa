@@ -110,7 +110,8 @@ function zoom() {
             y = size.y;
             width = size.width;
             height = size.height;
-
+            console.log({x: x, y: y, width: width, height: height})
+            //console.log({xOffset: x, yOffset: y, widthOffset: width, heightOffset: height})
         };
 
         elem.onmousemove = e => {

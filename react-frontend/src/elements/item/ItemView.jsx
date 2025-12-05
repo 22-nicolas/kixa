@@ -109,9 +109,21 @@ function LoadingSlider() {
 
 function Slide({ imgSrc }) {
     const {name, paramColor} = useContext(ItemDataContext)
+    const img = useRef()
+
+    function zoom(e) {
+        const rect = img.current.getBoundingClientRect();
+
+        const horizontal = ((e.clientX - rect.left) / rect.width) * 100;
+        const vertical = ((e.clientY - rect.top) / rect.height) * 100;
+
+        img.current.style.setProperty('--x', `${horizontal}%`);
+        img.current.style.setProperty('--y', `${vertical}%`);
+    }
+
     return(
         <div className={styles.slide}>
-            <img src={imgSrc} alt={`${name}, color: ${string(paramColor)}`} />
+            <img ref={img} onMouseMove={(e) => zoom(e)} src={imgSrc} alt={`${name}, color: ${string(paramColor)}`} />
         </div>
     )
 }
