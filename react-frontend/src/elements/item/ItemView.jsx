@@ -8,20 +8,20 @@ import loadingGif from "../../assets/loading_icon.gif"
 const ActiveImgContext = createContext()
 
 export default function ItemView() {
-    const itemData = useContext(ItemDataContext)
+    const [itemData] = useContext(ItemDataContext)
 
     let [thumbnails, setThumbnails] = useState()
     let [activeImg, setActiveImg] = useState(1)
 
     useEffect(() => {
         if(!itemData) return
-        const thumbnailsArray = Array.from({ length: itemData.imgs_per_colorway[itemData.paramColor] })
+        const thumbnailsArray = Array.from({ length: itemData.imgs_per_colorway[itemData.color] })
         const thumbnailComponents = thumbnailsArray.map((_, i) => <Thumbnail key={i} i={i} itemData={itemData}/>)
 
         setThumbnails(thumbnailComponents)
 
     }, [itemData, activeImg])
-
+    console.log(itemData)
     if(!itemData) return <LoadingItemView/>
 
     return(
@@ -38,14 +38,14 @@ export default function ItemView() {
 }
 
 function Thumbnail({ itemData, i }) {
-    const { id, paramColor } = itemData
+    const { id, color } = itemData
     const [activeImg, setActiveImg] = useContext(ActiveImgContext)
     const imgIndex = i + 1
     const isActive = activeImg === imgIndex
 
     return (
         <div className={`${styles.thumbnail} ${isActive ? styles.active : ""}`} onClick={() => {setActiveImg(imgIndex)}}>
-            <img src={`${shoeAssetsPath}/${id}/${id}_${paramColor + 1}_${imgIndex}.png`} alt={`image: ${imgIndex}`} />
+            <img src={`${shoeAssetsPath}/${id}/${id}_${color + 1}_${imgIndex}.png`} alt={`image: ${imgIndex}`} />
         </div>
     )
 }
@@ -63,14 +63,15 @@ function LoadingItemView() {
 }
 
 function Slider() {
+    const [itemData] = useContext(ItemDataContext)
 
-    if(!useContext(ItemDataContext)) return <LoadingSlider/>
+    if(!itemData) return <LoadingSlider/>
 
-    const {id, paramColor, imgs_per_colorway} = useContext(ItemDataContext)
+    const {id, color, imgs_per_colorway} = itemData
 
     //map slides
-    const slidesArray = Array.from({ length: imgs_per_colorway[paramColor] })
-    const slidesComponents = slidesArray.map((_, i) => <Slide key={i} imgSrc={`${shoeAssetsPath}/${id}/${id}_${paramColor + 1}_${i + 1}.png`}/>)
+    const slidesArray = Array.from({ length: imgs_per_colorway[color] })
+    const slidesComponents = slidesArray.map((_, i) => <Slide key={i} imgSrc={`${shoeAssetsPath}/${id}/${id}_${color + 1}_${i + 1}.png`}/>)
 
     //move track according to selected thumbnail/activeImg
     const [activeImg] = useContext(ActiveImgContext)
@@ -83,7 +84,7 @@ function Slider() {
     return(
         <div className={styles.sliderContainer}>
             <div className={styles.slider}>
-                <img src={`${shoeAssetsPath}/${id}/${id}_${paramColor + 1}_1.png`} className={styles.placeholder} ref={placeholder}/>
+                <img src={`${shoeAssetsPath}/${id}/${id}_${color + 1}_1.png`} className={styles.placeholder} ref={placeholder}/>
                 <div className={styles.track} ref={track}>
                     {slidesComponents}
                 </div>
@@ -108,7 +109,8 @@ function LoadingSlider() {
 }
 
 function Slide({ imgSrc }) {
-    const {name, paramColor} = useContext(ItemDataContext)
+    const itemData = useContext(ItemDataContext)
+    const {name, color} = itemData
     const img = useRef()
 
     function zoom(e) {
@@ -123,7 +125,7 @@ function Slide({ imgSrc }) {
 
     return(
         <div className={styles.slide}>
-            <img ref={img} onMouseMove={(e) => zoom(e)} src={imgSrc} alt={`${name}, color: ${string(paramColor)}`} />
+            <img ref={img} onMouseMove={(e) => zoom(e)} src={imgSrc} alt={`${name}, color: ${string(color)}`} />
         </div>
     )
 }

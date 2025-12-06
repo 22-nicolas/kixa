@@ -24,7 +24,7 @@ export default function Item() {
 
     async function getItemData(id, color) {
         const itemsData = await getProductById(id)
-        itemsData.paramColor = Number(color)
+        itemsData.color = Number(color)
         setItemData(itemsData)
     }
 
@@ -34,7 +34,7 @@ export default function Item() {
             <LoginPopup/>
 
             <Container>
-                <ItemDataContext value={itemData}>
+                <ItemDataContext value={[itemData, setItemData]}>
                     <div className={styles.productContainer}>
                         <ItemView></ItemView>
                         <ItemInfo></ItemInfo>

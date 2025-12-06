@@ -3,14 +3,16 @@ import { useContext, useState, createContext } from "react"
 import styles from "../../styles/item.module.css"
 import cart_icon from "../../assets/cart_icon.png"
 import { addToCart } from "../../modules/cart"
+import { shoeAssetsPath } from "../../modules/utils"
 
 export default function ItemInfo() {
-    const itemData = useContext(ItemDataContext)
+    const [itemData] = useContext(ItemDataContext)
     const [activeSize, setActiveSize] = useState(null)
 
     if (!itemData) return <h1>Loading...</h1>
 
     const sizeSelectors = itemData.sizes.map(size => <SizeSelector key={size} size={size} activeSize={activeSize} setActiveSize={setActiveSize}/>)
+    const colorSelectors = itemData.colors.map((color, i) => <ColorSelector key={i} colorId={color} i={i}/>)
 
     return(
         <div className={styles.itemInfo}>
@@ -18,7 +20,7 @@ export default function ItemInfo() {
                 <h1>{itemData.name}</h1>
                 <p>{itemData.description}</p>  
                 <div className={styles.colorways}>
-
+                    {colorSelectors}
                 </div>
                 <p className={styles.sizeSelectLabel}>Select Size</p>
                 <div className={styles.sizeSelect}>
@@ -38,4 +40,19 @@ function SizeSelector({ size, activeSize, setActiveSize }) {
     const isActive = activeSize === size
 
     return <div className={`${styles.size} ${isActive ? styles.active : ""}`} onClick={() => setActiveSize(size)}>EU {size}</div>
+}
+
+function ColorSelector({ i, colorId }) {
+    const [itemData, setItemData] = useContext(ItemDataContext)
+    const isActive = itemData.color === i
+    //console.log({itemData: itemData.color, i: i})
+
+    return(
+        <div className={`${styles.colorway} ${isActive ? styles.active : ""}`} onClick={() => setItemData(prevItemData => ({
+            ...prevItemData,
+            color: i
+        }))}>
+            <img src={`${shoeAssetsPath}/${itemData.id}/${itemData.id}_${i+1}_1.png`}/>
+        </div>
+    )
 }
