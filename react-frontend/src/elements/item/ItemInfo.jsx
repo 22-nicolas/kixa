@@ -2,6 +2,7 @@ import { ItemDataContext } from "../../pages/Item"
 import { useContext, useState, createContext } from "react"
 import styles from "../../styles/item.module.css"
 import cart_icon from "../../assets/cart_icon.png"
+import { addToCart } from "../../modules/cart"
 
 export default function ItemInfo() {
     const itemData = useContext(ItemDataContext)
@@ -24,7 +25,7 @@ export default function ItemInfo() {
                     {sizeSelectors}
                 </div>
                 <p className={styles.price}>{itemData.price}$</p>
-                <div className={styles.addCartButton}>
+                <div onClick={() => addToCart(itemData.id)} className={styles.addCartButton}>
                     <p>Add to cart</p>
                     <img src={cart_icon}/>
                 </div>
