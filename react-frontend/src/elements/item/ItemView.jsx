@@ -21,7 +21,7 @@ export default function ItemView() {
         setThumbnails(thumbnailComponents)
 
     }, [itemData, activeImg])
-    console.log(itemData)
+
     if(!itemData) return <LoadingItemView/>
 
     return(

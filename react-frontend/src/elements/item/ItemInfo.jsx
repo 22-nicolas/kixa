@@ -27,7 +27,7 @@ export default function ItemInfo() {
                     {sizeSelectors}
                 </div>
                 <p className={styles.price}>{itemData.price}$</p>
-                <div onClick={() => addToCart(itemData.id)} className={styles.addCartButton}>
+                <div onClick={() => addToCart(itemData.id, itemData.color, activeSize)} className={styles.addCartButton}>
                     <p>Add to cart</p>
                     <img src={cart_icon}/>
                 </div>
@@ -45,7 +45,6 @@ function SizeSelector({ size, activeSize, setActiveSize }) {
 function ColorSelector({ i, colorId }) {
     const [itemData, setItemData] = useContext(ItemDataContext)
     const isActive = itemData.color === i
-    //console.log({itemData: itemData.color, i: i})
 
     return(
         <div className={`${styles.colorway} ${isActive ? styles.active : ""}`} onClick={() => setItemData(prevItemData => ({

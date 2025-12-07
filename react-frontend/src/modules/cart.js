@@ -1,12 +1,16 @@
 import { getProductById } from "./api";
 
-export async function addToCart(id) {
+export async function addToCart(id, color, size) {
+    if (!size) {
+        alert('Please select a size.')
+        return
+    }
+
     let cartItems = getCartItems();
 
     const {name, price} = await getProductById(id)
 
-
-    const existingItem = cartItems.find(item => item.id == id );
+    const existingItem = cartItems.find(item => item.id == id && item.size == size && item.color == color);
 
     if (existingItem) {
         // If it exists, increase quantity
@@ -17,12 +21,13 @@ export async function addToCart(id) {
             id,
             name,
             price,
+            color,
+            size,
             quantity: 1
         });
     }
 
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
-    console.log(getCartItems())
 }
 
 function getCartItems() {
