@@ -2,18 +2,19 @@ import { ItemDataContext } from "../../pages/Item"
 import { useContext, useState, createContext } from "react"
 import styles from "../../styles/item.module.css"
 import cart_icon from "../../assets/cart_icon.png"
-import { addToCart } from "../../modules/cart"
+import { useAddToCart } from "../../customHooks/useAddToCart"
 import { shoeAssetsPath } from "../../modules/utils"
 
 export default function ItemInfo() {
     const [itemData] = useContext(ItemDataContext)
     const [activeSize, setActiveSize] = useState(null)
-
+    const addToCart = useAddToCart()
+    
     if (!itemData) return <h1>Loading...</h1>
 
     const sizeSelectors = itemData.sizes.map(size => <SizeSelector key={size} size={size} activeSize={activeSize} setActiveSize={setActiveSize}/>)
     const colorSelectors = itemData.colors.map((color, i) => <ColorSelector key={i} colorId={color} i={i}/>)
-
+    
     return(
         <div className={styles.itemInfo}>
             <div>
@@ -27,7 +28,7 @@ export default function ItemInfo() {
                     {sizeSelectors}
                 </div>
                 <p className={styles.price}>{itemData.price}$</p>
-                <div onClick={() => addToCart(itemData.id, itemData.color, activeSize)} className={styles.addCartButton}>
+                <div onMouseDown={() => addToCart(itemData.id, itemData.color, activeSize)} className={styles.addCartButton}>
                     <p>Add to cart</p>
                     <img src={cart_icon}/>
                 </div>

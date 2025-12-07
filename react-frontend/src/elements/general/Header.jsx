@@ -1,9 +1,11 @@
 import '../../styles/header.css'
 import PropTypes from 'prop-types'
-import { useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { fireAccountBtnEvent } from '../../modules/AccountBtnEvent.js'
 import { Link } from 'react-router-dom'
 import SearchBar from './SearchBar.jsx'
+import { useCart } from '../../customHooks/CartProvider.jsx'
+import { CartContext } from '../../App.jsx'
 
 //images
 import logo from '../../assets/logo.png'
@@ -42,6 +44,18 @@ function Header() {
         );
     });
 
+    
+    const {cart} = useCart()
+    const [quantity, setQuantity] = useState(0)
+    //update cart quantity display
+    useEffect(() => {
+        let newQuantity = 0
+        cart.forEach(item => {
+            newQuantity += item.quantity
+        });
+        setQuantity(newQuantity)
+    }, [cart])
+
     return(
         <div className="header">
             <Link to="/"><img src={logo} alt="logo" /></Link>
@@ -51,7 +65,7 @@ function Header() {
             <div className="right-header">
                 <SearchBar/>
                 <Link to="">
-                    <p>0</p>
+                    <p>{quantity}</p>
                     <img src={cart_icon} alt="cart icon" />
                 </Link>
                 <div onMouseDown={fireAccountBtnEvent} className="account-btn">
