@@ -45,15 +45,11 @@ function Header() {
     });
 
     
-    const {cart} = useCart()
+    const {cart, getQuantity} = useCart()
     const [quantity, setQuantity] = useState(0)
     //update cart quantity display
     useEffect(() => {
-        let newQuantity = 0
-        cart.forEach(item => {
-            newQuantity += item.quantity
-        });
-        setQuantity(newQuantity)
+        setQuantity(getQuantity())
     }, [cart])
 
     return(

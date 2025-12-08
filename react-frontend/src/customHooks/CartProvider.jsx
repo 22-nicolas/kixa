@@ -49,8 +49,16 @@ export default function CartProvider({ children }) {
         });
     }
 
+    const getQuantity = () => {
+        let quantity = 0
+        cart.forEach(item => {
+            quantity += item.quantity
+        });
+        return quantity
+    }
+
     return (
-        <CartContext.Provider value={{ cart, updateCart, addToCart }}>
+        <CartContext.Provider value={{ cart, updateCart, addToCart, getQuantity }}>
             {children}
         </CartContext.Provider>
     )

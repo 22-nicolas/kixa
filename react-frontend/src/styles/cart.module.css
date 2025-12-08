@@ -96,7 +96,7 @@ img{
     font-size: 1.3rem;
 }
 
-.checkout-btn{
+.checkoutBtn{
     color: white;
     text-decoration: none;
     background-color: rgb(25, 25, 27);
@@ -109,15 +109,16 @@ img{
     transition: 200ms;
 }
 
-.checkout-btn:hover{
+.checkoutBtn:hover{
     filter: invert();
     box-shadow: 5px 5px 15px rgba(214, 214, 214, 0.295);
 }
 
-.checkout-btn p{
+.checkoutBtn p{
     margin-top: 0;
     margin-bottom: 0;
     margin-left: auto;
     margin-right: auto;
     text-align: center;
+    color: white;
 }
