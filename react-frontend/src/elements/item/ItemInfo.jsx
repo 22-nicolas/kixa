@@ -2,13 +2,13 @@ import { ItemDataContext } from "../../pages/Item"
 import { useContext, useState, createContext } from "react"
 import styles from "../../styles/item.module.css"
 import cart_icon from "../../assets/cart_icon.png"
-import { useAddToCart } from "../../customHooks/useAddToCart"
 import { shoeAssetsPath } from "../../modules/utils"
+import { useCart } from "../../customHooks/CartProvider"
 
 export default function ItemInfo() {
     const [itemData] = useContext(ItemDataContext)
     const [activeSize, setActiveSize] = useState(null)
-    const addToCart = useAddToCart()
+    const {addToCart} = useCart()
     
     if (!itemData) return <h1>Loading...</h1>
 
