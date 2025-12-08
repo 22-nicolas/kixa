@@ -1,10 +1,9 @@
-import { CartContext } from "../../App";
 import { useCart } from "../../customHooks/CartProvider";
 import styles from "../../styles/cart.module.css"
 import { shoeAssetsPath } from "../../modules/utils";
 
 export default function Cart() {
-    const {cart} = useCart(CartContext)
+    const {cart} = useCart()
 
     const items = cart.map(item => {
         const {id, name, price, color, size, quantity} = item
