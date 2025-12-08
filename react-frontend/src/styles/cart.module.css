@@ -1,3 +1,9 @@
+.cart{
+    display: grid;
+    grid-template-columns: 60% 1fr;
+    column-gap: 1%;
+}
+
 h1 {
     text-align: left;
     margin: 0;
@@ -12,7 +18,7 @@ h1 {
     align-items: top;
 }
 
-.img-container{
+.imgContainer{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -25,7 +31,7 @@ img{
     width: 100%;
 }
 
-.cart-list a{
+.cartList a{
     color: black;
     font-family: Arial, Helvetica, sans-serif;
     font-weight: bold;
@@ -45,7 +51,7 @@ img{
     margin-bottom: 10px;
 }
 
-.remove-btn{
+.removeBtn{
     text-align: right;
     cursor: pointer;
     width: fit-content;
@@ -54,7 +60,7 @@ img{
     margin-bottom: 0;
 }
 
-.remove-btn:hover{
+.removeBtn:hover{
     text-decoration: underline;
 }
 

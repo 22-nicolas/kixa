@@ -64,7 +64,7 @@ function Header() {
             </div>
             <div className="right-header">
                 <SearchBar/>
-                <Link to="">
+                <Link to="/cart">
                     <p>{quantity}</p>
                     <img src={cart_icon} alt="cart icon" />
                 </Link>
