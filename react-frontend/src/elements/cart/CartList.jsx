@@ -4,7 +4,7 @@ import { shoeAssetsPath } from "../../modules/utils";
 import { Link } from "react-router-dom";
 
 export default function Cart() {
-    const {cart} = useCart()
+    const {cart, removeFromCart} = useCart()
 
     const items = cart.map(item => {
         const {id, name, price, color, size, quantity} = item
@@ -19,7 +19,7 @@ export default function Cart() {
                     <p className="item-qty">Qty {quantity}</p>
                     <p className="price">US ${price*quantity}</p>
                 </div>
-                <p className={styles.removeBtn}>Remove</p>
+                <p className={styles.removeBtn} onMouseDown={() => removeFromCart(id, color, size)}>Remove</p>
             </div>
         )
     })
