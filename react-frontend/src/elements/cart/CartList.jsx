@@ -1,6 +1,7 @@
 import { useCart } from "../../customHooks/CartProvider";
 import styles from "../../styles/cart.module.css"
 import { shoeAssetsPath } from "../../modules/utils";
+import { Link } from "react-router-dom";
 
 export default function Cart() {
     const {cart} = useCart()
@@ -12,7 +13,7 @@ export default function Cart() {
                 <div className={styles.flex}>
                     <div className={styles.imgContainer}><img src={`${shoeAssetsPath}/${id}/${id}_${color + 1}_1.png`}/></div>
                     <div className="item-info">
-                        <a href="">{name}</a>
+                        <Link to={`/item?id=${id}&c=${color}&size=${size}`}>{name}</Link>
                         <p className="color-size">{color}, EU {size}</p>
                     </div>
                     <p className="item-qty">Qty {quantity}</p>

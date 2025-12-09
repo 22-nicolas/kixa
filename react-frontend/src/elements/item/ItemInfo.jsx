@@ -4,10 +4,12 @@ import styles from "../../styles/item.module.css"
 import cart_icon from "../../assets/cart_icon.png"
 import { shoeAssetsPath } from "../../modules/utils"
 import { useCart } from "../../customHooks/CartProvider"
+import { useSearchParams } from "react-router-dom"
 
 export default function ItemInfo() {
     const [itemData] = useContext(ItemDataContext)
-    const [activeSize, setActiveSize] = useState(null)
+    const [searchParams] = useSearchParams()
+    const [activeSize, setActiveSize] = useState(Number(searchParams.get("size")) || null)
     const {addToCart} = useCart()
     
     if (!itemData) return <h1>Loading...</h1>
