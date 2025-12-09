@@ -80,7 +80,7 @@ function Slider({ slidesData, autoScrollDelay = 5000 }) {
     function matchWidth() {
         //disconnect if slider doesn't exist
         if (!slider.current) {
-            window.removeEventListener(resize, matchWidth)
+            window.removeEventListener("resize", matchWidth)
             return
         }
 
