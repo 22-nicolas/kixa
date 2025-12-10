@@ -13,7 +13,7 @@ export default function Reciept() {
         setItemsPrice(prevPrice => {
             let price = 0
             cart.forEach(item => {
-                price += Number(item.price)
+                price += Number(item.price) * Number(item.quantity)
             });
             return price
         })
