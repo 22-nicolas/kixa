@@ -22,7 +22,7 @@ function LoginPopup() {
                 return
             }
             if (!(isDescandentOf(event.target, loginPopup.current) || isDescandentOf(event.target, document.querySelector('.account-btn')))) {
-                toggleIsOpen(false)
+                setIsOpen(prev => false)
                 controller.abort()
             }
         }, { signal: controller.signal });
@@ -30,16 +30,8 @@ function LoginPopup() {
 
     let CurrentInterface = getInterfaceFromType();
     
-    function toggleIsOpen(setState) {
-        if (setState) {
-            setIsOpen(setState)
-            return
-        }
-
-        setIsOpen(prev => {
-            const next = !prev;
-            return next;
-        });
+    function toggleIsOpen() {
+        setIsOpen(prev => !prev);
     }
 
     return(
