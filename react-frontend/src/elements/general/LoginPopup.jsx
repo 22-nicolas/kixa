@@ -9,11 +9,13 @@ function LoginPopup() {
     const [isOpen, setIsOpen] = useState(false)
     const [interfaceType, setInterfaceType] = useState('default')
     
+    //link/disconnect toggleIsOpen to account btn
     useEffect(() => {
         suscribeToAccountBtn(toggleIsOpen);
         return () => unSuscribe(toggleIsOpen)
     }, []);
-
+    
+    //check if isOpen and clicked outside the popup
     useEffect(() => {
         let controller = new AbortController
         window.addEventListener('mousedown', (event) => {
@@ -22,8 +24,8 @@ function LoginPopup() {
                 return
             }
             if (!(isDescandentOf(event.target, loginPopup.current) || isDescandentOf(event.target, document.querySelector('.account-btn')))) {
-                setIsOpen(prev => false)
-                controller.abort()
+                setIsOpen(prev => false) //if so close
+                controller.abort() //clean up listener
             }
         }, { signal: controller.signal });
     }, [isOpen]);
