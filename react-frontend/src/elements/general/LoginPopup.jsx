@@ -1,13 +1,14 @@
-import { useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { suscribeToAccountBtn, unSuscribe } from "../../modules/AccountBtnEvent";
 import { isDescandentOf } from "../../modules/utils";
 
+const InterfaceContext = createContext()
 
 function LoginPopup() {
     const loginPopup = useRef(null)
 
     const [isOpen, setIsOpen] = useState(false)
-    const [interfaceType, setInterfaceType] = useState('default')
+    const [currentInterface, setInterface] = useState('default')
     
     //link/disconnect toggleIsOpen to account btn
     useEffect(() => {
@@ -25,50 +26,64 @@ function LoginPopup() {
             }
             if (!(isDescandentOf(event.target, loginPopup.current) || isDescandentOf(event.target, document.querySelector('.account-btn')))) {
                 setIsOpen(prev => false) //if so close
+                setInterface('default')
                 controller.abort() //clean up listener
             }
         }, { signal: controller.signal });
     }, [isOpen]);
-
-    let CurrentInterface = getInterfaceFromType();
     
     function toggleIsOpen() {
-        setIsOpen(prev => !prev);
+        setIsOpen(prev => {
+            if(!prev) {
+                setInterface('default')
+            }
+            return !prev
+        });
     }
 
     return(
         <div className={`login-popup${isOpen ? " show" : ""}`} ref={loginPopup}>
-            <CurrentInterface setInterfaceType={setInterfaceType} />
+            <InterfaceContext.Provider value={[currentInterface, setInterface]}>
+                <Default/>
+                <Register/>
+                <Login/>
+            </InterfaceContext.Provider>
         </div>
     );
 }
 
-function Default({ setInterfaceType }) {
+function Default() {
+    const {isVisible, setInterface} = getIsVisible('default')
 
     return(
-        <div className="default">
-            <div className="register-btn" onMouseDown={() => setInterfaceType('register')}><p>register</p></div>
+        <div className={`${isVisible ? "" : "hidden"}`}>
+            <div className="register-btn" onMouseDown={() => setInterface('register')}><p>register</p></div>
             <div className="separator">
                 <div className="line"></div>
                 <span>or</span>
                 <div className="line"></div>
             </div>
-            <div className="login-btn" onMouseDown={() => setInterfaceType('login')}><p>login</p></div>
+            <div className="login-btn" onMouseDown={() => setInterface('login')}><p>login</p></div>
         </div>
     )
 }
 
-function getInterfaceFromType(interfaceType) {
-    switch (interfaceType) {
-        case "register":
-            //CurrentInterface = Register;
-            //break;
-        case "login":
-            //CurrentInterface = Login;
-            //break;
-        default:
-            return Default;
-    }
+function Register() {
+    const {isVisible} = getIsVisible('register')
+
+    return <div className={`register ${isVisible ? "" : "hidden"}`}>register</div>
+}
+
+function Login() {
+    const {isVisible} = getIsVisible('login')
+
+    return <div className={`login ${isVisible ? "" : "hidden"}`}>login</div>
+}
+
+function getIsVisible(interfaceId) {
+    const [currentInterface, setInterface] = useContext(InterfaceContext)
+    const isVisible = currentInterface === interfaceId
+    return {isVisible, currentInterface, setInterface}
 }
 
 export default LoginPopup
