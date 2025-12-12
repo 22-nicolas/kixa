@@ -112,11 +112,11 @@
     margin-left: auto;
     margin-right: auto;
 }
-
+/*
 .sumbit-register-btn, .sumbit-login-btn {
     margin-top: 1ch;
 }
-/*
+
 .register input, .login input{
     border: 1px solid;
     border-radius: 2ch;
@@ -126,7 +126,7 @@
 
 .register input:focus, .login input{
     outline: none;
-}*/
+}
 
 .name, .place, .house {
     display: flex;

@@ -5,14 +5,14 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
-input{
+.register input{
     border: 1px solid;
     border-radius: 2ch;
     padding: 0.7ch;
     display: block;
 }
 
-input{
+.register input{
     outline: none;
 }
 
