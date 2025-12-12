@@ -15,7 +15,7 @@ export default function Register() {
                 Inputs will default to type: "text" and small: false.
                 Id will be formated from label if not given.
 
-                TODO: Create phone number input with refix dropdown.
+                TODO: Create phone number input with prefix dropdown.
             */}
             <RegisterDetails inputsData={[{label: "First Name"}, {label: "Last Name"}]}/>
             <RegisterDetails inputsData={[{label: "Country"}]}/>
