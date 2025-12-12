@@ -1,0 +1,72 @@
+.inputLabel{
+    font-weight: 100;
+    font-size: 12px;
+    color: #666;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+input{
+    border: 1px solid;
+    border-radius: 2ch;
+    padding: 0.7ch;
+    display: block;
+}
+
+input{
+    outline: none;
+}
+
+.registerDetail{
+    display: flex;
+    align-items: center;
+    justify-content: left;
+}
+
+.smallInput{
+    max-width: 8ch;
+}
+
+.password{
+    border: 1px solid;
+    border-radius: 2ch;
+    padding: 0.7ch;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    height: 2ch;
+    width: fit-content;
+    position: relative;
+    overflow: hidden;
+}
+
+.password img{
+    height: 2ch;
+    cursor: pointer;
+}
+
+.password input{
+    border: none;
+    border-radius: 0;
+    padding: none;
+}
+
+.sumbitRegisterBtn{
+    background-color: rgb(25, 25, 27);
+    padding: 1ch;
+    width: calc(100% - 3ch);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5ch;
+    cursor: pointer;
+    transition: 200ms;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-top: 2ch;
+    max-width: 10ch;
+}
+
+.sumbitRegisterBtn:hover{
+    filter: invert();
+    box-shadow: 5px 5px 15px rgba(214, 214, 214, 0.295);
+}
