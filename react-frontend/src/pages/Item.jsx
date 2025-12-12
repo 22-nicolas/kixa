@@ -6,7 +6,7 @@ import Container from "../elements/general/Container"
 import ItemView from "../elements/item/ItemView"
 import ItemInfo from "../elements/item/ItemInfo"
 import Header from "../elements/general/Header"
-import LoginPopup from "../elements/general/LoginPopup"
+import LoginPopup from "../elements/general/AccountPopup/AccountPopup"
 import Footer from "../elements/general/Footer"
 
 import styles from "../styles/item.module.css"

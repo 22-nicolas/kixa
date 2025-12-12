@@ -1,7 +1,7 @@
 import { useEffect , useState} from "react"
 import Footer from "../elements/general/Footer"
 import Header from "../elements/general/Header"
-import LoginPopup from "../elements/general/LoginPopup"
+import LoginPopup from "../elements/general/AccountPopup/AccountPopup"
 import Container from "../elements/general/Container"
 import Pricing from "../elements/search/Pricing"
 import Color from "../elements/search/Color"

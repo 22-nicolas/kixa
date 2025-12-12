@@ -1,5 +1,5 @@
 import Header from "../elements/general/Header";
-import LoginPopup from "../elements/general/LoginPopup"
+import LoginPopup from "../elements/general/AccountPopup/AccountPopup"
 import Footer from "../elements/general/Footer"
 import Container from "../elements/general/Container";
 import CartList from "../elements/cart/CartList";

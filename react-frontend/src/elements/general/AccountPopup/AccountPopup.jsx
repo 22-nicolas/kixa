@@ -1,10 +1,14 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
-import { suscribeToAccountBtn, unSuscribe } from "../../modules/AccountBtnEvent";
-import { isDescandentOf } from "../../modules/utils";
+import { suscribeToAccountBtn, unSuscribe } from "../../../modules/AccountBtnEvent";
+import { isDescandentOf } from "../../../modules/utils";
+import Default from "./Default";
+import Register from "./Register";
+import Login from "./Login";
 
-const InterfaceContext = createContext()
 
-function LoginPopup() {
+export const InterfaceContext = createContext()
+
+export default function AccountPopup() {
     const loginPopup = useRef(null)
 
     const [isOpen, setIsOpen] = useState(false)
@@ -42,7 +46,7 @@ function LoginPopup() {
     }
 
     return(
-        <div className={`login-popup${isOpen ? " show" : ""}`} ref={loginPopup}>
+        <div className={`account-popup${isOpen ? " show" : ""}`} ref={loginPopup}>
             <InterfaceContext.Provider value={[currentInterface, setInterface]}>
                 <Default/>
                 <Register/>
@@ -52,38 +56,8 @@ function LoginPopup() {
     );
 }
 
-function Default() {
-    const {isVisible, setInterface} = getIsVisible('default')
-
-    return(
-        <div className={`${isVisible ? "" : "hidden"}`}>
-            <div className="register-btn" onMouseDown={() => setInterface('register')}><p>register</p></div>
-            <div className="separator">
-                <div className="line"></div>
-                <span>or</span>
-                <div className="line"></div>
-            </div>
-            <div className="login-btn" onMouseDown={() => setInterface('login')}><p>login</p></div>
-        </div>
-    )
-}
-
-function Register() {
-    const {isVisible} = getIsVisible('register')
-
-    return <div className={`register ${isVisible ? "" : "hidden"}`}>register</div>
-}
-
-function Login() {
-    const {isVisible} = getIsVisible('login')
-
-    return <div className={`login ${isVisible ? "" : "hidden"}`}>login</div>
-}
-
-function getIsVisible(interfaceId) {
+export function getIsVisible(interfaceId) {
     const [currentInterface, setInterface] = useContext(InterfaceContext)
     const isVisible = currentInterface === interfaceId
     return {isVisible, currentInterface, setInterface}
 }
-
-export default LoginPopup

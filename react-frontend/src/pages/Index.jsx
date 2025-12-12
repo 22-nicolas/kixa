@@ -1,6 +1,6 @@
 //components
 import Header from "../elements/general/Header"
-import LoginPopup from "../elements/general/LoginPopup"
+import LoginPopup from "../elements/general/AccountPopup/AccountPopup"
 import Footer from "../elements/general/Footer"
 import Slider from "../elements/index/Slider"
 import Promo from "../elements/index/Promo"

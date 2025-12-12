@@ -48,7 +48,7 @@
     }
 }
 
-.login-popup{
+.account-popup{
     display: none;
     position: fixed;
     top: 50%;
@@ -65,7 +65,7 @@
     display: none;
 }
 
-.login-popup.show{
+.account-popup.show{
     display: block;
 }
 
@@ -78,7 +78,7 @@
   color: #666;       /*    text color */
 }
 
-.login-popup .line{
+.account-popup .line{
     height: 0;
     width: 20ch;
     border-bottom: 1px solid #666;
@@ -86,7 +86,7 @@
     margin-right: 0.5ch;
 }
 
-.login-popup .register-btn, .login-popup .login-btn, .sumbit-register-btn, .sumbit-login-btn{
+.account-popup .register-btn, .account-popup .login-btn, .sumbit-register-btn, .sumbit-login-btn{
     background-color: rgb(25, 25, 27);
     padding: 1ch;
     width: calc(100% - 3ch);
@@ -98,16 +98,16 @@
     transition: 200ms;
 }
 
-.login-popup .register-btn:hover,  .login-popup .login-btn:hover, .sumbit-register-btn:hover, .sumbit-login-btn:hover{
+.account-popup .register-btn:hover,  .account-popup .login-btn:hover, .sumbit-register-btn:hover, .sumbit-login-btn:hover{
     filter: invert();
     box-shadow: 5px 5px 15px rgba(214, 214, 214, 0.295);
 }
 
-.login-popup .register-btn p, .login-popup  .login-btn p, .sumbit-register-btn p, .sumbit-login-btn p{
+.account-popup .register-btn p, .account-popup  .login-btn p, .sumbit-register-btn p, .sumbit-login-btn p{
     color: white;
 }
 
-.login-popup .register-btn div,.login-popup  .login-btn div, .sumbit-register-btn div, .sumbit-login-btn div{
+.account-popup .register-btn div,.account-popup  .login-btn div, .sumbit-register-btn div, .sumbit-login-btn div{
     width: fit-content;
     margin-left: auto;
     margin-right: auto;
