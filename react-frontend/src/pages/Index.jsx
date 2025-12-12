@@ -39,17 +39,17 @@ function Index() {
             ]} autoScrollDelay={3200}/>
             <Promo headline="Check out our sortiment!" info="Future 8 Ultimate Creativity FG" imgSrc={neymarPromo} />
             <ImgLinks linksData={[
-                {link: null, imgSrc: speedcatPreview, headline: "Puma Speedcat OG", info: "Live Fast"},
-                {link: null, imgSrc: adidasXbraindeadPreview, headline: "Adidas x Brain Dead", info: "A slam of sport and subculture."},
-                {link: null, imgSrc: gelcumulusPreview, headline: "Gel-Cumulus 16", info: "Feel Comfort, Find Energy"},
-                {link: null, imgSrc: jordansPreview, headline: "Jordan 1 Chicago SB Dunks", info: "A timless look."}
+                {link: "/item?id=puma_speedcat_og", imgSrc: speedcatPreview, headline: "Puma Speedcat OG", info: "Live Fast"},
+                {link: "/item?id=japan_lo_brain_dead", imgSrc: adidasXbraindeadPreview, headline: "Adidas x Brain Dead", info: "A slam of sport and subculture."},
+                {link: "/item?id=gel_cumulus_16", imgSrc: gelcumulusPreview, headline: "Gel-Cumulus 16", info: "Feel Comfort, Find Energy"},
+                {link: "/item?id=jordan_1_chicago_sb_dunks", imgSrc: jordansPreview, headline: "Jordan 1 Chicago SB Dunks", info: "A timless look."}
             ]} />
             <SideScroll items={[
-                {link: null, imgSrc: predator_elite_sg},
-                {link: null, imgSrc: nike_air_max_plus},
-                {link: null, imgSrc: adidas_campus},
-                {link: null, imgSrc: japan_lo_brain_dead},
-                {link: null, imgSrc: nike_air_force}
+                {link: "/item?id=predator_elite_sg", imgSrc: predator_elite_sg},
+                {link: "/item?id=nike_air_max_plus", imgSrc: nike_air_max_plus},
+                {link: "/item?id=adidas_campus", imgSrc: adidas_campus},
+                {link: "/item?id=japan_lo_brain_dead", imgSrc: japan_lo_brain_dead},
+                {link: "/item?id=nike_air_force", imgSrc: nike_air_force}
             ]} />
 
             <Footer/>

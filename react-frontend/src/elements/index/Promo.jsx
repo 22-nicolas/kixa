@@ -9,6 +9,8 @@ function Promo({ headline, info, buttonLabel = "Shop now", imgSrc, link }) {
         imgSrc = null
     }
 
+    if(!link) link = "/search"
+
     return(
         <Link className={styles.promo} to={link}>
             <img src={imgSrc} alt={headline} />
