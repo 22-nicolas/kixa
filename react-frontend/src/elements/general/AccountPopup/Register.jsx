@@ -22,7 +22,7 @@ export default function Register() {
             <RegisterDetails inputsData={[{label: "City"}, {label: "ZIP code", small: true}]}/>
             <RegisterDetails inputsData={[{label: "Street"}, {label: "House Number", small: true}]}/>
             <RegisterDetails inputsData={[{label: "Email", type: "email"}]}/>
-            <RegisterDetails inputsData={[{label: "Phone Number", required: false}]}/>
+            <RegisterDetails inputsData={[{label: "Phone Number", type: "phone number", required: false}]}/>
             <RegisterDetails inputsData={[{label: "Password", type: "password"}]}/>
             <RegisterDetails inputsData={[{label: "Repeat Password", type: "password"}]}/>
 
@@ -42,6 +42,8 @@ function RegisterDetails({ inputsData }) {
         if (required === undefined) required = true
 
         switch (type) {
+            case "phone number":
+                return <PhoneNumber key={i} label={label} id={id} small={small} i={i} />
             case "password":
                 return <Password key={i} label={label} id={id} small={small} i={i} />
             default:
@@ -82,4 +84,56 @@ function Password({label, id, small, i }) {
             </div>
         </div>
     )  
+}
+
+function PhoneNumber({ label, id, small, i }) {
+    /*const [dropdownOpen, setDropdownOpen] = useState(false)
+
+    function toggleOpen() {
+        setDropdownOpen(prev => !prev)
+    }*/
+
+    return(
+        <div style={i == 2 ? {} : {marginRight: '4ch'}}>
+            <label htmlFor={id} className={styles.inputLabel}>{label} *</label>
+            <div className={styles.phoneNumber}>
+                <input type="checkbox" id="country-dropdown-input" className={styles.countryDropdownInput} style={{display: "none"}}/>
+                <label className={styles.countrySelector} htmlFor="country-dropdown-input">
+                    <p className={styles.arrow}>▴</p>
+                    <img src="flags/germany.png"/>
+                    <p>+49</p>
+                </label>
+
+                <div className={styles.countryDropdown}>
+                    <div className={styles.country}>
+                        <img src="flags/poland.png"/>
+                        <p>+48</p>
+                    </div>
+                    <div className={styles.country}>
+                        <img src="flags/italy.png"/>
+                        <p>+39</p>
+                    </div>
+                    <div className={styles.country}>
+                        <img src="flags/spain.png"/>
+                        <p>+34</p>
+                    </div>
+                    <div className={styles.country}>
+                        <img src="flags/france.png"/>
+                        <p>+33</p>
+                    </div>
+                    <div className={styles.country}>
+                        <img src="flags/us.png"/>
+                        <p>+1</p>
+                    </div>
+                    <div className={styles.country}>
+                        <img src="flags/portugal.png"/>
+                        <p>+351</p>
+                    </div>
+                    
+                </div>
+                <input type="text" id={id} className={`${styles.input} ${small ? styles.smallInput : ""}`} />
+                
+            </div>
+        </div>
+    )
 }

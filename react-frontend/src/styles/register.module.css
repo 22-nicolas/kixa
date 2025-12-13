@@ -26,6 +26,81 @@
     max-width: 8ch;
 }
 
+.phoneNumber{
+    border: 1px solid;
+    border-radius: 2ch;
+    padding: 0.7ch;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    height: 2ch;
+    width: fit-content;
+    position: relative;
+}
+
+.phoneNumber input{
+    border: none;
+    border-radius: 0;
+    padding: none;
+}
+
+.countrySelector{
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    gap: 0.5ch;
+    border-right: 1px solid;
+    padding-right: 1ch;
+    cursor: pointer;
+    
+}
+
+.countrySelector img, .country img{
+    width: 2ch;
+}
+
+.countryDropdown{
+    display: none;
+    background-color: white;
+    z-index: 2;
+    overflow-y: scroll;
+    max-height: 15ch;
+}
+
+.countryDropdownInput:checked ~ .countryDropdown{
+    display: block;
+    position: absolute;
+    /* bottom: 0;*/
+    top: 100%;
+}
+
+.arrow{
+    transition: 200ms;
+}
+
+
+.countryDropdownInput:checked ~ .countrySelector .arrow{
+    transform: rotateZ(180deg);
+}
+
+.country {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    background-color: white;
+    gap: 0.5ch;
+    border-bottom: 1px solid;
+    padding-left: 1ch;
+    padding-right: 1ch;
+    padding-top: 0.3ch;
+    padding-bottom: 0.3ch;
+    cursor: pointer;
+}
+
+.country:hover{
+    background-color: #dddddd;
+}   
+
 .password{
     border: 1px solid;
     border-radius: 2ch;
