@@ -2,7 +2,7 @@ import PropTypes from "prop-types"
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { getProductIdFromSrc } from "../../modules/utils.js"
-import { getProductById } from "../../modules/api.js"
+import { getProductById } from "../../api/productData.js"
 import styles from "../../styles/index.module.css"
 
 export default function SideScroll({ items }) {

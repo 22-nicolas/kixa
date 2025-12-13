@@ -1,5 +1,5 @@
 import { useState, createContext, useContext } from "react"
-import { getProductById } from "../modules/api";
+import { getProductById } from "../api/productData";
 
 const CartContext = createContext()
 

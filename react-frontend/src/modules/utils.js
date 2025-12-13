@@ -1,4 +1,4 @@
-import { getProductData } from "./api";
+import { getProductData } from "../api/productData";
 
 export const shoeAssetsPath = "shoes"
 
@@ -29,4 +29,16 @@ export async function getProductIdFromSrc(src) {
         }
     }
     return null
+}
+
+export function getBaseApiUrl() {
+    let API_BASE_URL;
+
+    if (window.location.hostname === "localhost") {
+        API_BASE_URL = "http://localhost:3000/api"
+    } else {
+        API_BASE_URL = "https://kixa-production.up.railway.app/api"
+    }
+    
+    return API_BASE_URL
 }

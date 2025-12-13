@@ -1,16 +1,6 @@
-let API_BASE_URL;
+import { getBaseApiUrl } from "../modules/utils";
 
-if (window.location.hostname === "localhost") {
-    API_BASE_URL = "http://localhost:3000/api"
-} else {
-    API_BASE_URL = "https://kixa-production.up.railway.app/api"
-}
-
-export async function getRequiredFields() {
-    const response = await fetch(`${API_BASE_URL}/register/required_fields`);
-    const required_fields = await response.json();
-    return required_fields;
-}
+const API_BASE_URL = getBaseApiUrl();
 
 export async function getProductData() {
     const response = await fetch(`${API_BASE_URL}/products`);

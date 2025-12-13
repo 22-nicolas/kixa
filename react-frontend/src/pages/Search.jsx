@@ -9,7 +9,7 @@ import Brand from "../elements/search/Brand"
 import Item from "../elements/search/Item"
 import { Colors } from "../modules/colors"
 import { Brands } from "../modules/brands"
-import { getProductData } from "../modules/api"
+import { getProductData } from "../api/productData"
 import styles from "../styles/search.module.css"
 
 function Search() {

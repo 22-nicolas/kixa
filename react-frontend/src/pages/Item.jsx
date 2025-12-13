@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react"
-import { getProductById } from "../modules/api"
+import { getProductById } from "../api/productData"
 import { useNavigate, useSearchParams } from "react-router-dom"
 
 import Container from "../elements/general/Container"
