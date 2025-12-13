@@ -54,7 +54,8 @@ app.get("/api/country/:country", async (req, res, next) => {
   //check cache
   const cached = cache.get(cacheKey);
   if (cached) {
-    return cached;
+    res.send(cached);
+    return;
   }
 
   const response = await fetch("https://aaapis.com/api/v1/info/country/", {
