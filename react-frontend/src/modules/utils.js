@@ -2,6 +2,8 @@ import { getProductData } from "../api/productData";
 
 export const shoeAssetsPath = "shoes"
 
+export const supportedCountries = ["france", "germany", "italy", "poland", "portugal", "spain", "uk", "us"]
+
 export function isDescandentOf(parentElement, searchElement) {
     let currentElement = parentElement;
     while (currentElement) {

@@ -2,7 +2,9 @@ import { getIsVisible } from "./AccountPopup"
 import styles from "../../../styles/register.module.css"
 import openEye from "../../../assets/open_eye.png"
 import closedEye from "../../../assets/closed_eye.png"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { supportedCountries } from "../../../modules/utils"
+import { getCountryData } from "../../../api/countryData"
 
 export default function Register() {
     const {isVisible} = getIsVisible('register')
@@ -14,8 +16,6 @@ export default function Register() {
             {/*
                 Inputs will default to type: "text", small: false and required: true.
                 Id will be formated from label if not given.
-
-                TODO: Create phone number input with prefix dropdown.
             */}
             <RegisterDetails inputsData={[{label: "First Name"}, {label: "Last Name"}]}/>
             <RegisterDetails inputsData={[{label: "Country"}]}/>
@@ -87,12 +87,35 @@ function Password({label, id, small, i }) {
 }
 
 function PhoneNumber({ label, id, small, i }) {
-    /*const [dropdownOpen, setDropdownOpen] = useState(false)
+    const [countryComponents, setCountryComponents] = useState(<p>Loading...</p>)
 
-    function toggleOpen() {
-        setDropdownOpen(prev => !prev)
-    }*/
+    useEffect(() => {
+        mapCountryComponents()
+    }, [])
+    
+    async function mapCountryComponents() {
+        //fetch country data
+        const countryData = await Promise.all(
+            supportedCountries.map(country => getCountryData(country))
+        )
 
+        //map to components
+        const components = countryData.map((data, i) => {
+            if(!data.name) return
+            return(
+                <div key={i} className={styles.country}>
+                    <p>{data.flag}</p>
+                    <p>+{data.phone_international_prefix}</p>
+                </div>
+            )
+        })
+        
+        //return if one component didn't get mapped
+        if(components.findIndex(component => !component) !== -1) return setCountryComponents(<ErrorDropdown/>)
+
+        setCountryComponents(prevComponents => components)
+    }
+    
     return(
         <div style={i == 2 ? {} : {marginRight: '4ch'}}>
             <label htmlFor={id} className={styles.inputLabel}>{label} *</label>
@@ -105,35 +128,15 @@ function PhoneNumber({ label, id, small, i }) {
                 </label>
 
                 <div className={styles.countryDropdown}>
-                    <div className={styles.country}>
-                        <img src="flags/poland.png"/>
-                        <p>+48</p>
-                    </div>
-                    <div className={styles.country}>
-                        <img src="flags/italy.png"/>
-                        <p>+39</p>
-                    </div>
-                    <div className={styles.country}>
-                        <img src="flags/spain.png"/>
-                        <p>+34</p>
-                    </div>
-                    <div className={styles.country}>
-                        <img src="flags/france.png"/>
-                        <p>+33</p>
-                    </div>
-                    <div className={styles.country}>
-                        <img src="flags/us.png"/>
-                        <p>+1</p>
-                    </div>
-                    <div className={styles.country}>
-                        <img src="flags/portugal.png"/>
-                        <p>+351</p>
-                    </div>
-                    
+                    {countryComponents}
                 </div>
                 <input type="text" id={id} className={`${styles.input} ${small ? styles.smallInput : ""}`} />
                 
             </div>
         </div>
     )
+}
+
+function ErrorDropdown() {
+    return <div style={{color: "grey", fontSize: "0.8rem"}}>There was an issue while loading. Please try again later.</div>
 }
