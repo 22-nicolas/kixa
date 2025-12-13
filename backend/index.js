@@ -40,9 +40,26 @@ app.get("/api/products/delete/:id", async (req, res) => {
   res.status(200).send();
 });
 
+//country api
+app.get("/api/country/:country", async (req, res, next) => {
+  const country = req.params.country;
+  const response = await fetch("https://aaapis.com/api/v1/info/country/", {
+    method: "POST",
+    headers: {
+      "Authorization": `Token ${process.env.COUNTRY_API_TOKEN}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      country: country
+    })
+  });
+  const countryData = await response.json();
+  res.send(countryData);
+});
+
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send({err})
+  res.status(500).send({ message: "An internal server error occurred." });
 });
 
 app.listen(3000, () => {
