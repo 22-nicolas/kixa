@@ -33,13 +33,15 @@ export async function getProductIdFromSrc(src) {
     return null
 }
 
+const API_URL_PRODUCTION = import.meta.env.VITE_API_URL_PRODUCTION;
+const API_URL_DEVELOPMENT = import.meta.env.VITE_API_URL_DEVELOPMENT;
 export function getBaseApiUrl() {
     let API_BASE_URL;
 
     if (window.location.hostname === "localhost") {
-        API_BASE_URL = "http://localhost:3000/api"
+        API_BASE_URL = API_URL_DEVELOPMENT
     } else {
-        API_BASE_URL = "https://kixa-production.up.railway.app/api"
+        API_BASE_URL = API_URL_PRODUCTION
     }
     
     return API_BASE_URL
