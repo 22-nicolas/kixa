@@ -2,13 +2,29 @@ import { getIsVisible } from "./AccountPopup"
 import styles from "../../../styles/register.module.css"
 import openEye from "../../../assets/open_eye.png"
 import closedEye from "../../../assets/closed_eye.png"
-import { useEffect, useRef, useState } from "react"
+import { createRef, useEffect, useRef, useState } from "react"
 import { supportedCountries } from "../../../modules/utils"
 import { getCountryData } from "../../../api/countryData"
+import { register } from "../../../api/users"
 
 export default function Register() {
     const {isVisible} = getIsVisible('register')
+    const inputRefs = useRef({});
 
+    function getFormValues() {
+        const values = {};
+        for (const id in inputRefs.current) {
+            if (inputRefs.current[id].current) {
+                values[id] = inputRefs.current[id].current.value;
+            }
+        }
+        return values;
+    }
+
+    function handleSubmit() {
+        const formValues = getFormValues();
+        register(formValues)
+    }
     return (
         <div className={`register ${isVisible ? "" : "hidden"}`}>
             <p>Please enter your details to create an account</p>
@@ -17,22 +33,22 @@ export default function Register() {
                 Inputs will default to type: "text", small: false and required: true.
                 Id will be formated from label if not given.
             */}
-            <RegisterDetails inputsData={[{label: "First Name"}, {label: "Last Name"}]}/>
-            <RegisterDetails inputsData={[{label: "Country"}]}/>
-            <RegisterDetails inputsData={[{label: "City"}, {label: "ZIP code", small: true}]}/>
-            <RegisterDetails inputsData={[{label: "Street"}, {label: "House Number", small: true}]}/>
-            <RegisterDetails inputsData={[{label: "Email", type: "email"}]}/>
-            <RegisterDetails inputsData={[{label: "Phone Number", type: "phone number", required: false}]}/>
-            <RegisterDetails inputsData={[{label: "Password", type: "password"}]}/>
-            <RegisterDetails inputsData={[{label: "Repeat Password", type: "password"}]}/>
+            <RegisterDetails inputsData={[{label: "First Name"}, {label: "Last Name"}]} inputRefs={inputRefs}/>
+            <RegisterDetails inputsData={[{label: "Country"}]} inputRefs={inputRefs}/>
+            <RegisterDetails inputsData={[{label: "City"}, {label: "ZIP code", small: true}]} inputRefs={inputRefs}/>
+            <RegisterDetails inputsData={[{label: "Street"}, {label: "House Number", small: true}]} inputRefs={inputRefs}/>
+            <RegisterDetails inputsData={[{label: "Email", type: "email"}]} inputRefs={inputRefs}/>
+            <RegisterDetails inputsData={[{label: "Phone Number", type: "phone number", required: false}]} inputRefs={inputRefs}/>
+            <RegisterDetails inputsData={[{label: "Password", type: "password"}]} inputRefs={inputRefs}/>
+            <RegisterDetails inputsData={[{label: "Repeat Password", type: "password"}]} inputRefs={inputRefs}/>
 
-            <div className={styles.sumbitRegisterBtn}>register</div>
+            <div className={styles.sumbitRegisterBtn} onClick={handleSubmit}>register</div>
         </div>
     )
 
 }
 
-function RegisterDetails({ inputsData }) {
+function RegisterDetails({ inputsData, inputRefs }) {
 
     const inputComponents = inputsData.map((data, i) => {
         let {label, id, small, type, required} = data
@@ -41,13 +57,16 @@ function RegisterDetails({ inputsData }) {
         if (!type) type = "text"
         if (required === undefined) required = true
 
+        const ref = createRef();
+        inputRefs.current[id] = ref;
+
         switch (type) {
             case "phone number":
-                return <PhoneNumber key={i} label={label} id={id} small={small} i={i} />
+                return <PhoneNumber key={i} label={label} id={id} small={small} i={i} ref={ref} />
             case "password":
-                return <Password key={i} label={label} id={id} small={small} i={i} />
+                return <Password key={i} label={label} id={id} small={small} i={i} ref={ref} />
             default:
-                return <Input key={i} label={label} type={type} id={id} small={small} i={i} required={required} />
+                return <Input key={i} label={label} type={type} id={id} small={small} i={i} required={required} ref={ref} />
         }
         
     })
@@ -59,16 +78,16 @@ function RegisterDetails({ inputsData }) {
     )
 }
 
-function Input({label, id, small, i, type, required }) {
+function Input({label, id, small, i, type, required, ref }) {
     return(
         <div style={i == 2 ? {} : {marginRight: '4ch'}}>
             <label htmlFor={id} className={styles.inputLabel}>{label}{required ? " *" : ""}</label>
-            <input id={id} type={type} className={`${styles.input} ${small ? styles.smallInput : ""}`} />
+            <input ref={ref} id={id} type={type} className={`${styles.input} ${small ? styles.smallInput : ""}`} />
         </div>
     )  
 }
 
-function Password({label, id, small, i }) {
+function Password({label, id, small, i, ref }) {
     const [isVisible, setIsVisible] = useState(false)
 
     function toggleVisible() {
@@ -79,14 +98,14 @@ function Password({label, id, small, i }) {
         <div style={i == 2 ? {} : {marginRight: '4ch'}}>
             <label htmlFor={id} className={styles.inputLabel}>{label} *</label>
             <div className={styles.password}>
-                <input id={id} type={`${isVisible ? "text" : "password"}`} className={`${styles.passwordInput} ${small ? styles.smallInput : ""}`} />
+                <input ref={ref} id={id} type={`${isVisible ? "text" : "password"}`} className={`${styles.passwordInput} ${small ? styles.smallInput : ""}`} />
                 <img onMouseDown={toggleVisible} src={`${isVisible ? closedEye : openEye}`} alt="toggle visible" />
             </div>
         </div>
     )  
 }
 
-function PhoneNumber({ label, id, small, i }) {
+function PhoneNumber({ label, id, small, i, ref }) {
     const userRegionName = getUserRegionName() //get userRegion to set as default prefix
     const countryInput = useRef()
     const [countryComponents, setCountryComponents] = useState(<p>Loading...</p>)
@@ -171,7 +190,7 @@ function PhoneNumber({ label, id, small, i }) {
                 <div className={styles.countryDropdown}>
                     {countryComponents}
                 </div>
-                <input type="text" id={id} className={`${styles.input} ${small ? styles.smallInput : ""}`} />
+                <input ref={ref} type="text" id={id} className={`${styles.input} ${small ? styles.smallInput : ""}`} />
                 
             </div>
         </div>

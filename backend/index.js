@@ -3,6 +3,7 @@ import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import NodeCache from 'node-cache';
+import bcrypt from 'bcrypt';
 
 dotenv.config({ path: "backend/.env" });
 
@@ -74,6 +75,15 @@ app.get("/api/country/:country", async (req, res, next) => {
   cache.set(cacheKey, countryData, 60);
 
   res.send(countryData);
+});
+
+app.post("/api/users/register", async (req, res) => {
+  const userData = req.body;
+  const {password} = userData;
+  //TODO: validateUserData
+  const hashedPassword = await bcrypt.hash(password, 10);
+  //TODO: store in db
+  res.status(201).send();
 });
 
 app.use((err, req, res, next) => {
