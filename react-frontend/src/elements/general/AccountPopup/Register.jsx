@@ -2,7 +2,7 @@ import { getIsVisible } from "./AccountPopup"
 import styles from "../../../styles/register.module.css"
 import openEye from "../../../assets/open_eye.png"
 import closedEye from "../../../assets/closed_eye.png"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { supportedCountries } from "../../../modules/utils"
 import { getCountryData } from "../../../api/countryData"
 
@@ -87,12 +87,42 @@ function Password({label, id, small, i }) {
 }
 
 function PhoneNumber({ label, id, small, i }) {
+    const userRegionName = getUserRegionName() //get userRegion to set as default prefix
+    const countryInput = useRef()
     const [countryComponents, setCountryComponents] = useState(<p>Loading...</p>)
+    const [activeCountry, setActiveCountry] = useState(userRegionName || supportedCountries[0]) //default back to first supported country (france)
+    const [activeCountryComponent, setActiveCountryComponent] = useState(
+        <label className={styles.countrySelector} htmlFor="country-dropdown-input">
+            <p className={styles.arrow}>▴</p>
+            <p>...</p>
+        </label>
+    )
 
     useEffect(() => {
         mapCountryComponents()
     }, [])
-    
+
+    useEffect(() => {
+        mapActiveCountryComponent()
+    }, [activeCountry])
+
+    async function mapActiveCountryComponent(){
+        const data = await getCountryData(activeCountry)
+        setActiveCountryComponent(
+            <label className={styles.countrySelector} htmlFor="country-dropdown-input">
+                <p className={styles.arrow}>▴</p>
+                <p>{data.flag}</p>
+                <p>+{data.phone_international_prefix}</p>
+            </label>
+        )
+    }
+
+    function onCountryClick(country) {
+        countryInput.current.checked = false
+        setActiveCountry(country)
+    }
+
+
     async function mapCountryComponents() {
         //fetch country data
         const countryData = await Promise.all(
@@ -103,7 +133,7 @@ function PhoneNumber({ label, id, small, i }) {
         const components = countryData.map((data, i) => {
             if(!data.name) return
             return(
-                <div key={i} className={styles.country}>
+                <div key={i} className={styles.country} onMouseDown={() => onCountryClick(data.name)}>
                     <p>{data.flag}</p>
                     <p>+{data.phone_international_prefix}</p>
                 </div>
@@ -115,17 +145,28 @@ function PhoneNumber({ label, id, small, i }) {
 
         setCountryComponents(prevComponents => components)
     }
+
+    function getUserRegionName() {
+        const navigator = window.navigator
+        const locale = new Intl.Locale(navigator.language)
+        const userRegionCode = locale.region
+
+        if (!userRegionCode) return
+
+        const regionNames = new Intl.DisplayNames(
+            ["en-US"],
+            { type: 'region'}
+        )
+
+        return regionNames.of(userRegionCode)
+    }
     
     return(
         <div style={i == 2 ? {} : {marginRight: '4ch'}}>
             <label htmlFor={id} className={styles.inputLabel}>{label} *</label>
             <div className={styles.phoneNumber}>
-                <input type="checkbox" id="country-dropdown-input" className={styles.countryDropdownInput} style={{display: "none"}}/>
-                <label className={styles.countrySelector} htmlFor="country-dropdown-input">
-                    <p className={styles.arrow}>▴</p>
-                    <img src="flags/germany.png"/>
-                    <p>+49</p>
-                </label>
+                <input ref={countryInput} type="checkbox" id="country-dropdown-input" className={styles.countryDropdownInput} style={{display: "none"}}/>
+                {activeCountryComponent}
 
                 <div className={styles.countryDropdown}>
                     {countryComponents}
