@@ -4,8 +4,8 @@ import dotenv from 'dotenv'
 dotenv.config({ path: "backend/.env" });
 
 let connectionConfig;
-if (process.env.DATABASE_URL) {
-    connectionConfig = process.env.MYSQL_URL;
+if (process.env.DATABASE_URL) { // For production (Aiven, Railway, etc.)
+    connectionConfig = process.env.DATABASE_URL;
 } else {
     // Use individual env vars (for local)
     connectionConfig = {
