@@ -11,5 +11,9 @@ export async function register(userData) {
         body: JSON.stringify(userData)
     });
     const result = await response
-    return result;
+    
+    if (result.status !== 400) return result;
+    
+    const error = await result.json();
+    return error;
 }

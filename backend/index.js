@@ -4,6 +4,7 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import NodeCache from 'node-cache';
 import bcrypt from 'bcrypt';
+import { validateUserData } from './users.js';
 
 dotenv.config({ path: "backend/.env" });
 
@@ -80,7 +81,12 @@ app.get("/api/country/:country", async (req, res, next) => {
 app.post("/api/users/register", async (req, res) => {
   const userData = req.body;
   const {password} = userData;
-  //TODO: validateUserData
+  const validateResult = await validateUserData(userData);
+  if (validateResult) {
+    res.status(400).send(validateResult);
+    return;
+  }
+
   const hashedPassword = await bcrypt.hash(password, 10);
   //TODO: store in db
   res.status(201).send();
