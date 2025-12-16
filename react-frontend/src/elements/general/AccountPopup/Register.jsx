@@ -2,16 +2,21 @@ import { getIsVisible } from "./AccountPopup"
 import styles from "../../../styles/register.module.css"
 import openEye from "../../../assets/open_eye.png"
 import closedEye from "../../../assets/closed_eye.png"
-import { createRef, useEffect, useRef, useState } from "react"
+import { createContext, useContext, createRef, useEffect, useRef, useState } from "react"
 import { supportedCountries } from "../../../modules/utils"
 import { getCountryData } from "../../../api/countryData"
-import { register } from "../../../api/users"
+import { validateUserData } from "../../../api/users"
+
+const HighlightedFieldsContext = createContext()
 
 export default function Register() {
     const {isVisible} = getIsVisible('register')
     const inputRefs = useRef({});
+    const [highlightedFields, setHighlightedFields] = useState([])
+    const [errorMessage, setErrorMessage] = useState("")
 
     function getFormValues() {
+        console.log(inputRefs.current)
         const values = {};
         for (const id in inputRefs.current) {
             if (inputRefs.current[id].current) {
@@ -21,9 +26,37 @@ export default function Register() {
         return values;
     }
 
-    function handleSubmit() {
+    async function handleSubmit() {
         const formValues = getFormValues();
-        register(formValues)
+        const errorData = await validateUserData(formValues)
+        
+        //if no error dehighlight all and clear error
+        if (!errorData) {
+            setHighlightedFields([])
+            setErrorMessage("")
+            return
+        }
+
+        //Display an error message to the user according to the error and highlight incorrect fields/inputs
+        const {error, missing} = errorData
+        switch (error) {
+            case "Missing required fields":
+                setHighlightedFields(missing)
+                setErrorMessage("Please fill out all required fields!")
+                break;
+            case "Invalid email format":
+                setHighlightedFields(["email"])
+                setErrorMessage("Please provide a valid email address!")
+                break;
+            case "Email already exists":
+                setHighlightedFields(["email"])
+                setErrorMessage("Your email is already in use! Did you mean to login?")
+                break;
+            case "Passwords do not match":
+                setHighlightedFields(["password", "repeat_password"])
+                setErrorMessage("Passwords do not match!")
+                break;
+        }
     }
     return (
         <div className={`register ${isVisible ? "" : "hidden"}`}>
@@ -33,15 +66,18 @@ export default function Register() {
                 Inputs will default to type: "text", small: false and required: true.
                 Id will be formated from label if not given.
             */}
-            <RegisterDetails inputsData={[{label: "First Name"}, {label: "Last Name"}]} inputRefs={inputRefs}/>
-            <RegisterDetails inputsData={[{label: "Country"}]} inputRefs={inputRefs}/>
-            <RegisterDetails inputsData={[{label: "City"}, {label: "ZIP code", small: true}]} inputRefs={inputRefs}/>
-            <RegisterDetails inputsData={[{label: "Street"}, {label: "House Number", small: true}]} inputRefs={inputRefs}/>
-            <RegisterDetails inputsData={[{label: "Email", type: "email"}]} inputRefs={inputRefs}/>
-            <RegisterDetails inputsData={[{label: "Phone Number", type: "phone number", required: false}]} inputRefs={inputRefs}/>
-            <RegisterDetails inputsData={[{label: "Password", type: "password"}]} inputRefs={inputRefs}/>
-            <RegisterDetails inputsData={[{label: "Repeat Password", type: "password"}]} inputRefs={inputRefs}/>
+            <HighlightedFieldsContext.Provider value={highlightedFields}>
+                <RegisterDetails inputsData={[{label: "First Name"}, {label: "Last Name"}]} inputRefs={inputRefs}/>
+                <RegisterDetails inputsData={[{label: "Country"}]} inputRefs={inputRefs}/>
+                <RegisterDetails inputsData={[{label: "City"}, {label: "ZIP code", small: true}]} inputRefs={inputRefs}/>
+                <RegisterDetails inputsData={[{label: "Street"}, {label: "House Number", small: true}]} inputRefs={inputRefs}/>
+                <RegisterDetails inputsData={[{label: "Email", type: "email"}]} inputRefs={inputRefs}/>
+                <RegisterDetails inputsData={[{label: "Phone Number", type: "phone number", required: false}]} inputRefs={inputRefs}/>
+                <RegisterDetails inputsData={[{label: "Password", type: "password"}]} inputRefs={inputRefs}/>
+                <RegisterDetails inputsData={[{label: "Repeat Password", type: "password"}]} inputRefs={inputRefs}/>
+            </HighlightedFieldsContext.Provider>
 
+            <p className={styles.errorMessage}>{errorMessage}</p>
             <div className={styles.sumbitRegisterBtn} onClick={handleSubmit}>register</div>
         </div>
     )
@@ -79,25 +115,37 @@ function RegisterDetails({ inputsData, inputRefs }) {
 }
 
 function Input({label, id, small, i, type, required, ref }) {
+    const highlightedFields = useContext(HighlightedFieldsContext)
+    const isHighlightedFields = highlightedFields.includes(id);
+    console.log(`Input '${id}': isHighlightedFields =`, isHighlightedFields);
+
     return(
-        <div style={i == 2 ? {} : {marginRight: '4ch'}}>
+        <div style={{ ...(i !== 2 && { marginRight: '4ch' }) }}>
             <label htmlFor={id} className={styles.inputLabel}>{label}{required ? " *" : ""}</label>
-            <input ref={ref} id={id} type={type} className={`${styles.input} ${small ? styles.smallInput : ""}`} />
+            <input ref={ref} id={id} type={type} 
+                   className={`${styles.input} ${small ? styles.smallInput : ""}`} 
+                   style={{ ...(isHighlightedFields && { borderColor: 'red' }) }} />
         </div>
     )  
 }
 
 function Password({label, id, small, i, ref }) {
     const [isVisible, setIsVisible] = useState(false)
+    const highlightedFields = useContext(HighlightedFieldsContext)
+    const isHighlightedFields = highlightedFields.includes(id)
+    console.log(`Password '${id}': isHighlightedFields =`, isHighlightedFields);
 
     function toggleVisible() {
         setIsVisible(prev => !prev)
     }
 
     return(
-        <div style={i == 2 ? {} : {marginRight: '4ch'}}>
+        <div style={{ ...(i !== 2 && { marginRight: '4ch' }) }}>
             <label htmlFor={id} className={styles.inputLabel}>{label} *</label>
-            <div className={styles.password}>
+            <div 
+                className={styles.password} 
+                style={{ ...(isHighlightedFields && { borderColor: 'red' }) }}
+            >
                 <input ref={ref} id={id} type={`${isVisible ? "text" : "password"}`} className={`${styles.passwordInput} ${small ? styles.smallInput : ""}`} />
                 <img onMouseDown={toggleVisible} src={`${isVisible ? closedEye : openEye}`} alt="toggle visible" />
             </div>
@@ -116,7 +164,9 @@ function PhoneNumber({ label, id, small, i, ref }) {
             <p>...</p>
         </label>
     )
-
+    const highlightedFields = useContext(HighlightedFieldsContext)
+    const isHighlightedFields = highlightedFields.includes(id)
+    console.log(`PhoneNumber '${id}': isHighlightedFields =`, isHighlightedFields);
     useEffect(() => {
         mapCountryComponents()
     }, [])
@@ -181,9 +231,12 @@ function PhoneNumber({ label, id, small, i, ref }) {
     }
     
     return(
-        <div style={i == 2 ? {} : {marginRight: '4ch'}}>
+        <div style={{ ...(i !== 2 && { marginRight: '4ch' }) }}>
             <label htmlFor={id} className={styles.inputLabel}>{label} *</label>
-            <div className={styles.phoneNumber}>
+            <div 
+                className={styles.phoneNumber}
+                style={{ ...(isHighlightedFields && { borderColor: 'red' }) }}
+            >
                 <input ref={countryInput} type="checkbox" id="country-dropdown-input" className={styles.countryDropdownInput} style={{display: "none"}}/>
                 {activeCountryComponent}
 

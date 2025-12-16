@@ -1,7 +1,9 @@
+import { checkIfEmailExists } from "./sql.js";
+
 export async function validateUserData(userData) {
     const requiredFields = [
         'first_name', 'last_name', 'country', 'city', 'zip_code', 
-        'street', 'house_number', 'email', 'phone_number', 'password', 
+        'street', 'house_number', 'email', 'password', 
         'repeat_password'
     ];
 
@@ -17,12 +19,16 @@ export async function validateUserData(userData) {
         return { error: 'Invalid email format' };
     }
 
+    // Check if email is unique
+    const emailExists = await checkIfEmailExists(userData.email);
+    if (emailExists) {
+        return { error: 'Email already exists' };
+    }
+
     // Check if repeat password matches password
     if (userData.password !== userData.repeat_password) {
         return { error: 'Passwords do not match' };
-    }
-
-    //TODO: Validate Address with an API
+    }    
 
     return null; // Indicates successful validation
 }

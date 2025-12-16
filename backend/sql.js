@@ -58,3 +58,18 @@ const productData = await createProductData('test', 'test', 124, '[3,2]', 2, '[2
 console.log(productData);
 deleteProductData('test');
 */
+
+export async function checkIfEmailExists(email) {
+    const [userData] = await pool.query(`
+        select email
+        from users
+        where email = ?   
+    `, [email])
+
+    if (userData[0]) {
+        return true;
+    } else {
+        return false;
+    }
+}
+   
