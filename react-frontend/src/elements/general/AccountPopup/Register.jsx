@@ -3,31 +3,42 @@ import styles from "../../../styles/register.module.css"
 import openEye from "../../../assets/open_eye.png"
 import closedEye from "../../../assets/closed_eye.png"
 import { createContext, useContext, createRef, useEffect, useRef, useState } from "react"
-import { supportedCountries } from "../../../modules/utils"
+import { supportedCountries, getUserRegionName} from "../../../modules/utils"
 import { getCountryData } from "../../../api/countryData"
 import { validateUserData } from "../../../api/users"
 
 const HighlightedFieldsContext = createContext()
+const ActiveCountryContext = createContext()
+
 
 export default function Register() {
     const {isVisible} = getIsVisible('register')
     const inputRefs = useRef({});
     const [highlightedFields, setHighlightedFields] = useState([])
     const [errorMessage, setErrorMessage] = useState("")
+    const userRegionName = getUserRegionName() //get userRegion to set as default prefix
+    const [activeCountry, setActiveCountry] = useState(userRegionName || supportedCountries[0]) //default back to first supported country (france)
 
-    function getFormValues() {
+    async function getFormValues() {
         console.log(inputRefs.current)
         const values = {};
         for (const id in inputRefs.current) {
             if (inputRefs.current[id].current) {
-                values[id] = inputRefs.current[id].current.value;
+                // add prefix for phone number
+                if (id === "phone_number") {
+                    const {phone_international_prefix} = await getCountryData(activeCountry)
+                    values[id] = `+${phone_international_prefix}${inputRefs.current[id].current.value}`
+                } else {
+                    values[id] = inputRefs.current[id].current.value;
+                }
             }
         }
         return values;
     }
 
     async function handleSubmit() {
-        const formValues = getFormValues();
+        const formValues = await getFormValues();
+        console.log(formValues)
         const errorData = await validateUserData(formValues)
         
         //if no error dehighlight all and clear error
@@ -57,6 +68,8 @@ export default function Register() {
                 setErrorMessage("Passwords do not match!")
                 break;
         }
+
+        if (error) return
     }
     return (
         <div className={`register ${isVisible ? "" : "hidden"}`}>
@@ -66,16 +79,18 @@ export default function Register() {
                 Inputs will default to type: "text", small: false and required: true.
                 Id will be formated from label if not given.
             */}
-            <HighlightedFieldsContext.Provider value={highlightedFields}>
-                <RegisterDetails inputsData={[{label: "First Name"}, {label: "Last Name"}]} inputRefs={inputRefs}/>
-                <RegisterDetails inputsData={[{label: "Country"}]} inputRefs={inputRefs}/>
-                <RegisterDetails inputsData={[{label: "City"}, {label: "ZIP code", small: true}]} inputRefs={inputRefs}/>
-                <RegisterDetails inputsData={[{label: "Street"}, {label: "House Number", small: true}]} inputRefs={inputRefs}/>
-                <RegisterDetails inputsData={[{label: "Email", type: "email"}]} inputRefs={inputRefs}/>
-                <RegisterDetails inputsData={[{label: "Phone Number", type: "phone number", required: false}]} inputRefs={inputRefs}/>
-                <RegisterDetails inputsData={[{label: "Password", type: "password"}]} inputRefs={inputRefs}/>
-                <RegisterDetails inputsData={[{label: "Repeat Password", type: "password"}]} inputRefs={inputRefs}/>
+            <ActiveCountryContext.Provider value={[activeCountry, setActiveCountry]}>
+                <HighlightedFieldsContext.Provider value={highlightedFields}>
+                    <RegisterDetails inputsData={[{label: "First Name"}, {label: "Last Name"}]} inputRefs={inputRefs}/>
+                    <RegisterDetails inputsData={[{label: "Country"}]} inputRefs={inputRefs}/>
+                    <RegisterDetails inputsData={[{label: "City"}, {label: "ZIP code", small: true}]} inputRefs={inputRefs}/>
+                    <RegisterDetails inputsData={[{label: "Street"}, {label: "House Number", small: true}]} inputRefs={inputRefs}/>
+                    <RegisterDetails inputsData={[{label: "Email", type: "email"}]} inputRefs={inputRefs}/>
+                    <RegisterDetails inputsData={[{label: "Phone Number", type: "phone number", required: false}]} inputRefs={inputRefs}/>
+                    <RegisterDetails inputsData={[{label: "Password", type: "password"}]} inputRefs={inputRefs}/>
+                    <RegisterDetails inputsData={[{label: "Repeat Password", type: "password"}]} inputRefs={inputRefs}/>
             </HighlightedFieldsContext.Provider>
+            </ActiveCountryContext.Provider>
 
             <p className={styles.errorMessage}>{errorMessage}</p>
             <div className={styles.sumbitRegisterBtn} onClick={handleSubmit}>register</div>
@@ -117,7 +132,6 @@ function RegisterDetails({ inputsData, inputRefs }) {
 function Input({label, id, small, i, type, required, ref }) {
     const highlightedFields = useContext(HighlightedFieldsContext)
     const isHighlightedFields = highlightedFields.includes(id);
-    console.log(`Input '${id}': isHighlightedFields =`, isHighlightedFields);
 
     return(
         <div style={{ ...(i !== 2 && { marginRight: '4ch' }) }}>
@@ -133,7 +147,6 @@ function Password({label, id, small, i, ref }) {
     const [isVisible, setIsVisible] = useState(false)
     const highlightedFields = useContext(HighlightedFieldsContext)
     const isHighlightedFields = highlightedFields.includes(id)
-    console.log(`Password '${id}': isHighlightedFields =`, isHighlightedFields);
 
     function toggleVisible() {
         setIsVisible(prev => !prev)
@@ -154,10 +167,9 @@ function Password({label, id, small, i, ref }) {
 }
 
 function PhoneNumber({ label, id, small, i, ref }) {
-    const userRegionName = getUserRegionName() //get userRegion to set as default prefix
     const countryInput = useRef()
     const [countryComponents, setCountryComponents] = useState(<p>Loading...</p>)
-    const [activeCountry, setActiveCountry] = useState(userRegionName || supportedCountries[0]) //default back to first supported country (france)
+    const [activeCountry, setActiveCountry] = useContext(ActiveCountryContext)
     const [activeCountryComponent, setActiveCountryComponent] = useState(
         <label className={styles.countrySelector} htmlFor="country-dropdown-input">
             <p className={styles.arrow}>▴</p>
@@ -166,7 +178,6 @@ function PhoneNumber({ label, id, small, i, ref }) {
     )
     const highlightedFields = useContext(HighlightedFieldsContext)
     const isHighlightedFields = highlightedFields.includes(id)
-    console.log(`PhoneNumber '${id}': isHighlightedFields =`, isHighlightedFields);
     useEffect(() => {
         mapCountryComponents()
     }, [])
@@ -213,21 +224,6 @@ function PhoneNumber({ label, id, small, i, ref }) {
         if(components.findIndex(component => !component) !== -1) return setCountryComponents(<ErrorDropdown/>)
 
         setCountryComponents(prevComponents => components)
-    }
-
-    function getUserRegionName() {
-        const navigator = window.navigator
-        const locale = new Intl.Locale(navigator.language)
-        const userRegionCode = locale.region
-
-        if (!userRegionCode) return
-
-        const regionNames = new Intl.DisplayNames(
-            ["en-US"],
-            { type: 'region'}
-        )
-
-        return regionNames.of(userRegionCode)
     }
     
     return(
