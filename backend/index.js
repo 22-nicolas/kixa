@@ -1,4 +1,4 @@
-import {getProductData, getProductById, createProductData, deleteProductData} from './sql.js';
+import {getProductData, getProductById, createProductData, deleteProductData, registerUser} from './sql.js';
 import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
@@ -87,8 +87,12 @@ app.post("/api/users/register", async (req, res) => {
     return;
   }
 
+  //hash password
   const hashedPassword = await bcrypt.hash(password, 10);
-  //TODO: store in db
+  userData.password = hashedPassword;
+
+  await registerUser(userData);
+
   res.status(201).send();
 });
 
