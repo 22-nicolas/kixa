@@ -20,7 +20,6 @@ export default function Register() {
     const [activeCountry, setActiveCountry] = useState(userRegionName || supportedCountries[0]) //default back to first supported country (france)
 
     async function getFormValues() {
-        console.log(inputRefs.current)
         const values = {};
         for (const id in inputRefs.current) {
             if (inputRefs.current[id].current) {
@@ -38,7 +37,6 @@ export default function Register() {
 
     async function handleSubmit() {
         const formValues = await getFormValues();
-        console.log(formValues)
         const errorData = await validateUserData(formValues)
         
         //if no error dehighlight all and clear error
