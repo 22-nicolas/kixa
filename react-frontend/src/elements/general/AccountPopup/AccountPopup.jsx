@@ -1,18 +1,24 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { suscribeToAccountBtn, unSuscribe } from "../../../modules/AccountBtnEvent";
 import { isDescandentOf } from "../../../modules/utils";
+import { supportedCountries, getUserRegionName} from "../../../modules/utils"
 import Default from "./Default";
 import Register from "./Register";
 import Login from "./Login";
 
 
 export const InterfaceContext = createContext()
+export const HighlightedFieldsContext = createContext()
+export const ActiveCountryContext = createContext()
 
 export default function AccountPopup() {
     const loginPopup = useRef(null)
 
     const [isOpen, setIsOpen] = useState(false)
     const [currentInterface, setInterface] = useState('default')
+    const [highlightedFields, setHighlightedFields] = useState([])
+    const userRegionName = getUserRegionName() //get userRegion to set as default prefix
+    const [activeCountry, setActiveCountry] = useState(userRegionName || supportedCountries[0]) //default back to first supported country (france)
     
     //link/disconnect toggleIsOpen to account btn
     useEffect(() => {
@@ -47,11 +53,15 @@ export default function AccountPopup() {
 
     return(
         <div className={`account-popup${isOpen ? " show" : ""}`} ref={loginPopup}>
-            <InterfaceContext.Provider value={[currentInterface, setInterface]}>
-                <Default/>
-                <Register/>
-                <Login/>
-            </InterfaceContext.Provider>
+            <ActiveCountryContext.Provider value={[activeCountry, setActiveCountry]}>
+                <HighlightedFieldsContext.Provider value={[highlightedFields, setHighlightedFields]}>
+                    <InterfaceContext.Provider value={[currentInterface, setInterface]}>
+                        <Default/>
+                        <Register/>
+                        <Login/>
+                    </InterfaceContext.Provider>
+                </HighlightedFieldsContext.Provider>
+            </ActiveCountryContext.Provider>
         </div>
     );
 }
