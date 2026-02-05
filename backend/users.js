@@ -1,4 +1,4 @@
-import { checkIfEmailExists } from "./sql.js";
+import { getUserByEmail } from "./sql.js";
 
 export async function validateUserData(userData) {
     const requiredFields = [
@@ -20,8 +20,8 @@ export async function validateUserData(userData) {
     }
 
     // Check if email is unique
-    const emailExists = await checkIfEmailExists(userData.email);
-    if (emailExists) {
+    const emailExists = await getUserByEmail(userData.email);
+    if (emailExists != null) {
         return { error: 'Email already exists' };
     }
 

@@ -59,18 +59,14 @@ console.log(productData);
 deleteProductData('test');
 */
 
-export async function checkIfEmailExists(email) {
+export async function getUserByEmail(email) {
     const [userData] = await pool.query(`
-        select email
+        select *
         from users
         where email = ?   
     `, [email])
 
-    if (userData[0]) {
-        return true;
-    } else {
-        return false;
-    }
+    return userData[0];
 }
 
 export async function registerUser(userData) {

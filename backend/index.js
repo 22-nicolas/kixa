@@ -1,4 +1,4 @@
-import {getProductData, getProductById, createProductData, deleteProductData, registerUser} from './sql.js';
+import {getProductData, getProductById, createProductData, deleteProductData, registerUser, getUserByEmail} from './sql.js';
 import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
@@ -95,6 +95,25 @@ app.post("/api/users/register", async (req, res) => {
 
   res.status(201).send();
 });
+
+app.post("/api/users/login", async (req, res) => {
+  const {email, password} = req.body;
+  const userData = await getUserByEmail(email);
+
+  if (userData == null) {
+    return res.status(400).send("Cannot find user");
+  }
+
+  try {
+    if(await bcrypt.compare(password, userData.password)) {
+      res.status(200).send("Success");
+    } else {
+      res.status(400).send("Wrong password");
+    }
+  } catch {
+    res.status(500).send();
+  }
+})
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

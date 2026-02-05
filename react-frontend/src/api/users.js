@@ -17,3 +17,16 @@ export async function validateUserData(userData) {
     //console.log(errorData);
     return errorData;
 }
+
+export async function loginUser(email, password) {
+    const userData = {email: email, password: password}
+    const response = await fetch(`${API_BASE_URL}/users/login`, {
+        method: "POST",
+        headers: {
+        "Content-Type": "application/json"
+        },
+        body: JSON.stringify(userData)
+    });
+    
+    return response;
+}
