@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
-import { format } from "../../../../old-frontend/scripts/utils/utils"
+import { format } from "../../modules/utils"
 import { shoeAssetsPath } from "../../modules/utils"
 import { string } from "../../modules/colors"
 import styles from "../../styles/search.module.css"
@@ -85,9 +85,9 @@ export default function Item({ itemData }) {
         params.set("c", colorway.selectorIndex)
         navigate("/item?" + params)
     }
-
+    //${styles.item}
     return(
-        <div className={`${styles.item} ${!visible ? styles.hidden : ""}`} id={id}>
+        <div className={`${styles.item} ${!visible ? styles.hidden : ""} col-6 col-lg-3`} id={id}>
             <div className="href" onClick={redirect}>
                 <div className={styles.imgContainer}>
                     <img  src={`${shoeAssetsPath}/${id}/${id}_${colorway.selectorIndex + 1}_1.png`} alt={name} />

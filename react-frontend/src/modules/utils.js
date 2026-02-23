@@ -61,3 +61,7 @@ export function getUserRegionName() {
 
     return regionNames.of(userRegionCode)
 }
+
+export function format(str) {
+    return str.replace(" ", "").toLowerCase();
+}
