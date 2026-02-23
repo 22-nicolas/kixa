@@ -29,7 +29,7 @@ function Search() {
         const itemsData = await getProductData()
         setItemsData(itemsData)
     }
-
+    //${styles.itemContainer}
     return(
         <>
             <Header/>
@@ -37,16 +37,18 @@ function Search() {
 
             <Container>
                 <div className={styles.searchUi}>
-                    <div className={styles.filters}>
+                    <div className={`${styles.filters} collapse d-lg-block`} id="filtersTogglerButton">
                         <Pricing/>
                         <Color colors={Colors}/>
                         <Brand brands={Brands} />
                     </div>
                     <div>
-                        <div className={styles.itemHeader}>
-
+                        <div className={`${styles.itemHeader} btn d-inline-block mb-3`}>
+                            <button className="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#filtersTogglerButton" aria-controls="filtersTogglerButton" aria-expanded="false" aria-label="Toggle filters">
+                                Filters
+                            </button>
                         </div>
-                        <div className={styles.itemContainer}>
+                        <div className={` row`}>
                             {items}
                         </div>
                     </div>

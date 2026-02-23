@@ -1,6 +1,12 @@
 .searchUi{
     display: grid;
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 992px) {
+  .searchUi {
     grid-template-columns: 15vw 1fr;
+  }
 }
 
 .itemHeader{
@@ -105,6 +111,7 @@
     text-decoration: none;
     transition: 200ms;
     cursor: pointer;
+    margin-bottom: 2ch;
 }
 
 .hidden {
