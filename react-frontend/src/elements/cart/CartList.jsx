@@ -10,14 +10,16 @@ export default function Cart() {
         const {id, name, price, color, size, quantity} = item
         return(
             <div key={`${id}${color}${size}`} className={styles.item}>
-                <div className={styles.flex}>
-                    <div className={styles.imgContainer}><img src={`${shoeAssetsPath}/${id}/${id}_${color + 1}_1.png`}/></div>
-                    <div className="item-info">
-                        <Link to={`/item?id=${id}&c=${color}&size=${size}`}>{name}</Link>
-                        <p className="color-size">{color}, EU {size}</p>
+                <div className={"d-flex align-items-top justify-content-start"}>
+                    <div className={`${styles.imgContainer}`}><img src={`${shoeAssetsPath}/${id}/${id}_${color + 1}_1.png`}/></div>
+                    <div className="row justify-content-start ms-3 w-100">
+                        <div className="item-info col-12 col-lg-6">
+                            <Link to={`/item?id=${id}&c=${color}&size=${size}`}>{name}</Link>
+                            <p className="color-size">{color}, EU {size}</p>
+                        </div>
+                        <p className="item-qty col-4 col-lg-3">Qty {quantity}</p>
+                        <p className="price col-4 col-lg-3">US ${price*quantity}</p>
                     </div>
-                    <p className="item-qty">Qty {quantity}</p>
-                    <p className="price">US ${price*quantity}</p>
                 </div>
                 <p className={styles.removeBtn} onMouseDown={() => removeFromCart(id, color, size)}>Remove</p>
             </div>

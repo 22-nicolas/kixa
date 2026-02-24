@@ -1,7 +1,13 @@
 .cart{
     display: grid;
-    grid-template-columns: 60% 1fr;
-    column-gap: 1%;
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 992px) {
+  .cart{
+        grid-template-columns: 60% 1fr;
+        column-gap: 1%;
+    }
 }
 
 h1 {
