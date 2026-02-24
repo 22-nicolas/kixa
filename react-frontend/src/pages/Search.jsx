@@ -37,14 +37,14 @@ function Search() {
 
             <Container>
                 <div className={styles.searchUi}>
-                    <div className={`${styles.filters} collapse d-lg-block`} id="filtersTogglerButton">
+                    <div className={`${styles.filters} collapse d-xl-block`} id="filtersTogglerButton">
                         <Pricing/>
                         <Color colors={Colors}/>
                         <Brand brands={Brands} />
                     </div>
                     <div>
                         <div className={`${styles.itemHeader} btn d-inline-block mb-3`}>
-                            <button className="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#filtersTogglerButton" aria-controls="filtersTogglerButton" aria-expanded="false" aria-label="Toggle filters">
+                            <button className="navbar-toggler d-xl-none" type="button" data-bs-toggle="collapse" data-bs-target="#filtersTogglerButton" aria-controls="filtersTogglerButton" aria-expanded="false" aria-label="Toggle filters">
                                 Filters
                             </button>
                         </div>
