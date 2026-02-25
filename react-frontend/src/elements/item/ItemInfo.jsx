@@ -17,6 +17,8 @@ export default function ItemInfo() {
     const sizeSelectors = itemData.sizes.map(size => <SizeSelector key={size} size={size} activeSize={activeSize} setActiveSize={setActiveSize}/>)
     const colorSelectors = itemData.colors.map((color, i) => <ColorSelector key={i} colorId={color} i={i}/>)
     
+    const [show] = useState(window.visualViewport.width > 992)
+
     return(
         <div className={styles.itemInfo}>
             <div>
@@ -25,8 +27,8 @@ export default function ItemInfo() {
                 <div className={styles.colorways}>
                     {colorSelectors}
                 </div>
-                <p className={styles.sizeSelectLabel}>Select Size</p>
-                <div className={styles.sizeSelect}>
+                <p className={`${styles.sizeSelectLabel} `} type="button" data-bs-toggle="collapse" data-bs-target="#sizeSelectDropdown" aria-controls="sizeSelectDropdown" aria-expanded="false" aria-label="Toggle size selector">Select Size</p>
+                <div className={`${styles.sizeSelect} ${show ? "show" : ""} row collapse justify-content-center`} id="sizeSelectDropdown">
                     {sizeSelectors}
                 </div>
                 <p className={styles.price}>{itemData.price}$</p>
@@ -42,7 +44,7 @@ export default function ItemInfo() {
 function SizeSelector({ size, activeSize, setActiveSize }) {
     const isActive = activeSize === size
 
-    return <div className={`${styles.size} ${isActive ? styles.active : ""}`} onClick={() => setActiveSize(size)}>EU {size}</div>
+    return <div className={`${styles.size} ${isActive ? styles.active : ""} col-5 col-lg-3 m-1 p-1`} onClick={() => setActiveSize(size)}>EU {size}</div>
 }
 
 function ColorSelector({ i, colorId }) {

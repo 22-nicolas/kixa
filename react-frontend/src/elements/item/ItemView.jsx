@@ -78,8 +78,24 @@ function Slider() {
     const track = useRef()
     const placeholder = useRef()
     useEffect(() => {
-        track.current.style.left = `-${placeholder.current.offsetWidth*(activeImg-1)}px`
+        setTrackOffset()
+        
+        window.addEventListener("resize", handleResize)
+
+        return () => window.removeEventListener("resize", handleResize)
     }, [activeImg])
+
+    //moves track to correct position without transition (used when resizing window to prevent sliding animation)
+    function handleResize() {
+        const transition = track.current.style.transition
+        track.current.style.transition = "none"
+        setTrackOffset()
+        track.current.style.transition = transition
+    }
+
+    function setTrackOffset() {
+        track.current.style.left = `-${placeholder.current.offsetWidth*(activeImg-1)}px`
+    }
 
     return(
         <div className={styles.sliderContainer}>
