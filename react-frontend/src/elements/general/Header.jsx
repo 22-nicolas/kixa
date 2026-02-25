@@ -13,15 +13,7 @@ import cart_icon from '../../assets/cart_icon.png'
 import user_icon from '../../assets/user_icon.png'
 
 
-function Header() {
-    //copy and pasted just as placeholders
-    const LinkDropdownsList = ['Women', 'Men', 'Kids', 'Offers']
-
-    const LinkDropdownElements = LinkDropdownsList.map((txt) => {
-        return <Link className='btn'>{txt}</Link>
-    });
-
-    
+function Header() {    
     const {cart, getQuantity} = useCart()
     const [quantity, setQuantity] = useState(0)
     //update cart quantity display
@@ -37,7 +29,10 @@ function Header() {
             </button>
             <div className='collapse navbar-collapse justify-content-between' id="navbarNavDropdown">
                 <div className='d-flex align-items-start flex-column flex-lg-row'>
-                    {LinkDropdownElements}
+                    <Link to="/" className='btn'>Women</Link>
+                    <Link to="/" className='btn'>Men</Link>
+                    <Link to="/" className='btn'>Kids</Link>
+                    <Link to="/" className='btn'>Offers</Link>
                 </div>
                 <div className="right-header justify-content-start" role="search">
                     <SearchBar/>
