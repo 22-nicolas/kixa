@@ -30,6 +30,14 @@ jobs:
         working-directory: react-frontend
         run: npm run build
 
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions-bot"
+          git config --global user.email "support+actions@github.com"
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Deploy to GitHub Pages
         working-directory: react-frontend
         run: npm run deploy -- -u "github-actions-bot <support+actions@github.com>"
