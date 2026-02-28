@@ -14,15 +14,12 @@ export default function ItemView() {
     let [activeImg, setActiveImg] = useState(1)
 
     useEffect(() => {
-        if(!itemData) return
         const thumbnailsArray = Array.from({ length: itemData.imgs_per_colorway[itemData.color] })
         const thumbnailComponents = thumbnailsArray.map((_, i) => <Thumbnail key={i} i={i} itemData={itemData}/>)
 
         setThumbnails(thumbnailComponents)
 
-    }, [itemData, activeImg])
-
-    if(!itemData) return <LoadingItemView/>
+    }, [itemData])
 
     return(
         <ActiveImgContext.Provider value={[activeImg, setActiveImg]}>
@@ -50,22 +47,8 @@ function Thumbnail({ itemData, i }) {
     )
 }
 
-function LoadingItemView() {
-    return(
-        <div className={styles.itemView}>
-            <Slider itemData={null}/>
-
-            <div className={styles.thumbnails}>
-                <div className={styles.thumbnail}><img src={loadingGif} alt="Loading..."/></div>
-            </div>
-        </div>
-    )
-}
-
 function Slider() {
-    const [itemData] = useContext(ItemDataContext)
-
-    if(!itemData) return <LoadingSlider/>
+    let [itemData] = useContext(ItemDataContext)
 
     const {id, color, imgs_per_colorway} = itemData
 
@@ -103,21 +86,6 @@ function Slider() {
                 <img src={`${shoeAssetsPath}/${id}/${id}_${color + 1}_1.png`} className={styles.placeholder} ref={placeholder}/>
                 <div className={styles.track} ref={track}>
                     {slidesComponents}
-                </div>
-            </div>
-        </div>
-    )
-}
-
-function LoadingSlider() {
-    return(
-        <div className={styles.sliderContainer}>
-            <div className={styles.slider}>
-                <img src={loadingGif} className={styles.placeholder}/>
-                <div className={styles.track}>
-                    <div className={styles.slide}>
-                        <img src={loadingGif} alt="Loading..."/>
-                    </div>
                 </div>
             </div>
         </div>

@@ -8,6 +8,7 @@ import ItemInfo from "../elements/item/ItemInfo"
 import Header from "../elements/general/Header"
 import LoginPopup from "../elements/general/AccountPopup/AccountPopup"
 import Footer from "../elements/general/Footer"
+import loadingGif from "../assets/loading_icon.gif"
 
 import styles from "../styles/item.module.css"
 
@@ -23,9 +24,9 @@ export default function Item() {
     }, [params])
 
     async function getItemData(id, color) {
-        const itemsData = await getProductById(id)
-        itemsData.color = Number(color)
-        setItemData(itemsData)
+        const itemData = await getProductById(id)
+        itemData.color = Number(color)
+        setItemData(itemData)
     }
 
     return(
@@ -34,15 +35,41 @@ export default function Item() {
             <LoginPopup/>
 
             <Container>
-                <ItemDataContext value={[itemData, setItemData]}>
+                <ItemDataContext.Provider value={[itemData, setItemData]}>
                     <div className={styles.productContainer}>
-                        <ItemView></ItemView>
-                        <ItemInfo></ItemInfo>
+                        {itemData ? <ItemView/> : <LoadingItemView/>}
+                        {itemData ? <ItemInfo/> : <h1>Loading...</h1>}
                     </div>
-                </ItemDataContext>
+                </ItemDataContext.Provider>
             </Container>
 
             <Footer/>
         </>
+    )
+}
+
+export function LoadingItemView() {
+    return(
+        <div className={styles.itemView}>
+            <LoadingSlider />
+            <div className={styles.thumbnails}>
+                <div className={styles.thumbnail}><img src={loadingGif} alt="Loading..."/></div>
+            </div>
+        </div>
+    )
+}
+
+function LoadingSlider() {
+    return(
+        <div className={styles.sliderContainer}>
+            <div className={styles.slider}>
+                <img src={loadingGif} className={styles.placeholder}/>
+                <div className={styles.track}>
+                    <div className={styles.slide}>
+                        <img src={loadingGif} alt="Loading..."/>
+                    </div>
+                </div>
+            </div>
+        </div>
     )
 }
