@@ -25,15 +25,19 @@ function Slider({ slidesData, autoScrollDelay = 5000 }) {
     let dots = initDots()
     
     useEffect(() => {
-        matchWidth()
+        handleResize()
         start()
-        window.addEventListener('resize', matchWidth);
+        
         return () => clearInterval(sliderInterval.current);
     }, [])
     
     useEffect(() => {
         dots = initDots()
         start()
+
+        window.addEventListener('resize', handleResize);
+
+        return () => window.removeEventListener('resize', handleResize);
     }, [currentSlide])
 
     function initSlides() {
@@ -77,16 +81,16 @@ function Slider({ slidesData, autoScrollDelay = 5000 }) {
         setCurrentSlide(i)
     }
 
-    function matchWidth() {
-        //disconnect if slider doesn't exist
-        if (!slider.current) {
-            window.removeEventListener("resize", matchWidth)
-            return
-        }
-
+    function handleResize() {
         for (let i = 0; i < contents.current.length; i++) {
             contents.current[i].style.width = slider.current.offsetWidth + 'px';
         }
+
+        //set current slide without transition/animation
+        const transition = track.current.style.transition
+        track.current.style.transition = "none"
+        track.current.style.left = `-${currentSlide*slider.current.offsetWidth}px`;
+        track.current.style.transition = transition
     }
 
     return(
