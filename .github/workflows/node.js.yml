@@ -28,6 +28,8 @@ jobs:
       - name: Build
         working-directory: react-frontend
         run: npm run build
+        env:
+          VITE_API_URL_PRODUCTION: ${{ secrets.VITE_API_URL_PRODUCTION }}
 
       - name: Configure Git
         run: |
