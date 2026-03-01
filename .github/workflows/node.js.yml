@@ -25,14 +25,6 @@ jobs:
         working-directory: react-frontend
         run: npm ci
 
-      - name: Build
-        working-directory: react-frontend
-        run: |
-          echo "Prod URL is: $VITE_API_URL_PRODUCTION"
-          npm run build
-        env:
-          VITE_API_URL_PRODUCTION: ${{ secrets.VITE_API_URL_PRODUCTION }}
-
       - name: Configure Git
         run: |
           git config --global user.name "github-actions-bot"
@@ -46,3 +38,4 @@ jobs:
         run: npm run deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VITE_API_URL_PRODUCTION: ${{ secrets.VITE_API_URL_PRODUCTION }}
