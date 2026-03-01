@@ -1,0 +1,45 @@
+name: Deploy React Frontend
+
+on:
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: npm
+          cache-dependency-path: react-frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: react-frontend
+        run: npm ci
+
+      - name: Build
+        working-directory: react-frontend
+        run: npm run build
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions-bot"
+          git config --global user.email "support+actions@github.com"
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy
+        working-directory: react-frontend
+        run: npm run deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VITE_API_URL_PRODUCTION: ${{ secrets.VITE_API_URL_PRODUCTION }}
