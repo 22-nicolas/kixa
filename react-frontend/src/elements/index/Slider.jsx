@@ -19,36 +19,26 @@ function Slider({ slidesData, autoScrollDelay = 5000 }) {
     const [currentSlide, setCurrentSlide] = useState(0)
     const slider = useRef()
     const track = useRef()
-    const contents = useRef([])
+    const slidesRef = useRef([])
     const slides = initSlides()
     let sliderInterval = useRef()
     let dots = initDots()
     
     useEffect(() => {
-        handleResize()
         start()
-        
+
         return () => clearInterval(sliderInterval.current);
     }, [])
-    
-    useEffect(() => {
-        dots = initDots()
-        start()
-
-        window.addEventListener('resize', handleResize);
-
-        return () => window.removeEventListener('resize', handleResize);
-    }, [currentSlide])
 
     function initSlides() {
         return slidesData.map((slideData, i) => {
             slideData.isVideo = isVideo(slideData.src)
 
             return(
-            <div className={styles.slide} key={i}>
+            <div className={styles.slide} key={i} ref={slide => slidesRef.current[i] = slide}>
                 {slideData.isVideo ? 
-                    <video className={styles.contents} ref={content => contents.current[i] = content} src={slideData.src} autoPlay muted loop/> :
-                    <img className={styles.contents} ref={content => contents.current[i] = content} src={slideData.src}/>
+                    <video className={styles.contents} src={slideData.src} autoPlay muted loop/> :
+                    <img className={styles.contents} src={slideData.src}/>
                 }
                 <h1>{slideData.txt}<p>KX</p></h1>
             </div>
@@ -58,10 +48,7 @@ function Slider({ slidesData, autoScrollDelay = 5000 }) {
 
     function initDots(){
         return slidesData.map((_, i) => {
-            let isActive = false
-            if (i === currentSlide) isActive = true
-
-            return <span key={i} className={isActive ? styles.active : ""} onMouseDown={() => goToSlide(i)}/>
+            return <span key={i} className={i === currentSlide ? styles.active : ""} onMouseDown={() => goToSlide(i)}/>
         })
     }
 
@@ -71,26 +58,17 @@ function Slider({ slidesData, autoScrollDelay = 5000 }) {
     }
 
     function nextSlide() {
-        let nextSlide = currentSlide + 1
-        if(nextSlide >= slidesData.length) nextSlide = 0
-        goToSlide(nextSlide)
+        setCurrentSlide(prev => {
+                const next = (prev + 1) % slidesData.length
+                track.current.style.transform = `translateX(-${next * 100}%)`;
+                return next
+            })
     }
 
-    function goToSlide(i){
-        track.current.style.left = `-${i*slider.current.offsetWidth}px`;
+    function goToSlide(i, stopAutoScroll = true) {
+        track.current.style.transform = `translateX(-${i * 100}%)`;
         setCurrentSlide(i)
-    }
-
-    function handleResize() {
-        for (let i = 0; i < contents.current.length; i++) {
-            contents.current[i].style.width = slider.current.offsetWidth + 'px';
-        }
-
-        //set current slide without transition/animation
-        const transition = track.current.style.transition
-        track.current.style.transition = "none"
-        track.current.style.left = `-${currentSlide*slider.current.offsetWidth}px`;
-        track.current.style.transition = transition
+        if(stopAutoScroll) start()
     }
 
     return(
@@ -106,7 +84,7 @@ function Slider({ slidesData, autoScrollDelay = 5000 }) {
         </Container>
     )
 }
-Slider.PropTypes = {
+Slider.propTypes = {
     slideData: PropTypes.array.isRequired,
     autoScrollDelay: PropTypes.number
 }
