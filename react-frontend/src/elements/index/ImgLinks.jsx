@@ -11,12 +11,12 @@ export default function ImgLinks({ linksData }) {
 
     const links = linksData.map(({link, imgSrc, headline, info}, i) => {
         return(
-            <Link key={i} to={link}>
+            <Link key={i} to={link} className="col-12 col-sm-6 p-1">
                 <img src={imgSrc}/>
                 <div className={styles.cornerInfo}>
                     <p>{info}</p>
                     <h1>{headline}</h1>
-                    <button>Shop now</button>
+                    <button className="btn btn-light">Shop now</button>
                 </div>
             </Link>
         )
@@ -24,7 +24,7 @@ export default function ImgLinks({ linksData }) {
 
     return(
         <Container>
-            <div className={styles.imgLinks}>
+            <div className={`${styles.imgLinks} row`}>
                 {links}
             </div>
         </Container>

@@ -48,8 +48,8 @@ function Item({ link, imgSrc }) {
             <div className={styles.gradient}/>
             <img src={imgSrc} />
             <div className={styles.cornerInfo}>
-                <h1>{headline}</h1>
-                <button>Shop now</button>
+                <h2>{headline}</h2>
+                <button className="btn btn-light">Shop now</button>
             </div>
         </Link>
     )

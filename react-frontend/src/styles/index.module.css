@@ -77,10 +77,10 @@ span.active{
 }
 
 .imgLinks{
-    display: grid;
+    /*display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
-    gap: 20px;
+    gap: 20px;*/
 }
 
 .imgLinks a{
@@ -108,25 +108,8 @@ span.active{
     line-height: 0.5ch;
 }
 
-.cornerInfo button{
-    background-color: white;
-    height: fit-content;
-    border: none;
-    border-radius: 50px;
-    font-weight: bold;
-    padding: 1ch;
-    cursor: pointer;
-    transition: 200ms;
-}
-
 .cornerInfo button:hover{
-    background-color: white;
-    border: none;
-    border-radius: 50px;
-    font-weight: bold;
-    padding: 1ch;
-    cursor: pointer;
-    background-color: rgb(228, 228, 228);
+    filter: invert();
 }
 
 .cornerInfo h1, .cornerInfo p {
@@ -135,21 +118,28 @@ span.active{
     margin-bottom: 1ch;
 }
 
+.cornerInfo h1 {
+    font-size: 1.5rem;
+}
+
+.cornerInfo p {
+    font-size: 0.8rem;
+}
+
 .sideScroll{
     max-width: 100%;
     overflow-x: scroll;
 }
 
 .sideScrollSlider{
-    
     display: flex;
     gap: 20px;
     width: fit-content;
 }
 
 .sideScroll a{
-    height: 350px;
-    width: fit-content;
+    height: fit-content;
+    width: 60vw;
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -182,6 +172,8 @@ a:hover .gradient{
     justify-content: center;
     position: relative;
     margin-bottom: 30px;
+    overflow: hidden;
+    width: 100vw;
 }
 
 .promo .cornerInfo{
@@ -191,5 +183,30 @@ a:hover .gradient{
 }
 
 .promo img{
-    width: 100%;
+    width: 200%;
+    transform: translateX(0);
+}
+
+
+@media (min-width: 576px) {
+    .promo img{
+        width: 100%;
+        transform: translateX(0%);
+    }
+}
+
+@media (min-width: 768px) {
+    .sideScroll a{
+        width: 30vw;
+    }
+}
+
+@media (min-width: 992px) {
+    .cornerInfo p {
+        font-size: 1.2rem;
+    }
+
+    .cornerInfo h1 {
+        font-size: 2.5rem;
+    }
 }

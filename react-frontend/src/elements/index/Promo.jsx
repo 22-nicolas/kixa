@@ -17,7 +17,7 @@ function Promo({ headline, info, buttonLabel = "Shop now", imgSrc, link }) {
             <div className={styles.cornerInfo}>
                 <p>{info}</p>
                 <h1>{headline}</h1>
-                <button>{buttonLabel}</button>
+                <button className={"btn btn-light"}>{buttonLabel}</button>
             </div>
         </Link>
     )
