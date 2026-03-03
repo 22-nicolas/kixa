@@ -22,6 +22,7 @@ function Slider({ slidesData, autoScrollDelay = 5000 }) {
     const slidesRef = useRef([])
     const slides = initSlides()
     const startX = useRef(0)
+    const scrollY = useRef(window.scrollY)
     let sliderInterval = useRef()
     let dots = initDots()
     
@@ -74,9 +75,14 @@ function Slider({ slidesData, autoScrollDelay = 5000 }) {
 
     function handleTouchStart(e) {
         startX.current = e.touches[0].clientX
+        scrollY.current = window.scrollY
     }
 
     function handleToucheEnd(e) {
+        // Prevent swipe if user has scrolled vertically
+        const scrollDelta = window.scrollY - scrollY.current
+        if (scrollDelta !== 0) return
+
         const endX = e.changedTouches[0].clientX
         const diff = endX - startX.current
 

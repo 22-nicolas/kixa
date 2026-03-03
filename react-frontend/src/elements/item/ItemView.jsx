@@ -61,6 +61,7 @@ function Slider() {
     const track = useRef()
     const placeholder = useRef()
     const startX = useRef(0)
+    const scrollY = useRef(0)
     useEffect(() => {
         setTrackOffset()
         
@@ -86,6 +87,10 @@ function Slider() {
     }
 
     function handleToucheEnd(e) {
+        // Prevent swipe if user has scrolled vertically
+        const scrollDelta = window.scrollY - scrollY.current
+        if (scrollDelta !== 0) return
+
         const endX = e.changedTouches[0].clientX
         const diff = endX - startX.current
 
