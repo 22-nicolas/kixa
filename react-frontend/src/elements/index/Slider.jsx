@@ -21,6 +21,7 @@ function Slider({ slidesData, autoScrollDelay = 5000 }) {
     const track = useRef()
     const slidesRef = useRef([])
     const slides = initSlides()
+    const startX = useRef(0)
     let sliderInterval = useRef()
     let dots = initDots()
     
@@ -71,9 +72,30 @@ function Slider({ slidesData, autoScrollDelay = 5000 }) {
         if(stopAutoScroll) start()
     }
 
+    function handleTouchStart(e) {
+        startX.current = e.touches[0].clientX
+    }
+
+    function handleToucheEnd(e) {
+        const endX = e.changedTouches[0].clientX
+        const diff = endX - startX.current
+
+        if (diff === 0) return
+
+        if (diff > 0) {
+            const nextSlide = Math.max(currentSlide - 1, 0)
+            if (nextSlide === currentSlide) return
+            goToSlide(nextSlide)
+        } else {
+            const nextSlide = Math.min(currentSlide + 1, slidesData.length - 1)
+            if (nextSlide === currentSlide) return
+            goToSlide(nextSlide)
+        } 
+    }
+
     return(
         <Container>
-            <div ref={slider} className={styles.slider}>
+            <div ref={slider} className={styles.slider} onTouchStart={handleTouchStart} onTouchEnd={handleToucheEnd}>
                 <div ref={track} className={styles.sliderTrack} id="sliderTrack">
                     {slides}
                 </div>

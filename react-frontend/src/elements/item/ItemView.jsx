@@ -57,9 +57,10 @@ function Slider() {
     const slidesComponents = slidesArray.map((_, i) => <Slide key={i} imgSrc={`${shoeAssetsPath}/${id}/${id}_${color + 1}_${i + 1}.png`}/>)
 
     //move track according to selected thumbnail/activeImg
-    const [activeImg] = useContext(ActiveImgContext)
+    const [activeImg, setActiveImg] = useContext(ActiveImgContext)
     const track = useRef()
     const placeholder = useRef()
+    const startX = useRef(0)
     useEffect(() => {
         setTrackOffset()
         
@@ -80,9 +81,30 @@ function Slider() {
         track.current.style.left = `-${placeholder.current.offsetWidth*(activeImg-1)}px`
     }
 
+    function handleTouchStart(e) {
+        startX.current = e.touches[0].clientX
+    }
+
+    function handleToucheEnd(e) {
+        const endX = e.changedTouches[0].clientX
+        const diff = endX - startX.current
+
+        if (diff === 0) return
+
+        if (diff > 0) {
+            const nextSlide = Math.max(activeImg - 1, 1)
+            if (nextSlide === activeImg) return
+            setActiveImg(nextSlide)
+        } else {
+            const nextSlide = Math.min(activeImg + 1, slidesArray.length)
+            if (nextSlide === activeImg) return
+            setActiveImg(nextSlide)
+        } 
+    }
+
     return(
         <div className={styles.sliderContainer}>
-            <div className={styles.slider}>
+            <div className={styles.slider} onTouchStart={handleTouchStart} onTouchEnd={handleToucheEnd}>
                 <img src={`${shoeAssetsPath}/${id}/${id}_${color + 1}_1.png`} className={styles.placeholder} ref={placeholder}/>
                 <div className={styles.track} ref={track}>
                     {slidesComponents}
@@ -98,6 +120,7 @@ function Slide({ imgSrc }) {
     const img = useRef()
 
     function zoom(e) {
+        console.log(e)
         const rect = img.current.getBoundingClientRect();
 
         const horizontal = ((e.clientX - rect.left) / rect.width) * 100;
