@@ -120,7 +120,9 @@ function Slide({ imgSrc }) {
     const img = useRef()
 
     function zoom(e) {
-        console.log(e)
+        console.log("zoom")
+        if (e.pointerType !== "mouse") return
+
         const rect = img.current.getBoundingClientRect();
 
         const horizontal = ((e.clientX - rect.left) / rect.width) * 100;
@@ -128,11 +130,12 @@ function Slide({ imgSrc }) {
 
         img.current.style.setProperty('--x', `${horizontal}%`);
         img.current.style.setProperty('--y', `${vertical}%`);
+        img.current.style.setProperty('--zoom', '1.7');
     }
 
     return(
         <div className={styles.slide}>
-            <img ref={img} onMouseMove={(e) => zoom(e)} src={imgSrc} alt={`${name}, color: ${string(color)}`} />
+            <img ref={img} onPointerMove={zoom} onPointerLeave={() => img.current.style.setProperty('--zoom', '1')} src={imgSrc} alt={`${name}, color: ${string(color)}`} />
         </div>
     )
 }
