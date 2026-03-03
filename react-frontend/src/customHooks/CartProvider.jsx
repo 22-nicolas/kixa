@@ -19,8 +19,12 @@ export default function CartProvider({ children }) {
         });
     }
 
-    const addToCart = async (id, color, size) => {    
+    const addToCart = async (id, color, size) => {
         if (!size) {
+            const sizeSelectLabel = document.getElementById("sizeSelectLabel")
+            if (sizeSelectLabel) {
+                sizeSelectLabel.style.color = "red"
+            }
             alert('Please select a size.')
             return
         }

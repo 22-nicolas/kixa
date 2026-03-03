@@ -27,7 +27,7 @@ export default function ItemInfo() {
                 <div className={styles.colorways}>
                     {colorSelectors}
                 </div>
-                <p className={`${styles.sizeSelectLabel} `} type="button" data-bs-toggle="collapse" data-bs-target="#sizeSelectDropdown" aria-controls="sizeSelectDropdown" aria-expanded="false" aria-label="Toggle size selector">Select Size</p>
+                <p className={`${styles.sizeSelectLabel} `} id="sizeSelectLabel" type="button" data-bs-toggle="collapse" data-bs-target="#sizeSelectDropdown" aria-controls="sizeSelectDropdown" aria-expanded="false" aria-label="Toggle size selector">Select Size</p>
                 <div className={`${styles.sizeSelect} ${show ? "show" : ""} row collapse justify-content-center`} id="sizeSelectDropdown">
                     {sizeSelectors}
                 </div>
@@ -44,7 +44,15 @@ export default function ItemInfo() {
 function SizeSelector({ size, activeSize, setActiveSize }) {
     const isActive = activeSize === size
 
-    return <div className={`${styles.size} ${isActive ? styles.active : ""} col-5 col-lg-3 m-1 p-1`} onClick={() => setActiveSize(size)}>EU {size}</div>
+    function handleClick() {
+        setActiveSize(size)
+        const sizeSelectLabel = document.getElementById("sizeSelectLabel")
+        if (sizeSelectLabel) {
+            sizeSelectLabel.style.color = "black"
+        }
+    }
+
+    return <div className={`${styles.size} ${isActive ? styles.active : ""} col-5 col-lg-3 m-1 p-1`} onClick={handleClick}>EU {size}</div>
 }
 
 function ColorSelector({ i, colorId }) {

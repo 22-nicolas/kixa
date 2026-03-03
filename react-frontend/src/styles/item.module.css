@@ -159,6 +159,7 @@ h1 {
 
 .sizeSelectLabel {
     font-weight: bold;
+    /*transition: 200ms;*/
 }
 
 .size{
