@@ -2,6 +2,13 @@ footer .links{
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
+}
+
+@media (min-width: 576px) {
+    footer .links{
+        flex-direction: row;
+    }
 }
 
 footer a{
@@ -9,8 +16,7 @@ footer a{
     font-family: Arial, Helvetica, sans-serif;
     font-weight: bold;
     font-size: 0.8rem;
-    margin-left: 0.5ch;
-    margin-right: 0.5ch;
+    margin: 0.8ch;
     text-decoration: none;
 }
 
@@ -30,7 +36,7 @@ footer p{
 }
 
 footer{
-    padding: 100px;
+    padding: 7vw;
     position: relative;
 }
 
