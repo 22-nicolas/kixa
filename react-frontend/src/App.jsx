@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import { HashRouter as Router, Routes, Route } from "react-router-dom"
 import Index from "./pages/Index.jsx"
 import Search from "./pages/Search.jsx"
 import Item from "./pages/Item.jsx"
@@ -16,7 +16,7 @@ function App() {
   
   return (
     <CartProvider>
-      <Router basename="/kixa">
+      <Router >
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/search" element={<Search />} />
