@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getProductData, getProductById, createProductData, deleteProductData } from "../sql.js";
+import { getProductData, getProductById, createProductData, deleteProductData } from "../sql/products.js";
 
 const router = Router();
 

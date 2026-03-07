@@ -1,4 +1,4 @@
-import { getUserByEmail, registerUser } from "../sql.js";
+import { getUserByEmail, registerUser } from "../sql/users.js";
 import { Router } from "express";
 import bcrypt from 'bcrypt';
 
