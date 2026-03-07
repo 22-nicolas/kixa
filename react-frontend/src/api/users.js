@@ -2,7 +2,7 @@ import { getBaseApiUrl } from "../modules/utils";
 
 const API_BASE_URL = getBaseApiUrl();
 
-export async function validateUserData(userData) {
+export async function registerUser(userData) {
     const response = await fetch(`${API_BASE_URL}/users/register`, {
         method: "POST",
         headers: {
@@ -11,7 +11,9 @@ export async function validateUserData(userData) {
         body: JSON.stringify(userData)
     });
     
-    if (response.ok) return null; 
+    return response;
+
+    if (response.ok) return null;
     
     const errorData = await response.json();
     //console.log(errorData);
