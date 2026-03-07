@@ -1,4 +1,4 @@
-import { getUserByEmail, registerUser } from "../sql/users.js";
+import { getUserByEmail, registerUser, createSession } from "../sql/users.js";
 import { Router } from "express";
 import bcrypt from 'bcrypt';
 
@@ -19,7 +19,7 @@ router.post("/register", async (req, res) => {
   const validateError = await validateUserData(userData, validateForms.register);
   if (validateError) {
     if (validateError === "Invalid validation form") {
-      return res.status(400).send("Internal server error: Invalid validation form");
+      return res.status(400).send("Internal Server error: Invalid validation form");
     }
     res.status(400).send(validateError);
     return;
@@ -41,7 +41,7 @@ router.post("/login", async (req, res) => {
   if (validateError) {
     console.log(validateError)
     if (validateError === "Invalid validation form") {
-      return res.status(400).send("Internal server error: Invalid validation form");
+      return res.status(400).send("Internal Server error: Invalid validation form");
     }
     res.status(400).send(validateError);
     return;

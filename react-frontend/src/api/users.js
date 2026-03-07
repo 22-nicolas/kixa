@@ -11,13 +11,14 @@ export async function registerUser(userData) {
         body: JSON.stringify(userData)
     });
     
-    return response;
+    if (response.ok) return {ok: true}
 
-    if (response.ok) return null;
+    if (response.status === 500) {
+        return {error: "Internal Server error"}
+    }
     
-    const errorData = await response.json();
-    //console.log(errorData);
-    return errorData;
+    const data = await response.json();
+    return data;
 }
 
 export async function loginUser(email, password) {
@@ -29,6 +30,13 @@ export async function loginUser(email, password) {
         },
         body: JSON.stringify(userData)
     });
+
+    if (response.ok) return {ok: true}
     
-    return response;
+    if (response.status === 500) {
+        return {error: "Internal Server error"}
+    }
+    
+    const data = await response.json();
+    return data;
 }

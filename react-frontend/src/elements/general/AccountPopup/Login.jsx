@@ -17,9 +17,8 @@ export default function Login() {
     }, [currentInterface])
 
     async function handleSubmit() {
-        const response = await loginUser(inputRefs.current.email.current.value, inputRefs.current.password.current.value)
-        
-        if (response.ok) {
+        const result = await loginUser(inputRefs.current.email.current.value, inputRefs.current.password.current.value)
+        if (result.ok) {
             //Dehighlight fields and clear error message
             setHighlightedFields([])
             setErrorMessage("")
@@ -35,8 +34,7 @@ export default function Login() {
             setIsVisible(false)
             setSuccessMessageVisible(true)
         } else {
-            const {error, missing} = await response.json()
-            console.log(error)
+            const {error, missing} = result
             switch (error) {
                 case "Missing required fields":
                     setHighlightedFields(missing)

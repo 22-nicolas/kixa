@@ -44,9 +44,9 @@ export default function Register() {
 
     async function handleSubmit() {
         const formValues = await getFormValues();
-        const response = await registerUser(formValues)
+        const result = await registerUser(formValues)
         
-        if (response.ok) {
+        if (result.ok) {
             //Dehighlight fields and clear error message
             setHighlightedFields([])
             setErrorMessage("")
@@ -63,8 +63,7 @@ export default function Register() {
             setSuccessMessageVisible(true)
         } else {
             //Display an error message to the user according to the error and highlight incorrect fields/inputs
-            const {error, missing} = await response.json()
-            console.log(error, missing)
+            const {error, missing} = result
             switch (error) {
                 case "Missing required fields":
                     setHighlightedFields(missing)
