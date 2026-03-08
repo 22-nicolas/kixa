@@ -1,4 +1,4 @@
-import { getUserByEmail, registerUser, createSession } from "../sql/users.js";
+import { getUserById, getUserByEmail, registerUser, createSession, validateSession } from "../sql/users.js";
 import { Router } from "express";
 import bcrypt from 'bcrypt';
 
@@ -56,7 +56,9 @@ router.post("/login", async (req, res) => {
 
   try {
     if(await bcrypt.compare(password, userData.password)) {
-      res.status(200).send("Success");
+      //create session
+      const sessionId = await createSession(userData.user_id);
+      res.status(200).send({sessionId: sessionId});
     } else {
       res.status(400).send({error: "Wrong password", missing: ["password"]});
     }
@@ -64,6 +66,28 @@ router.post("/login", async (req, res) => {
     res.status(500).send();
   }
 })
+
+router.get("/sessions/:id", async (req, res) => {
+  const sessionId = req.params.id;
+
+  //validate session id type
+  if (typeof(sessionId) !== "string") return res.status(400).send("Invalid session id");
+
+  //validate session
+  const sessionData = await validateSession(sessionId);
+  if (sessionData.length === 0) {
+    return res.status(401).send("Unauthorized");
+  }
+
+  //get user data
+  const userId = sessionData.user_id;
+
+  const userData = await getUserById(userId);
+  if (!userData) {
+    return res.status(404).send("User not found");
+  }
+  res.status(200).send(userData);
+});
 
 export default router;
 
