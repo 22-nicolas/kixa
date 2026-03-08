@@ -14,6 +14,8 @@ export default function Login() {
     useEffect(() => {
         setSuccessMessageVisible(false)
         setIsVisible(currentInterface === "login")
+        setHighlightedFields([])
+        setErrorMessage("")
     }, [currentInterface])
 
     async function handleSubmit() {
