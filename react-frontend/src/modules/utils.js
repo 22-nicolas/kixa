@@ -65,3 +65,12 @@ export function getUserRegionName() {
 export function format(str) {
     return str.replace(" ", "").toLowerCase();
 }
+
+export function getSessionIdCookie() {
+    const token = document.cookie
+                            .split("; ")
+                            .find((row) => row.startsWith("sessionId="))
+                            ?.split("=")[1];
+                            
+    return token;
+}

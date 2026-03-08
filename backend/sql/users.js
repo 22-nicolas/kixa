@@ -1,4 +1,5 @@
 import pool from "./db.js"
+import crypto from "crypto";
 
 const SESSION_DURATION = 10 //10 minutes
 
@@ -31,12 +32,18 @@ export async function registerUser(userData) {
 }
 
 export async function createSession(userId) {
-    const sessionData = await pool.query(`
-        insert into sessions (user_id, expires_at)
-        values(?, NOW() + INTERVAL ? MINUTE)
-    `, [userId, SESSION_DURATION])
+    //create session id
+    const sessionId = crypto.randomBytes(32).toString("hex");
 
-    return sessionData[0].insertId;
+    //hash session id
+    const hashedSessionId =  crypto.createHash("sha256").update(sessionId).digest("hex");
+    
+    await pool.query(`
+        insert into sessions (id, user_id, expires_at)
+        values(?, ?, NOW() + INTERVAL ? MINUTE)
+    `, [hashedSessionId, userId, SESSION_DURATION])
+
+    return sessionId;
 }
 
 export async function validateSession(sessionId) {

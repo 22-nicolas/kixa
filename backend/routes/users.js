@@ -1,6 +1,7 @@
 import { getUserById, getUserByEmail, registerUser, createSession, validateSession } from "../sql/users.js";
 import { Router } from "express";
 import bcrypt from 'bcrypt';
+import crypto from "crypto";
 
 const router = Router();
 
@@ -39,7 +40,6 @@ router.post("/login", async (req, res) => {
   const validateError = await validateUserData(formValues, validateForms.login);
 
   if (validateError) {
-    console.log(validateError)
     if (validateError === "Invalid validation form") {
       return res.status(400).send("Internal Server error: Invalid validation form");
     }
@@ -73,9 +73,12 @@ router.get("/sessions/:id", async (req, res) => {
   //validate session id type
   if (typeof(sessionId) !== "string") return res.status(400).send("Invalid session id");
 
+  //hash session id
+  const hashedSessionId =  crypto.createHash("sha256").update(sessionId).digest("hex");
+
   //validate session
-  const sessionData = await validateSession(sessionId);
-  if (sessionData.length === 0) {
+  const sessionData = await validateSession(hashedSessionId);
+  if (!sessionData || sessionData.length === 0) {
     return res.status(401).send("Unauthorized");
   }
 
