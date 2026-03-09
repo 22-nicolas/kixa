@@ -1,10 +1,12 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { suscribeToAccountBtn, unSuscribe } from "../../../modules/AccountBtnEvent";
-import { isDescandentOf } from "../../../modules/utils";
+import { getSessionIdCookie, isDescandentOf } from "../../../modules/utils";
 import { supportedCountries, getUserRegionName} from "../../../modules/utils"
 import Default from "./Default";
 import Register from "./Register";
 import Login from "./Login";
+import { getUserDataWithSession } from "../../../api/users";
+import UserData from "./UserData";
 
 
 export const InterfaceContext = createContext()
@@ -19,6 +21,7 @@ export default function AccountPopup() {
     const [highlightedFields, setHighlightedFields] = useState([])
     const userRegionName = getUserRegionName() //get userRegion to set as default prefix
     const [activeCountry, setActiveCountry] = useState(userRegionName || supportedCountries[0]) //default back to first supported country (france)
+    const [userData, setUserData] = useState({})
     
     //link/disconnect toggleIsOpen to account btn
     useEffect(() => {
@@ -41,6 +44,29 @@ export default function AccountPopup() {
             }
         }, { signal: controller.signal });
     }, [isOpen]);
+
+    useEffect(() => {
+        loadUserDataIfSessionExists()
+    }, [isOpen])
+
+    async function loadUserDataIfSessionExists() {
+        if (!isOpen) return
+
+        const sessionId = getSessionIdCookie()
+        if (!sessionId) {
+            setInterface("default")
+            return
+        }
+
+        const userData = await getUserDataWithSession(sessionId)
+        if (!userData) {
+            setInterface("default")
+            return
+        }
+
+        setUserData(userData)
+        setInterface("userData")
+    }
     
     function toggleIsOpen() {
         setIsOpen(prev => {
@@ -59,6 +85,7 @@ export default function AccountPopup() {
                         <Default/>
                         <Register/>
                         <Login/>
+                        <UserData userData={userData}/>
                     </InterfaceContext.Provider>
                 </HighlightedFieldsContext.Provider>
             </ActiveCountryContext.Provider>
