@@ -54,3 +54,10 @@ export async function validateSession(sessionId) {
 
     return sessionData[0][0];
 }
+
+export async function sessionsCleanup() {
+    await pool.query(`
+        delete from sessions
+        where expires_at < NOW()
+    `)
+}

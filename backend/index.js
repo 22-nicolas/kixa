@@ -5,6 +5,9 @@ import NodeCache from 'node-cache';
 import productRoutes from "./routes/products.js";
 import userRoutes from "./routes/users.js";
 import countryRoutes from "./routes/country.js";
+import { sessionsCleanup } from './sql/users.js';
+
+const SESSIONS_CLEANUP_INTERVAL = 10*60*1000;
 
 dotenv.config({ path: "backend/.env" });
 
@@ -30,3 +33,6 @@ app.use((err, req, res, next) => {
 app.listen(3000, () => {
   console.log("API running on http://localhost:3000");
 });
+
+sessionsCleanup()
+setInterval(sessionsCleanup, SESSIONS_CLEANUP_INTERVAL)
