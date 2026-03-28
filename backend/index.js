@@ -7,14 +7,19 @@ import userRoutes from "./routes/users.js";
 import countryRoutes from "./routes/country.js";
 import { sessionsCleanup } from './sql/users.js';
 import { checkPool } from './sql/db.js';
+import currencyRoutes from './routes/currency.js';
 
 const SESSIONS_CLEANUP_INTERVAL = 10*60*1000;
 
 dotenv.config({ path: "backend/.env" });
 
-const cache = new NodeCache({
-  stdTTL: 120,
-  checkperiod: 20
+const countryCache = new NodeCache({
+  stdTTL: 0,
+});
+
+const currencyCache = new NodeCache({
+  stdTTL: 3600,
+  checkperiod: 3600
 });
 
 const app = express();
@@ -36,7 +41,8 @@ if (err) {
   setInterval(sessionsCleanup, SESSIONS_CLEANUP_INTERVAL)
 }
 
-app.use("/api/country", countryRoutes(cache));
+app.use("/api/country", countryRoutes(countryCache));
+app.use("/api/conversion-rates", currencyRoutes(currencyCache));
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

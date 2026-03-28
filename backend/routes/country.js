@@ -6,8 +6,7 @@ export default function countryRoutes(cache) {
 
     if(!cache) {
         cache = new NodeCache({
-          stdTTL: 120,
-          checkperiod: 20
+          stdTTL: 0,
         });
     }
 
@@ -22,7 +21,7 @@ export default function countryRoutes(cache) {
         return;
     }
 
-    const response = await fetch("https://aaapis.com/api/v1/info/country/", {
+    const response = await fetch(process.env.COUNTRY_API_URL, {
         method: "POST",
         headers: {
         "Authorization": `Token ${process.env.COUNTRY_API_TOKEN}`,

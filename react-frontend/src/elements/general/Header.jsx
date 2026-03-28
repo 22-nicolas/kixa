@@ -5,7 +5,7 @@ import { fireAccountBtnEvent } from '../../modules/AccountBtnEvent.js'
 import { Link } from 'react-router-dom'
 import SearchBar from './SearchBar.jsx'
 import { useCart } from '../../customHooks/CartProvider.jsx'
-import { CartContext } from '../../App.jsx'
+import { CurrencyContext } from '../../customHooks/CurrencyProvider.jsx'
 
 //images
 import logo from '../../assets/logo.png'
@@ -16,6 +16,7 @@ import user_icon from '../../assets/user_icon.png'
 function Header() {    
     const {cart, getQuantity} = useCart()
     const [quantity, setQuantity] = useState(0)
+    const {currency, setCurrency} = useContext(CurrencyContext)
     //update cart quantity display
     useEffect(() => {
         setQuantity(getQuantity())
@@ -36,10 +37,26 @@ function Header() {
                 </div>
                 <div className="right-header justify-content-start" role="search">
                     <SearchBar/>
+
+                    {/* Cart button */}
                     <Link to="/cart">
                         <p>{quantity}</p>
                         <img src={cart_icon} alt="cart icon" />
                     </Link>
+
+                    {/* Currency dropdown */}
+                    <div className='dropdown'>
+                        <button className="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {currency}
+                        </button>
+                        <ul className="dropdown-menu dropdown-menu-end">
+                            <li><button className="dropdown-item" type="button" onClick={() => setCurrency("USD")}>USD</button></li>
+                            <li><button className="dropdown-item" type="button" onClick={() => setCurrency("EUR")}>EUR</button></li>
+                            <li><button className="dropdown-item" type="button" onClick={() => setCurrency("GBP")}>GBP</button></li>
+                        </ul>
+                    </div>
+
+                    {/* Account button */}
                     <div onMouseDown={fireAccountBtnEvent} className="account-btn">
                         <img src={user_icon} alt="user icon" />
                     </div>

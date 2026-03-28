@@ -5,19 +5,40 @@ import cart_icon from "../../assets/cart_icon.png"
 import { shoeAssetsPath } from "../../modules/utils"
 import { useCart } from "../../customHooks/CartProvider"
 import { useSearchParams } from "react-router-dom"
+import { CurrencyContext } from "../../customHooks/CurrencyProvider"
+import { getConversionRates } from "../../api/currency"
+import { useEffect } from "react"
 
 export default function ItemInfo() {
     const [itemData] = useContext(ItemDataContext)
     const [searchParams] = useSearchParams()
     const [activeSize, setActiveSize] = useState(Number(searchParams.get("size")) || null)
     const {addToCart} = useCart()
-    
+    const {currency} = useContext(CurrencyContext)
+    const [conversionRates, setConversionRates] = useState(null)
+
+    useEffect(() => { 
+        fetchConversionRates()
+    }, [currency])
+
+    async function fetchConversionRates() {
+        const rates = await getConversionRates()
+        setConversionRates(rates)
+    }
+
     if (!itemData) return <h1>Loading...</h1>
 
     const sizeSelectors = itemData.sizes.map(size => <SizeSelector key={size} size={size} activeSize={activeSize} setActiveSize={setActiveSize}/>)
     const colorSelectors = itemData.colors.map((color, i) => <ColorSelector key={i} colorId={color} i={i}/>)
     
     const [show] = useState(window.visualViewport.width > 992)
+
+    let convertedPrice
+
+    if (conversionRates) {
+        const usdPrice = itemData.price / conversionRates["EUR"]
+        convertedPrice = (conversionRates[currency] * usdPrice).toFixed(2)
+    }
 
     return(
         <div className={styles.itemInfo}>
@@ -31,7 +52,7 @@ export default function ItemInfo() {
                 <div className={`${styles.sizeSelect} ${show ? "show" : ""} row collapse justify-content-center`} id="sizeSelectDropdown">
                     {sizeSelectors}
                 </div>
-                <p className={styles.price}>{itemData.price}$</p>
+                <p className={styles.price}>{convertedPrice ? convertedPrice : "..."} {currency}</p>
                 <div onMouseDown={() => addToCart(itemData.id, itemData.color, activeSize)} className={styles.addCartButton}>
                     <p>Add to cart</p>
                     <img src={cart_icon}/>
