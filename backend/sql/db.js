@@ -18,4 +18,12 @@ if (process.env.DATABASE_URL) { // For production (Aiven, Railway, etc.)
 
 const pool = mysql.createPool(connectionConfig).promise();
 
+export async function checkPool() {
+  try {
+    await pool.query('SELECT 1');
+  } catch (err) {;
+    return err;
+  }
+}
+
 export default pool;

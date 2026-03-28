@@ -6,6 +6,7 @@ import productRoutes from "./routes/products.js";
 import userRoutes from "./routes/users.js";
 import countryRoutes from "./routes/country.js";
 import { sessionsCleanup } from './sql/users.js';
+import { checkPool } from './sql/db.js';
 
 const SESSIONS_CLEANUP_INTERVAL = 10*60*1000;
 
@@ -20,9 +21,21 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+
 // mount routers
-app.use("/api/products", productRoutes);
-app.use("/api/users", userRoutes);
+const err = await checkPool();
+if (err) {
+  console.error('Pool error:', err.message);
+  console.warn('Continuing without user and product routes');
+
+} else {
+  app.use("/api/products", productRoutes);
+  app.use("/api/users", userRoutes);
+
+  sessionsCleanup()
+  setInterval(sessionsCleanup, SESSIONS_CLEANUP_INTERVAL)
+}
+
 app.use("/api/country", countryRoutes(cache));
 
 app.use((err, req, res, next) => {
@@ -33,6 +46,3 @@ app.use((err, req, res, next) => {
 app.listen(3000, () => {
   console.log("API running on http://localhost:3000");
 });
-
-sessionsCleanup()
-setInterval(sessionsCleanup, SESSIONS_CLEANUP_INTERVAL)

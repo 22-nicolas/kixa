@@ -1,6 +1,7 @@
 import pool from "./db.js"
 import crypto from "crypto";
 
+
 const SESSION_DURATION = 10 //10 minutes
 
 export async function getUserById(id) {
