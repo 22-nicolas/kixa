@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useContext } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { format } from "../../modules/utils"
 import { shoeAssetsPath } from "../../modules/utils"
 import { string } from "../../modules/colors"
 import styles from "../../styles/search.module.css"
+import { CurrencyContext } from "../../customHooks/CurrencyProvider"
+import { getConversionRates } from "../../api/currency"
 
 export default function Item({ itemData }) {
 
@@ -19,7 +21,13 @@ export default function Item({ itemData }) {
                                                 id={id}
                                                 colorway={colorway}
                                                 onClick={setColorway}/>)
-    
+    const {currency} = useContext(CurrencyContext)
+    const [conversionRates, setConversionRates] = useState(null)
+
+    useEffect(() => { 
+        fetchConversionRates()
+    }, [currency])
+
     useEffect(() => {
         const params = getParams()
         
@@ -29,6 +37,17 @@ export default function Item({ itemData }) {
 
         selectSearchedColorway(params)
     }, [searchParams])
+
+    let convertedPrice
+    if (conversionRates) {
+        const usdPrice = itemData.price / conversionRates["EUR"]
+        convertedPrice = (conversionRates[currency] * usdPrice).toFixed(2)
+    }
+
+    async function fetchConversionRates() {
+        const rates = await getConversionRates()
+        setConversionRates(rates)
+    }
 
     function matchParamsWithData(params) {
         const {searchText, min, max, activeColors, activeBrands} = params
@@ -85,7 +104,7 @@ export default function Item({ itemData }) {
         params.set("c", colorway.selectorIndex)
         navigate("/item?" + params)
     }
-    //${styles.item}
+    
     return(
         <div className={`${styles.item} ${!visible ? styles.hidden : ""} col-6 col-lg-3`} id={id}>
             <div className="href" onClick={redirect}>
@@ -93,7 +112,7 @@ export default function Item({ itemData }) {
                     <img  src={`${shoeAssetsPath}/${id}/${id}_${colorway.selectorIndex + 1}_1.png`} alt={name} />
                 </div>
                 <p className={styles.name}>{name}</p>
-                <p className={styles.price}>{price}$</p>
+                <p className={styles.price}>{convertedPrice ? convertedPrice : "..."} {currency}</p>
             </div>
             <div className={styles.colorways}>
                 {colorways}
