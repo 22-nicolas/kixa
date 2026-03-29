@@ -11,7 +11,7 @@ export default function currencyRoutes(cache) {
         });
     }
 
-    router.get("/", async (req, res, next) => {
+    router.get("/conversion-rates", async (req, res) => {
         const cacheKey = 'currency'
 
         //check cache
@@ -28,13 +28,34 @@ export default function currencyRoutes(cache) {
         const response = await fetch(url);
         
         const currencyData = await response.json();
-        console.log(currencyData)
         
         //store in cache
-        cache.set(cacheKey, currencyData, 60);
+        cache.set(cacheKey, currencyData, 3600);
 
         res.send(currencyData);
     });
+
+    router.get("/user-preference", async (req, res) => {
+        const ip = req.ip;
+        const cacheKey = 'preference_' + ip;
+
+        //check cache
+        const cached = cache.get(cacheKey);
+        if (cached) {
+            res.send(cached);
+            return;
+        }
+
+        const response = await fetch("https://apip.cc/json")
+        const data = await response.json();
+
+        const currencyData = { currency: data.Currency };
+
+        //store in cache
+        cache.set(cacheKey, currencyData, 3600);
+        
+        res.send(currencyData);
+    })
 
     return router
 };

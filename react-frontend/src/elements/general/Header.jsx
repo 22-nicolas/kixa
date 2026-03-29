@@ -5,7 +5,7 @@ import { fireAccountBtnEvent } from '../../modules/AccountBtnEvent.js'
 import { Link } from 'react-router-dom'
 import SearchBar from './SearchBar.jsx'
 import { useCart } from '../../customHooks/CartProvider.jsx'
-import { CurrencyContext } from '../../customHooks/CurrencyProvider.jsx'
+import { CurrencyContext, SupportedCurrencies } from '../../customHooks/CurrencyProvider.jsx'
 
 //images
 import logo from '../../assets/logo.png'
@@ -17,6 +17,12 @@ function Header() {
     const {cart, getQuantity} = useCart()
     const [quantity, setQuantity] = useState(0)
     const {currency, setCurrency} = useContext(CurrencyContext)
+    const currencies = SupportedCurrencies.map((cur) => (
+        <li key={cur}>
+            <button className="dropdown-item" type="button" onClick={() => setCurrency(cur)}>{cur}</button>
+        </li>
+    ))
+
     //update cart quantity display
     useEffect(() => {
         setQuantity(getQuantity())
@@ -50,9 +56,7 @@ function Header() {
                             {currency}
                         </button>
                         <ul className="dropdown-menu dropdown-menu-end">
-                            <li><button className="dropdown-item" type="button" onClick={() => setCurrency("USD")}>USD</button></li>
-                            <li><button className="dropdown-item" type="button" onClick={() => setCurrency("EUR")}>EUR</button></li>
-                            <li><button className="dropdown-item" type="button" onClick={() => setCurrency("GBP")}>GBP</button></li>
+                            {currencies}
                         </ul>
                     </div>
 

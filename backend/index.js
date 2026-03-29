@@ -25,7 +25,7 @@ const currencyCache = new NodeCache({
 const app = express();
 app.use(cors());
 app.use(express.json());
-
+app.set('trust proxy', true);
 
 // mount routers
 const err = await checkPool();
@@ -42,7 +42,7 @@ if (err) {
 }
 
 app.use("/api/country", countryRoutes(countryCache));
-app.use("/api/conversion-rates", currencyRoutes(currencyCache));
+app.use("/api/currency", currencyRoutes(currencyCache));
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
