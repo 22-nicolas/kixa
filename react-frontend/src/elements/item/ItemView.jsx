@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react"
 import { string } from "../../modules/colors.js"
-import { ItemDataContext } from "../../pages/Item"
+import { ActiveColorContext, ItemDataContext } from "../../pages/Item"
 import { shoeAssetsPath } from "../../modules/utils"
 import styles from "../../styles/item.module.css"
 import loadingGif from "../../assets/loading_icon.gif"
@@ -9,17 +9,18 @@ const ActiveImgContext = createContext()
 
 export default function ItemView() {
     const [itemData] = useContext(ItemDataContext)
+    const [activeColor] = useContext(ActiveColorContext)
 
     let [thumbnails, setThumbnails] = useState()
     let [activeImg, setActiveImg] = useState(1)
 
     useEffect(() => {
-        const thumbnailsArray = Array.from({ length: itemData.imgs_per_colorway[itemData.color] })
+        const thumbnailsArray = Array.from({ length: itemData.imgs_per_colorway[activeColor] })
         const thumbnailComponents = thumbnailsArray.map((_, i) => <Thumbnail key={i} i={i} itemData={itemData}/>)
 
         setThumbnails(thumbnailComponents)
 
-    }, [itemData])
+    }, [activeColor])
 
     return(
         <ActiveImgContext.Provider value={[activeImg, setActiveImg]}>
@@ -35,26 +36,28 @@ export default function ItemView() {
 }
 
 function Thumbnail({ itemData, i }) {
-    const { id, color } = itemData
+    const { id } = itemData
     const [activeImg, setActiveImg] = useContext(ActiveImgContext)
+    const [activeColor] = useContext(ActiveColorContext)
     const imgIndex = i + 1
     const isActive = activeImg === imgIndex
 
     return (
         <div className={`${styles.thumbnail} ${isActive ? styles.active : ""}`} onClick={() => {setActiveImg(imgIndex)}}>
-            <img src={`${shoeAssetsPath}/${id}/${id}_${color + 1}_${imgIndex}.png`} alt={`image: ${imgIndex}`} />
+            <img src={`${shoeAssetsPath}/${id}/${id}_${activeColor + 1}_${imgIndex}.png`} alt={`image: ${imgIndex}`} />
         </div>
     )
 }
 
 function Slider() {
     let [itemData] = useContext(ItemDataContext)
+    const [activeColor] = useContext(ActiveColorContext)
 
-    const {id, color, imgs_per_colorway} = itemData
+    const {id, imgs_per_colorway} = itemData
 
     //map slides
-    const slidesArray = Array.from({ length: imgs_per_colorway[color] })
-    const slidesComponents = slidesArray.map((_, i) => <Slide key={i} imgSrc={`${shoeAssetsPath}/${id}/${id}_${color + 1}_${i + 1}.png`}/>)
+    const slidesArray = Array.from({ length: imgs_per_colorway[activeColor] })
+    const slidesComponents = slidesArray.map((_, i) => <Slide key={i} imgSrc={`${shoeAssetsPath}/${id}/${id}_${activeColor + 1}_${i + 1}.png`}/>)
 
     //move track according to selected thumbnail/activeImg
     const [activeImg, setActiveImg] = useContext(ActiveImgContext)
@@ -110,7 +113,7 @@ function Slider() {
     return(
         <div className={styles.sliderContainer}>
             <div className={styles.slider} onTouchStart={handleTouchStart} onTouchEnd={handleToucheEnd}>
-                <img src={`${shoeAssetsPath}/${id}/${id}_${color + 1}_1.png`} className={styles.placeholder} ref={placeholder}/>
+                <img src={`${shoeAssetsPath}/${id}/${id}_${activeColor + 1}_1.png`} className={styles.placeholder} ref={placeholder}/>
                 <div className={styles.track} ref={track}>
                     {slidesComponents}
                 </div>
@@ -121,7 +124,8 @@ function Slider() {
 
 function Slide({ imgSrc }) {
     const itemData = useContext(ItemDataContext)
-    const {name, color} = itemData
+    const {name} = itemData
+    const [activeColor] = useContext(ActiveColorContext)
     const img = useRef()
 
     function zoom(e) {
@@ -140,7 +144,7 @@ function Slide({ imgSrc }) {
 
     return(
         <div className={styles.slide}>
-            <img ref={img} onPointerMove={zoom} onPointerLeave={() => img.current.style.setProperty('--zoom', '1')} src={imgSrc} alt={`${name}, color: ${string(color)}`} />
+            <img ref={img} onPointerMove={zoom} onPointerLeave={() => img.current.style.setProperty('--zoom', '1')} src={imgSrc} alt={`${name}, color: ${string(activeColor)}`} />
         </div>
     )
 }

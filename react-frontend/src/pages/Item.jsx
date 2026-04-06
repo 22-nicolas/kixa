@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react"
-import { getProductById } from "../api/productData"
+import { getProductById, getProductStock } from "../api/productData"
 import { useNavigate, useSearchParams } from "react-router-dom"
 
 import Container from "../elements/general/Container"
@@ -13,20 +13,47 @@ import loadingGif from "../assets/loading_icon.gif"
 import styles from "../styles/item.module.css"
 
 export const ItemDataContext = createContext()
+export const ActiveColorContext = createContext()
 
 export default function Item() {
     const [itemData, setItemData] = useState()
-    const navigate = useNavigate()
-    const [params] = useSearchParams()
+    const [activeColor, setActiveColor] = useState(0)
+    const [params, setSearchParams] = useSearchParams()
+
+    const itemId = params.get("id")
 
     useEffect(() => {
-        getItemData(params.get("id"), params.get("c"))
-    }, [params])
+        getItemData(itemId)
+    }, [itemId])
 
-    async function getItemData(id, color) {
+    useEffect(() => {
+        console.log(activeColor)
+    }, [activeColor])
+
+    useEffect(() => {
+        const paramsColor = Number(params.get("c"))
+        if (paramsColor !== null && paramsColor !== undefined) {
+            setActiveColor(paramsColor)
+        }
+    }, [])
+
+    async function getItemData(id) {
         const itemData = await getProductById(id)
-        itemData.color = Number(color)
         setItemData(itemData)
+    }
+
+    function changeActiveColor(color) {
+        setSearchParams(prev => {
+            const params = new URLSearchParams(prev)
+            if (color !== null && color !== undefined) {
+                params.set("c", color)
+            } else {
+                params.delete("c")
+            }
+            return params
+        })
+
+        setActiveColor(color)
     }
 
     return(
@@ -36,10 +63,12 @@ export default function Item() {
 
             <Container>
                 <ItemDataContext.Provider value={[itemData, setItemData]}>
-                    <div className={styles.productContainer}>
-                        {itemData ? <ItemView/> : <LoadingItemView/>}
-                        {itemData ? <ItemInfo/> : <h1>Loading...</h1>}
-                    </div>
+                    <ActiveColorContext.Provider value={[activeColor, changeActiveColor]}>
+                        <div className={styles.productContainer}>
+                            {itemData ? <ItemView/> : <LoadingItemView/>}
+                            {itemData ? <ItemInfo/> : <h1>Loading...</h1>}
+                        </div>
+                    </ActiveColorContext.Provider>
                 </ItemDataContext.Provider>
             </Container>
 

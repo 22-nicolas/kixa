@@ -1,4 +1,4 @@
-import { ItemDataContext } from "../../pages/Item"
+import { ActiveColorContext, ItemDataContext } from "../../pages/Item"
 import { useContext, useState, useEffect } from "react"
 import styles from "../../styles/item.module.css"
 import cart_icon from "../../assets/cart_icon.png"
@@ -9,11 +9,17 @@ import { CurrencyContext } from "../../customHooks/CurrencyProvider"
 
 export default function ItemInfo() {
     const [itemData] = useContext(ItemDataContext)
-    const [searchParams] = useSearchParams()
-    const [activeSize, setActiveSize] = useState(Number(searchParams.get("size")) || null)
+    const [searchParams, setSearchParams] = useSearchParams()
+    const [activeSize, setActiveSize] = useState(getSizeFromParams())
+    const [activeColor] = useContext(ActiveColorContext)
     const {addToCart} = useCart()
     const {currency, conversionRates} = useContext(CurrencyContext)
     const [convertedPrice, setConvertedPrice] = useState(null)
+
+
+    useEffect(() => { 
+        changeSize(getSizeFromParams())
+    }, [searchParams])
 
     useEffect(() => { 
         handlePrice()
@@ -21,12 +27,33 @@ export default function ItemInfo() {
 
     if (!itemData) return <h1>Loading...</h1>
 
-    const sizeSelectors = itemData.sizes.map(size => <SizeSelector key={size} size={size} activeSize={activeSize} setActiveSize={setActiveSize}/>)
-    const colorSelectors = itemData.colors.map((color, i) => <ColorSelector key={i} colorId={color} i={i}/>)
+    const sizeSelectors = itemData.sizes.map(size => <SizeSelector key={size} size={size} activeSize={activeSize} changeSize={changeSize}/>)
+    const variantSelectors = itemData.colors.map((color, i) => <VariantSelector key={i} variant={i}/>)
 
     const [show] = useState(window.visualViewport.width > 992)
-    
+
     let price
+
+    function getSizeFromParams() {
+        return Number(searchParams.get("size")) || null
+    }
+
+    async function changeSize(size) {
+
+        setActiveSize(size)
+
+        setSearchParams(prev => {
+            const params = new URLSearchParams(prev)
+            if (size) {
+                params.set("size", size)
+            } else {
+                params.delete("size")
+            }
+            return params
+        })
+
+        handlePrice()
+    }
 
     async function handlePrice() {
         price = itemData.price
@@ -46,14 +73,14 @@ export default function ItemInfo() {
                 <h1>{itemData.name}</h1>
                 <p>{itemData.description}</p>  
                 <div className={styles.colorways}>
-                    {colorSelectors}
+                    {variantSelectors}
                 </div>
-                <p className={`${styles.sizeSelectLabel} `} id="sizeSelectLabel" type="button" data-bs-toggle="collapse" data-bs-target="#sizeSelectDropdown" aria-controls="sizeSelectDropdown" aria-expanded="false" aria-label="Toggle size selector">Select Size</p>
+                <p className={`${styles.sizeSelectLabel}`} id="sizeSelectLabel" type="button" data-bs-toggle="collapse" data-bs-target="#sizeSelectDropdown" aria-controls="sizeSelectDropdown" aria-expanded="false" aria-label="Toggle size selector">Select Size</p>
                 <div className={`${styles.sizeSelect} ${show ? "show" : ""} row collapse justify-content-center`} id="sizeSelectDropdown">
                     {sizeSelectors}
                 </div>
                 <p className={styles.price}>{convertedPrice ? convertedPrice : "..."} {currency}</p>
-                <div onMouseDown={() => addToCart(itemData.id, itemData.color, activeSize)} className={styles.addCartButton}>
+                <div onMouseDown={() => addToCart(itemData.id, activeColor, activeSize)} className={styles.addCartButton}>
                     <p>Add to cart</p>
                     <img src={cart_icon}/>
                 </div>
@@ -62,11 +89,13 @@ export default function ItemInfo() {
     )
 }
 
-function SizeSelector({ size, activeSize, setActiveSize }) {
+function SizeSelector({ size, activeSize, changeSize }) {
     const isActive = activeSize === size
 
     function handleClick() {
-        setActiveSize(size)
+        changeSize(size)
+
+        //reset red warning color back to black
         const sizeSelectLabel = document.getElementById("sizeSelectLabel")
         if (sizeSelectLabel) {
             sizeSelectLabel.style.color = "black"
@@ -76,16 +105,14 @@ function SizeSelector({ size, activeSize, setActiveSize }) {
     return <div className={`${styles.size} ${isActive ? styles.active : ""} col-5 col-lg-3 m-1 p-1`} onClick={handleClick}>EU {size}</div>
 }
 
-function ColorSelector({ i, colorId }) {
-    const [itemData, setItemData] = useContext(ItemDataContext)
-    const isActive = itemData.color === i
+function VariantSelector({ variant }) {
+    const [itemData] = useContext(ItemDataContext)
+    const [activeColor, changeActiveColor] = useContext(ActiveColorContext)
+    const isActive = activeColor === variant
 
     return(
-        <div className={`${styles.colorway} ${isActive ? styles.active : ""}`} onClick={() => setItemData(prevItemData => ({
-            ...prevItemData,
-            color: i
-        }))}>
-            <img src={`${shoeAssetsPath}/${itemData.id}/${itemData.id}_${i+1}_1.png`}/>
+        <div className={`${styles.colorway} ${isActive ? styles.active : ""}`} onClick={() => changeActiveColor(variant)}>
+            <img src={`${shoeAssetsPath}/${itemData.id}/${itemData.id}_${variant+1}_1.png`}/>
         </div>
     )
 }
