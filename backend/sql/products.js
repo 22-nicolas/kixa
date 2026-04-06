@@ -34,6 +34,16 @@ export async function deleteProductData(id) {
         where id = ? 
     `, [id])
 }
+
+export async function getProductStock(productId) {
+    const [stock] = await pool.query(`
+    select * 
+    from stock
+    where product_id = ?
+    `, [productId]);
+    return stock;
+}
+
 /*
 const productData = await createProductData('test', 'test', 124, '[3,2]', 2, '[23,32]', null, 3, 'test', '[213,2]');
 console.log(productData);

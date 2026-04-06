@@ -8,6 +8,7 @@ import countryRoutes from "./routes/country.js";
 import { sessionsCleanup } from './sql/users.js';
 import { checkPool } from './sql/db.js';
 import currencyRoutes from './routes/currency.js';
+import { getProductStock } from './sql/products.js';
 
 const SESSIONS_CLEANUP_INTERVAL = 10*60*1000;
 

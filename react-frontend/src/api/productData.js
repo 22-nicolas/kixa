@@ -31,3 +31,9 @@ export async function deleteProductData(id) {
     const response = await fetch(`${API_BASE_URL}/products/delete/${id}`);
     return response;
 }
+
+export async function  getProductStock(productId) {
+    const response = await fetch(`${API_BASE_URL}/products/stock/${productId}`);
+    const stock = await response.json();
+    return stock;
+}

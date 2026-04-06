@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getProductData, getProductById, createProductData, deleteProductData } from "../sql/products.js";
+import { getProductData, getProductById, createProductData, deleteProductData, getProductStock } from "../sql/products.js";
 
 const router = Router();
 
@@ -25,6 +25,12 @@ router.get("/delete/:id", async (req, res) => {
   const id = req.params.id;
   await deleteProductData(id);
   res.status(200).send();
+});
+
+router.get("/stock/:id", async (req, res) => {
+  const id = req.params.id;
+  const stockData = await getProductStock(id);
+  res.send(stockData);
 });
 
 export default router;
