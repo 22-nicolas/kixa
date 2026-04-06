@@ -74,3 +74,7 @@ export function getSessionIdCookie() {
                             
     return token;
 }
+
+export function notNil(value) {
+    return value !== null && value !== undefined;
+}

@@ -1,43 +1,43 @@
 import { ItemDataContext } from "../../pages/Item"
-import { useContext, useState, createContext } from "react"
+import { useContext, useState, useEffect } from "react"
 import styles from "../../styles/item.module.css"
 import cart_icon from "../../assets/cart_icon.png"
-import { shoeAssetsPath } from "../../modules/utils"
+import { notNil, shoeAssetsPath } from "../../modules/utils"
 import { useCart } from "../../customHooks/CartProvider"
 import { useSearchParams } from "react-router-dom"
 import { CurrencyContext } from "../../customHooks/CurrencyProvider"
-import { getConversionRates } from "../../api/currency"
-import { useEffect } from "react"
 
 export default function ItemInfo() {
     const [itemData] = useContext(ItemDataContext)
     const [searchParams] = useSearchParams()
     const [activeSize, setActiveSize] = useState(Number(searchParams.get("size")) || null)
     const {addToCart} = useCart()
-    const {currency} = useContext(CurrencyContext)
-    const [conversionRates, setConversionRates] = useState(null)
+    const {currency, conversionRates} = useContext(CurrencyContext)
+    const [convertedPrice, setConvertedPrice] = useState(null)
 
     useEffect(() => { 
-        fetchConversionRates()
-    }, [currency])
-
-    async function fetchConversionRates() {
-        const rates = await getConversionRates()
-        setConversionRates(rates)
-    }
+        handlePrice()
+    }, [currency, conversionRates])
 
     if (!itemData) return <h1>Loading...</h1>
 
     const sizeSelectors = itemData.sizes.map(size => <SizeSelector key={size} size={size} activeSize={activeSize} setActiveSize={setActiveSize}/>)
     const colorSelectors = itemData.colors.map((color, i) => <ColorSelector key={i} colorId={color} i={i}/>)
-    
+
     const [show] = useState(window.visualViewport.width > 992)
+    
+    let price
 
-    let convertedPrice
+    async function handlePrice() {
+        price = itemData.price
 
-    if (conversionRates) {
-        const usdPrice = itemData.price / conversionRates["EUR"]
-        convertedPrice = (conversionRates[currency] * usdPrice).toFixed(2)
+        if (notNil(conversionRates) && notNil(price)) {
+            const usdPrice = price / conversionRates["EUR"]
+            setConvertedPrice((conversionRates[currency] * usdPrice).toFixed(2))
+            return
+        }
+
+        setConvertedPrice(null)
     }
 
     return(

@@ -5,7 +5,6 @@ import { shoeAssetsPath } from "../../modules/utils"
 import { string } from "../../modules/colors"
 import styles from "../../styles/search.module.css"
 import { CurrencyContext } from "../../customHooks/CurrencyProvider"
-import { getConversionRates } from "../../api/currency"
 
 export default function Item({ itemData }) {
 
@@ -21,12 +20,7 @@ export default function Item({ itemData }) {
                                                 id={id}
                                                 colorway={colorway}
                                                 onClick={setColorway}/>)
-    const {currency} = useContext(CurrencyContext)
-    const [conversionRates, setConversionRates] = useState(null)
-
-    useEffect(() => { 
-        fetchConversionRates()
-    }, [currency])
+    const {currency, conversionRates} = useContext(CurrencyContext)
 
     useEffect(() => {
         const params = getParams()
@@ -43,12 +37,7 @@ export default function Item({ itemData }) {
         const usdPrice = itemData.price / conversionRates["EUR"]
         convertedPrice = (conversionRates[currency] * usdPrice).toFixed(2)
     }
-
-    async function fetchConversionRates() {
-        const rates = await getConversionRates()
-        setConversionRates(rates)
-    }
-
+    
     function matchParamsWithData(params) {
         const {searchText, min, max, activeColors, activeBrands} = params
         
