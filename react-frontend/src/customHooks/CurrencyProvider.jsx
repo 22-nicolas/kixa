@@ -1,15 +1,20 @@
 import { createContext, useEffect, useState } from "react";
-import { getPreferedCurrency } from "../api/currency";
+import { getConversionRates, getPreferedCurrency } from "../api/currency";
 
 export const CurrencyContext = createContext();
 
-export const SupportedCurrencies = ["USD", "EUR", "GBP", "JPY", "AUD", "CAD", "CHF", "CNY", "SEK", "NZD"];
+export const SupportedCurrencies = ["USD", "EUR", "GBP", "JPY", "AUD", "CAD", "CHF", "CNY", "SEK", "NZD", "RON"];
 
 export default function CurrencyProvier({ children }) {
     const [currency, setCurrency] = useState("USD");
+    const [conversionRates, setConversionRates] = useState()
 
     useEffect(() => {
         fetchPreferedCurrency()
+    }, [])
+
+    useEffect(() => { 
+        fetchConversionRates()
     }, [])
 
     async function fetchPreferedCurrency() {
@@ -17,8 +22,13 @@ export default function CurrencyProvier({ children }) {
         setCurrency(preferedCurrency)
     }
 
+    async function fetchConversionRates() {
+        const rates = await getConversionRates()
+        setConversionRates(rates)
+    }
+
     return (
-        <CurrencyContext.Provider value={{ currency, setCurrency }}>
+        <CurrencyContext.Provider value={{ currency, setCurrency, conversionRates }}>
             {children}
         </CurrencyContext.Provider>
     )
