@@ -159,7 +159,11 @@ h1 {
 
 .sizeSelectLabel {
     font-weight: bold;
-    /*transition: 200ms;*/
+    /*border: solid black 1px;
+    border-radius: 5px;*/
+    padding: 0.5ch;
+    margin: 0.5ch;
+    display: inline-block;
 }
 
 .size{
@@ -173,9 +177,9 @@ h1 {
     cursor: pointer;
 }
 
-.size:hover{
+/*.size:hover{
     border-color: black;
-}
+}*/
 
 .size.active {
     border-color: black;
@@ -216,4 +220,10 @@ h1 {
 
 .price{
     font-weight: bold;
+}
+
+.outOfStock{
+    /*color: gray;*/
+    border-style: dashed;
+    filter: opacity(0.7);
 }

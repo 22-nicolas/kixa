@@ -13,17 +13,20 @@ import loadingGif from "../assets/loading_icon.gif"
 import styles from "../styles/item.module.css"
 
 export const ItemDataContext = createContext()
+export const ItemStockContext = createContext()
 export const ActiveColorContext = createContext()
 
 export default function Item() {
     const [itemData, setItemData] = useState()
     const [activeColor, setActiveColor] = useState(0)
+    const [itemStock, setItemStock] = useState()
     const [params, setSearchParams] = useSearchParams()
 
     const itemId = params.get("id")
 
     useEffect(() => {
         getItemData(itemId)
+        getItemStock(itemId)
     }, [itemId])
 
     useEffect(() => {
@@ -40,6 +43,11 @@ export default function Item() {
     async function getItemData(id) {
         const itemData = await getProductById(id)
         setItemData(itemData)
+    }
+
+    async function getItemStock(id) {
+        const stock = await getProductStock(id)
+        setItemStock(stock)
     }
 
     function changeActiveColor(color) {
@@ -60,18 +68,18 @@ export default function Item() {
         <>
             <Header/>
             <LoginPopup/>
-
-            <Container>
-                <ItemDataContext.Provider value={[itemData, setItemData]}>
-                    <ActiveColorContext.Provider value={[activeColor, changeActiveColor]}>
-                        <div className={styles.productContainer}>
-                            {itemData ? <ItemView/> : <LoadingItemView/>}
-                            {itemData ? <ItemInfo/> : <h1>Loading...</h1>}
-                        </div>
-                    </ActiveColorContext.Provider>
-                </ItemDataContext.Provider>
-            </Container>
-
+                <Container>
+                    <ItemStockContext.Provider value={[itemStock]}>
+                        <ItemDataContext.Provider value={[itemData, setItemData]}>
+                                <ActiveColorContext.Provider value={[activeColor, setActiveColor]}>
+                                <div className={styles.productContainer}>
+                                    {itemData ? <ItemView/> : <LoadingItemView/>}
+                                    {itemData ? <ItemInfo/> : <h1>Loading...</h1>}
+                                </div>
+                            </ActiveColorContext.Provider>
+                        </ItemDataContext.Provider>
+                    </ItemStockContext.Provider>
+                </Container>
             <Footer/>
         </>
     )

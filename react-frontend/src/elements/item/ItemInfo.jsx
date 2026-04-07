@@ -1,5 +1,5 @@
-import { ActiveColorContext, ItemDataContext } from "../../pages/Item"
-import { useContext, useState, useEffect } from "react"
+import { ActiveColorContext, ItemDataContext, ItemStockContext } from "../../pages/Item"
+import { useContext, useState, useEffect, useRef } from "react"
 import styles from "../../styles/item.module.css"
 import cart_icon from "../../assets/cart_icon.png"
 import { notNil, shoeAssetsPath } from "../../modules/utils"
@@ -8,18 +8,23 @@ import { useSearchParams } from "react-router-dom"
 import { CurrencyContext } from "../../customHooks/CurrencyProvider"
 
 export default function ItemInfo() {
-    const [itemData] = useContext(ItemDataContext)
+    const [itemData, setItemData] = useContext(ItemDataContext)
+    const [itemStock] = useContext(ItemStockContext)
     const [searchParams, setSearchParams] = useSearchParams()
     const [activeSize, setActiveSize] = useState(getSizeFromParams())
     const [activeColor] = useContext(ActiveColorContext)
     const {addToCart} = useCart()
     const {currency, conversionRates} = useContext(CurrencyContext)
     const [convertedPrice, setConvertedPrice] = useState(null)
+    const [isInStock, setIsInStock] = useState(false)
 
+    useEffect(() => {
+        determineIfInStock()
+    }, [itemStock])
 
     useEffect(() => { 
         changeSize(getSizeFromParams())
-    }, [searchParams])
+    }, [searchParams, itemStock, activeColor])
 
     useEffect(() => { 
         handlePrice()
@@ -34,11 +39,21 @@ export default function ItemInfo() {
 
     let price
 
+    function determineIfInStock() {
+        itemStock?.length > 0 ? setIsInStock(true) : setIsInStock(false)
+    }
+
     function getSizeFromParams() {
         return Number(searchParams.get("size")) || null
     }
 
     async function changeSize(size) {
+        //check if active size is in stock, if not set active size to null
+        const isInStock = itemStock?.find(stockItem => stockItem.size == size && stockItem.variant == activeColor)?.stock > 0
+        if (!isInStock && notNil(itemStock) && notNil(size)) {
+            changeSize(null)
+            return
+        }
 
         setActiveSize(size)
 
@@ -56,7 +71,7 @@ export default function ItemInfo() {
     }
 
     async function handlePrice() {
-        price = itemData.price
+        price = itemStock?.find(stockItem => stockItem.size == activeSize && stockItem.variant == activeColor)?.price || null
 
         if (notNil(conversionRates) && notNil(price)) {
             const usdPrice = price / conversionRates["EUR"]
@@ -79,9 +94,9 @@ export default function ItemInfo() {
                 <div className={`${styles.sizeSelect} ${show ? "show" : ""} row collapse justify-content-center`} id="sizeSelectDropdown">
                     {sizeSelectors}
                 </div>
-                <p className={styles.price}>{convertedPrice ? convertedPrice : "..."} {currency}</p>
-                <div onMouseDown={() => addToCart(itemData.id, activeColor, activeSize)} className={styles.addCartButton}>
-                    <p>Add to cart</p>
+                <p className={styles.price}>{convertedPrice ? convertedPrice + " " + currency : "Please select a size to see the respective price."}</p>
+                <div onMouseDown={() => isInStock ?  addToCart(itemData.id, activeColor, activeSize) : null} className={`${styles.addCartButton} ${isInStock ? "" : styles.outOfStock}`}>
+                    <p>{isInStock ? "Add to cart" : "Out of stock"}</p>
                     <img src={cart_icon}/>
                 </div>
             </div>
@@ -90,7 +105,32 @@ export default function ItemInfo() {
 }
 
 function SizeSelector({ size, activeSize, changeSize }) {
+    const [itemStock] = useContext(ItemStockContext)
+    const [activeColor] = useContext(ActiveColorContext)
+    const [isInStock, setIsInStock] = useState(false)
+    const tooltipRef = useRef()
+
     const isActive = activeSize === size
+
+    useEffect(() => {
+        checkStock()
+    }, [itemStock, activeColor])
+
+
+    useEffect(() => {
+        if(!isInStock) {
+            const tooltip = initTooltip()
+            return () => tooltip?.dispose()
+        }
+    }, [isInStock])
+
+    function initTooltip() {
+        return tooltipRef.current ? new bootstrap.Tooltip(tooltipRef.current) : null
+    }
+
+    async function checkStock() {
+        setIsInStock(itemStock?.find(stockItem => stockItem.size == size && stockItem.variant == activeColor)?.stock > 0)
+    }
 
     function handleClick() {
         changeSize(size)
@@ -102,7 +142,14 @@ function SizeSelector({ size, activeSize, changeSize }) {
         }
     }
 
-    return <div className={`${styles.size} ${isActive ? styles.active : ""} col-5 col-lg-3 m-1 p-1`} onClick={handleClick}>EU {size}</div>
+    return <div ref={tooltipRef}
+                className={`${styles.size} ${isActive ? styles.active : ""} ${isInStock ? "" : styles.outOfStock} col-5 col-lg-3 m-1 p-1`} 
+                onClick={isInStock ? handleClick : undefined}
+                data-bs-toggle="tooltip" data-bs-placement="top"
+                data-bs-custom-class="out-of-stock-tooltip"
+                data-bs-title="out of stock">
+                EU {size}
+            </div>
 }
 
 function VariantSelector({ variant }) {
