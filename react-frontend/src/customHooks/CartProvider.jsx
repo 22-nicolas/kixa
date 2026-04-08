@@ -1,5 +1,5 @@
 import { useState, createContext, useContext } from "react"
-import { getProductById } from "../api/productData";
+import { getProductById, getProductStock } from "../api/productData";
 
 const CartContext = createContext()
 
@@ -19,7 +19,7 @@ export default function CartProvider({ children }) {
         });
     }
 
-    const addToCart = async (id, color, size) => {
+    const addToCart = async (id, color, size, amount = 1) => {
         if (!size) {
             const sizeSelectLabel = document.getElementById("sizeSelectLabel")
             if (sizeSelectLabel) {
@@ -29,9 +29,10 @@ export default function CartProvider({ children }) {
             return
         }
 
-        const {name, price} = await getProductById(id)
-        
-        
+        const {name} = await getProductById(id)
+        const stock = await getProductStock(id, color, size)
+        const price = Number(stock?.price)
+
         updateCart(prevCart => {
             const index = prevCart.findIndex(item => item.id === id && item.size === size && item.color === color);
 
@@ -40,7 +41,7 @@ export default function CartProvider({ children }) {
                 const updated = [...prevCart]
                 updated[index] = {
                     ...updated[index],
-                    quantity: updated[index].quantity + 1
+                    quantity: updated[index].quantity + amount
                 }
                 return updated
             }
@@ -48,7 +49,7 @@ export default function CartProvider({ children }) {
             //Else return with quantity 1
             return[
                 ...prevCart,
-                {id, name, price, color, size, quantity: 1}
+                {id, name, price, color, size, quantity: amount}
             ]
         });
     }

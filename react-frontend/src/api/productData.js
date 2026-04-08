@@ -1,4 +1,4 @@
-import { getBaseApiUrl } from "../modules/utils";
+import { getBaseApiUrl, notNil } from "../modules/utils";
 
 const API_BASE_URL = getBaseApiUrl();
 
@@ -32,8 +32,11 @@ export async function deleteProductData(id) {
     return response;
 }
 
-export async function  getProductStock(productId) {
+export async function  getProductStock(productId, variant, size) {
     const response = await fetch(`${API_BASE_URL}/products/stock/${productId}`);
     const stock = await response.json();
-    return stock;
+
+    if (notNil(variant) && notNil(size)) 
+        return stock?.find(itemStock => itemStock.variant === variant && itemStock.size == size);
+            else return stock;
 }
