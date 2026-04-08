@@ -32,11 +32,22 @@ export async function deleteProductData(id) {
     return response;
 }
 
-export async function  getProductStock(productId, variant, size) {
-    const response = await fetch(`${API_BASE_URL}/products/stock/${productId}`);
-    const stock = await response.json();
+export async function getProductStock(productId, variant, size) {
+    let stock
+    if (notNil(variant) && notNil(size)) {
+        const response = await fetch(`${API_BASE_URL}/products/stock`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({id: productId, variant: variant, size: size})
+        });
 
-    if (notNil(variant) && notNil(size)) 
-        return stock?.find(itemStock => itemStock.variant === variant && itemStock.size == size);
-            else return stock;
+        stock = await response.json();
+    } else {
+        const response = await fetch(`${API_BASE_URL}/products/stock/${productId}`);
+        stock = await response.json();
+    }
+
+    return stock;
 }

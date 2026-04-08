@@ -33,4 +33,17 @@ router.get("/stock/:id", async (req, res) => {
   res.send(stockData);
 });
 
+router.post("/stock", async (req, res) => {
+  const itemData = req.body;
+  if (!itemData) {
+    res.send().status(400);
+    return;
+  }
+
+  const {id, variant, size} = itemData;
+  const stockData = await getProductStock(id, variant, size);
+
+  res.send(stockData);
+})
+
 export default router;
