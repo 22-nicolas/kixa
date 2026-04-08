@@ -8,10 +8,9 @@ export const stockStates = {
 
 export async function checkStockStatus(id, variant, size, stock) {
     const productStock = await getProductStock(id, variant, size)
-    console.log(productStock)
 
     let stockState
-    if (!productStock || productStock.length === 0) {
+    if (!productStock) {
         stockState = stockStates.outOfStock
     } else if (productStock?.stock >= stock) {
         stockState = stockStates.inStock

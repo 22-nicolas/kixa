@@ -1,6 +1,8 @@
 import { useState, createContext, useContext } from "react"
 import { getProductById, getProductStock } from "../api/productData";
+import { getBaseApiUrl } from "../modules/utils";
 
+const API_BASE_URL = getBaseApiUrl();
 const CartContext = createContext()
 
 export default function CartProvider({ children }) {
@@ -30,8 +32,8 @@ export default function CartProvider({ children }) {
         }
 
         const {name} = await getProductById(id)
-        const stock = await getProductStock(id, color, size)
-        const price = Number(stock?.price)
+        /*const stock = await getProductStock(id, color, size)
+        const price = Number(stock?.price)*/
 
         updateCart(prevCart => {
             const index = prevCart.findIndex(item => item.id === id && item.size === size && item.color === color);
@@ -49,7 +51,7 @@ export default function CartProvider({ children }) {
             //Else return with quantity 1
             return[
                 ...prevCart,
-                {id, name, price, color, size, quantity: amount}
+                {id, name, /*price,*/ color, size, quantity: amount}
             ]
         });
     }
@@ -88,8 +90,22 @@ export default function CartProvider({ children }) {
         return quantity
     }
 
+    const resolveCart = async () => {
+        const response = await fetch(`${API_BASE_URL}/cart/resolve`, {
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json"
+            },
+            body: JSON.stringify(cart)
+        });
+
+        const resolvedCart = await response.json();
+
+        return resolvedCart;
+    }
+
     return (
-        <CartContext.Provider value={{ cart, updateCart, addToCart, removeFromCart, getQuantity }}>
+        <CartContext.Provider value={{ cart, updateCart, addToCart, removeFromCart, getQuantity, resolveCart }}>
             {children}
         </CartContext.Provider>
     )

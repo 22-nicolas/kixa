@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import NodeCache from 'node-cache';
 import productRoutes from "./routes/products.js";
 import userRoutes from "./routes/users.js";
+import cartRoutes from "./routes/cart.js";
 import countryRoutes from "./routes/country.js";
 import { sessionsCleanup } from './sql/users.js';
 import { checkPool } from './sql/db.js';
@@ -37,6 +38,7 @@ if (err) {
 } else {
   app.use("/api/products", productRoutes);
   app.use("/api/users", userRoutes);
+  app.use("/api/cart", cartRoutes);
 
   sessionsCleanup()
   setInterval(sessionsCleanup, SESSIONS_CLEANUP_INTERVAL)

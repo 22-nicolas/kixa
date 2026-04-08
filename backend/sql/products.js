@@ -38,7 +38,7 @@ export async function deleteProductData(id) {
 export async function getProductStock(productId, variant, size) {
     let stock
     if (!isNaN(variant) && !isNaN(size)) {
-        [stock] = await pool.query(`
+        [[stock]] = await pool.query(`
             select * 
             from stock
             where product_id = ? and variant = ? and size = ?
