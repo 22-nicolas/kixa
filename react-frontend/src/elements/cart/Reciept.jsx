@@ -1,43 +1,69 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useCart } from "../../customHooks/CartProvider";
 import styles from "../../styles/cart.module.css"
+import { CurrencyContext } from "../../customHooks/CurrencyProvider";
+import { checkStockStatus, stockStates } from "../../modules/stockStatus";
 
 export default function Reciept() {
-    const {cart, getQuantity} = useCart()
+    const {cart, getQuantity, resolveCart} = useCart()
+    const {currency, conversionRates} = useContext(CurrencyContext)
     const [quantity, setQuantity] = useState(0)
     const [itemsPrice, setItemsPrice] = useState(0)
-    const shipping = 10
+    const shipping = 0
     
     useEffect(() => {
         setQuantity(getQuantity())
-        setItemsPrice(prevPrice => {
-            let price = 0
-            cart.forEach(item => {
-                price += Number(item.price) * Number(item.quantity)
-            });
-            return price
-        })
-    }, [cart])
+        loadPrices()
+    }, [cart, currency, conversionRates])
 
+    async function loadPrices() {
+        const resolvedCart = await resolveCart()
+        
+        const results = await Promise.all(
+            resolvedCart.map(async (item) => {
+                const { id, color, size, quantity } = item
+                const status = await checkStockStatus(id, color, size, quantity)
+
+                if (status.stockState !== stockStates.outOfStock) {
+                    return Number(item.price) * Number(quantity)
+                }
+
+                return 0
+            })
+        )
+
+        const prices = results.reduce((sum, value) => sum + conertPrice(value), 0)
+
+        setItemsPrice(prices)
+    }
     
+    function conertPrice(price) {
+        if (price && conversionRates && currency) {
+            const usdPrice = price / conversionRates["EUR"]
+            const convertedPrice = Number((conversionRates[currency] * usdPrice).toFixed(2))
+            return convertedPrice
+        }
+
+        return 0
+    }
 
     return (
         <div className={styles.reciept}>
             <div>
                 <p>Items ({quantity})</p>
-                <p>US ${itemsPrice}</p>
+                <p>{itemsPrice} {currency}</p>
             </div>
             <div>
                 <p>Shipping</p>
-                <p>US $10</p>
+                <p>{shipping} {currency}</p>
             </div>
             <div>
                 <p>Discounts</p>
-                <p>US $0</p>
+                <p>0 {currency}</p>
             </div>
             <div className={styles.subtotal}>
                 <p>Subtotal</p>
-                <p>US ${itemsPrice+shipping}</p>
+                <p>{itemsPrice+shipping} {currency}</p>
             </div>
             <div className={styles.checkoutBtn}><p>Go to checkout</p></div>
         </div>

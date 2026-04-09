@@ -26,7 +26,6 @@ export default function CartItem({ itemData }) {
         if (itemData.price && conversionRates && currency) {
             const usdPrice = itemData.price / conversionRates["EUR"]
             const convertedPrice = Number((conversionRates[currency] * usdPrice).toFixed(2))
-            console.log(convertedPrice * 5)
             setPrice(convertedPrice)
         }
     }

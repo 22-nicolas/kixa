@@ -13,7 +13,7 @@ export default function Cart() {
 
     async function loadItems() {
         const resolvedCart = await resolveCart()
-        console.log(resolvedCart)
+
         const items = resolvedCart.map(itemData => {
             const key = `${itemData.id}${itemData.color}${itemData.size}`
             return <CartItem itemData={itemData} key={key} />
