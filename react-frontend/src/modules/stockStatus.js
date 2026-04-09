@@ -18,5 +18,5 @@ export async function checkStockStatus(id, variant, size, stock) {
         stockState = stockStates.notEnoughStock
     }
 
-    return stockState
+    return {stockState, productStock: productStock?.stock}
 }
