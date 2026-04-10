@@ -5,7 +5,7 @@ import { fireAccountBtnEvent } from '../../modules/AccountBtnEvent.js'
 import { Link } from 'react-router-dom'
 import SearchBar from './SearchBar.jsx'
 import { useCart } from '../../customHooks/CartProvider.jsx'
-import { CurrencyContext, SupportedCurrencies } from '../../customHooks/CurrencyProvider.jsx'
+import { CurrencyContext } from '../../customHooks/CurrencyProvider.jsx'
 
 //images
 import logo from '../../assets/logo.png'
@@ -16,17 +16,22 @@ import user_icon from '../../assets/user_icon.png'
 function Header() {    
     const {cart, getQuantity} = useCart()
     const [quantity, setQuantity] = useState(0)
-    const {currency, setCurrency} = useContext(CurrencyContext)
-    const currencies = SupportedCurrencies.map((cur) => (
-        <li key={cur}>
-            <button className="dropdown-item" type="button" onClick={() => setCurrency(cur)}>{cur}</button>
-        </li>
-    ))
+    const {currency, setCurrency, supportedCurrencies} = useContext(CurrencyContext)
+    const [currencySelectors, setCurrencySelectors] = useState()
 
     //update cart quantity display
     useEffect(() => {
         setQuantity(getQuantity())
     }, [cart])
+
+    useEffect(() => {
+        const currencies = supportedCurrencies?.map((cur) => (
+            <li key={cur}>
+                <button className="dropdown-item" type="button" onClick={() => setCurrency(cur)}>{cur}</button>
+            </li>
+        ))
+        setCurrencySelectors(currencies)
+    }, [supportedCurrencies])
 
     return(
         <nav className="header navbar navbar-expand-lg">
@@ -56,7 +61,7 @@ function Header() {
                             {currency}
                         </button>
                         <ul className="dropdown-menu dropdown-menu-end">
-                            {currencies}
+                            {currencySelectors}
                         </ul>
                     </div>
 

@@ -1,11 +1,11 @@
-import { getIsVisible } from "./AccountPopup"
 import styles from "../../../styles/register.module.css"
-import { use, useContext, useEffect, useRef, useState } from "react"
-import { supportedCountries, getUserRegionName} from "../../../modules/utils"
-import { getCountryData } from "../../../api/countryData"
+import { useContext, useEffect, useRef, useState } from "react"
+import { getUserRegionName} from "../../../modules/utils"
+import { getCountriesData } from "../../../api/countriesData"
 import { registerUser } from "../../../api/users"
 import FormInput from "./FormInputs/FormInput"
 import { HighlightedFieldsContext, InterfaceContext } from "./AccountPopup"
+import { supportedCountries } from "../../../../../packages/shared/supportedCountries"
 
 
 export default function Register() {
@@ -32,7 +32,8 @@ export default function Register() {
             if (inputRefs.current[id].current) {
                 // add prefix for phone number
                 if (id === "phone_number") {
-                    const {phone_international_prefix} = await getCountryData(activeCountry)
+                    const countriesData = await getCountriesData()
+                    const {phone_international_prefix} = countriesData?.find(data => data.country_code === activeCountry)
                     values[id] = `+${phone_international_prefix}${inputRefs.current[id].current.value}`
                 } else {
                     values[id] = inputRefs.current[id].current.value;

@@ -1,7 +1,8 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { suscribeToAccountBtn, unSuscribe } from "../../../modules/AccountBtnEvent";
 import { getSessionIdCookie, isDescandentOf } from "../../../modules/utils";
-import { supportedCountries, getUserRegionName} from "../../../modules/utils"
+import { getUserRegionName} from "../../../modules/utils"
+import { supportedCountries } from "../../../../../packages/shared/supportedCountries";
 import Default from "./Default";
 import Register from "./Register";
 import Login from "./Login";

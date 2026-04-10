@@ -5,7 +5,7 @@ import NodeCache from 'node-cache';
 import productRoutes from "./routes/products.js";
 import userRoutes from "./routes/users.js";
 import cartRoutes from "./routes/cart.js";
-import countryRoutes from "./routes/country.js";
+import countriesRoutes from "./routes/countries.js";
 import { sessionsCleanup } from './sql/users.js';
 import { checkPool } from './sql/db.js';
 import currencyRoutes from './routes/currency.js';
@@ -15,7 +15,7 @@ const SESSIONS_CLEANUP_INTERVAL = 10*60*1000;
 
 dotenv.config({ path: "backend/.env" });
 
-const countryCache = new NodeCache({
+const countriesCache = new NodeCache({
   stdTTL: 0,
 });
 
@@ -44,7 +44,7 @@ if (err) {
   setInterval(sessionsCleanup, SESSIONS_CLEANUP_INTERVAL)
 }
 
-app.use("/api/country", countryRoutes(countryCache));
+app.use("/api/countries", countriesRoutes(countriesCache));
 app.use("/api/currency", currencyRoutes(currencyCache));
 
 app.use((err, req, res, next) => {

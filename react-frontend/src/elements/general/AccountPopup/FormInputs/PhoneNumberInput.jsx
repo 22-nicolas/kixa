@@ -2,8 +2,7 @@ import { useContext, useEffect, useRef, useState } from "react"
 import { ActiveCountryContext as CountryContext } from "../AccountPopup"
 import { InterfaceContext } from "../AccountPopup"
 import styles from "../../../../styles/register.module.css"
-import { getCountryData } from "../../../../api/countryData"
-import { supportedCountries } from "../../../../modules/utils"
+import { getCountriesData } from "../../../../api/countriesData"
 import { HighlightedFieldsContext } from "../AccountPopup"
 
 export default function PhoneNumberInput({ label, id, small, i, ref }) {
@@ -40,12 +39,13 @@ export default function PhoneNumberInput({ label, id, small, i, ref }) {
 
     async function mapActiveCountryComponent(){
         if (!activeCountry) return
-        const data = await getCountryData(activeCountry)
+        const data = await getCountriesData()
+        const countryData = data?.find(item => item.country_code === activeCountry)
         setActiveCountryComponent(
             <label className={styles.countrySelector} htmlFor="country-dropdown-input">
                 <p className={styles.arrow}>▴</p>
-                <p>{data.flag}</p>
-                <p>+{data.phone_international_prefix}</p>
+                <p>{countryData?.flag}</p>
+                <p>+{countryData?.phone_international_prefix}</p>
             </label>
         )
     }
@@ -58,15 +58,13 @@ export default function PhoneNumberInput({ label, id, small, i, ref }) {
 
     async function mapCountryComponents() {
         //fetch country data
-        const countryData = await Promise.all(
-            supportedCountries.map(country => getCountryData(country))
-        )
+        const countryData = await getCountriesData()
 
         //map to components
         const components = countryData.map((data, i) => {
             if(!data.name) return
             return(
-                <div key={i} className={styles.country} onMouseDown={() => onCountryClick(data.name)}>
+                <div key={i} className={styles.country} onMouseDown={() => onCountryClick(data.country_code)}>
                     <p>{data.flag}</p>
                     <p>+{data.phone_international_prefix}</p>
                 </div>
