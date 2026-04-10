@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { getConversionRates, getPreferedCurrency } from "../api/currency";
 import { supportedCurrencies } from "../../../packages/shared/supportedCurrencies";
+import { getCookie, notNil } from "../modules/utils"
 
 export const CurrencyContext = createContext();
 
@@ -18,7 +19,12 @@ export default function CurrencyProvier({ children }) {
     }, [supportedCurrencies])
 
     async function fetchPreferedCurrency() {
-        if (!supportedCurrencies || supportedCurrencies.length === 0) return
+        const cookieCurrency = getCookie("currency")
+        if (notNil(cookieCurrency)) {
+            setCurrency(cookieCurrency)
+            return
+        }
+
         const preferedCurrency = await getPreferedCurrency()
 
         // Fallback to USD if the request fails
@@ -41,15 +47,14 @@ export default function CurrencyProvier({ children }) {
         setConversionRates(rates)
     }
 
-    async function fetchSupportedCurrencies() {
-        const countriesData = await getCountriesData() 
-        const currencyCodes = countriesData?.map(data => data.currency.code)
-        const uniqueCurrencyCodes = [...new Set(currencyCodes)];
-        setSupportedCurrencies(uniqueCurrencyCodes)
+
+    function changeCurrency(newCurrency) {
+        setCurrency(newCurrency)
+        document.cookie = `currency=${newCurrency}`
     }
 
     return (
-        <CurrencyContext.Provider value={{ currency, setCurrency, conversionRates, supportedCurrencies }}>
+        <CurrencyContext.Provider value={{ currency, changeCurrency, conversionRates, supportedCurrencies }}>
             {children}
         </CurrencyContext.Provider>
     )

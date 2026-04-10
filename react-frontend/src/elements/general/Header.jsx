@@ -16,7 +16,7 @@ import user_icon from '../../assets/user_icon.png'
 function Header() {    
     const {cart, getQuantity} = useCart()
     const [quantity, setQuantity] = useState(0)
-    const {currency, setCurrency, supportedCurrencies} = useContext(CurrencyContext)
+    const {currency, changeCurrency, supportedCurrencies} = useContext(CurrencyContext)
     const [currencySelectors, setCurrencySelectors] = useState()
 
     //update cart quantity display
@@ -27,7 +27,7 @@ function Header() {
     useEffect(() => {
         const currencies = supportedCurrencies?.map((cur) => (
             <li key={cur}>
-                <button className="dropdown-item" type="button" onClick={() => setCurrency(cur)}>{cur}</button>
+                <button className="dropdown-item" type="button" onClick={() => changeCurrency(cur)}>{cur}</button>
             </li>
         ))
         setCurrencySelectors(currencies)
