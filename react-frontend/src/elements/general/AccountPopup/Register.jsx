@@ -5,7 +5,7 @@ import { getCountriesData } from "../../../api/countriesData"
 import { registerUser } from "../../../api/users"
 import FormInput from "./FormInputs/FormInput"
 import { HighlightedFieldsContext, InterfaceContext } from "./AccountPopup"
-import { supportedCountries } from "../../../../../packages/shared/supportedCountries"
+import { supportedCountries } from "../../../../../packages/shared/index"
 
 
 export default function Register() {

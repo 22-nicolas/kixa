@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { getConversionRates, getPreferedCurrency } from "../api/currency";
-import { supportedCurrencies } from "../../../packages/shared/supportedCurrencies";
+import { supportedCurrencies } from "../../../packages/shared/index";
 import { getCookie, notNil } from "../modules/utils"
 
 export const CurrencyContext = createContext();

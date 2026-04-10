@@ -1,3 +1,5 @@
 {
+  "name": "shared",
+  "main": "index.js",
   "type": "module"
 }

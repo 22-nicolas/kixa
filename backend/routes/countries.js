@@ -1,6 +1,6 @@
 import { Router } from "express";
 import NodeCache from 'node-cache';
-import { supportedCountries } from "../../packages/shared/supportedCountries.js";
+import { supportedCountries } from "shared";
 
 export default function countryRoutes(cache) {
     const router = Router();

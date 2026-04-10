@@ -16,6 +16,7 @@
     "express": "^5.1.0",
     "mysql2": "^3.14.5",
     "node-cache": "^5.1.2",
-    "bcrypt": "^5.1.1"
+    "bcrypt": "^5.1.1",
+    "shared": "file:../packages/shared"  
   }
 }

@@ -1,3 +1,12 @@
+export const supportedCurrencies = [
+    "USD",
+    "EUR",
+    "GBP",
+    "CAD",
+    "AUD",
+    "JPY"
+];
+
 //only use ISO 3166-1 alpha-2 country codes
 export const supportedCountries = [
     "FR",
