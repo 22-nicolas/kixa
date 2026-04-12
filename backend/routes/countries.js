@@ -30,7 +30,7 @@ export default function countryRoutes(cache) {
         });
         //console.log(response)
         const {countries} = await response.json();
-        //console.log(countriesData)
+        console.log(response)
         //filter out none supported countries
         const filteredCountriesData = countries.filter(data => supportedCountries.includes(data.country_code));
 
