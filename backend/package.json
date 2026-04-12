@@ -11,12 +11,15 @@
   "description": "",
   "type": "module",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "mysql2": "^3.14.5",
     "node-cache": "^5.1.2",
-    "bcrypt": "^5.1.1",
-    "shared": "file:../packages/shared"  
+    "shared": "file:../packages/shared"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
   }
 }

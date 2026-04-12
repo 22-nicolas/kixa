@@ -1,0 +1,22 @@
+{
+  "name": "kixa",
+  "version": "1.0.0",
+  "description": "Full stack e-commerce website. I started this project after learning HTML, CSS and JavaScript basics. My goal was to learn real-world development practices. Due throwing myself into a challenging but achievable project with limited web-development knowledge, I had to often rewrite and rethink major parts of the application. I'm not finished yet, but I've already made huge progress compared the first version of the website.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"nodemon backend/index.js\" \"npm run dev --prefix react-frontend\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/22-nicolas/kixa.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/22-nicolas/kixa/issues"
+  },
+  "homepage": "https://github.com/22-nicolas/kixa#readme",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
