@@ -5,7 +5,7 @@ import cart_icon from "../../assets/cart_icon.png"
 import { notNil, shoeAssetsPath } from "../../modules/utils"
 import { useCart } from "../../customHooks/CartProvider"
 import { useSearchParams } from "react-router-dom"
-import { CurrencyContext } from "../../customHooks/CurrencyProvider"
+import { useCurrency } from "../../customHooks/CurrencyProvider"
 
 export default function ItemInfo() {
     const [itemData, setItemData] = useContext(ItemDataContext)
@@ -14,7 +14,7 @@ export default function ItemInfo() {
     const [activeSize, setActiveSize] = useState(getSizeFromParams())
     const [activeColor] = useContext(ActiveColorContext)
     const {addToCart} = useCart()
-    const {currency, conversionRates} = useContext(CurrencyContext)
+    const {currency, conversionRates} = useCurrency()
     const [convertedPrice, setConvertedPrice] = useState(null)
     const [isInStock, setIsInStock] = useState(false)
 

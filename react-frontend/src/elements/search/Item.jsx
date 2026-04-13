@@ -4,7 +4,7 @@ import { format, notNil } from "../../modules/utils"
 import { shoeAssetsPath } from "../../modules/utils"
 import { string } from "../../modules/colors"
 import styles from "../../styles/search.module.css"
-import { CurrencyContext } from "../../customHooks/CurrencyProvider"
+import { useCurrency } from "../../customHooks/CurrencyProvider"
 import { getConversionRates } from "../../api/currency"
 import { getProductStock } from "../../api/productData"
 
@@ -25,7 +25,7 @@ export default function Item({ itemData }) {
                                                 id={id}
                                                 colorway={colorway}
                                                 onClick={setColorway}/>)
-    const {currency, conversionRates} = useContext(CurrencyContext)
+    const {currency, conversionRates} = useCurrency()
 
 
     useEffect(() => {

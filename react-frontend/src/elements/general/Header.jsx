@@ -5,7 +5,7 @@ import { fireAccountBtnEvent } from '../../modules/AccountBtnEvent.js'
 import { Link } from 'react-router-dom'
 import SearchBar from './SearchBar.jsx'
 import { useCart } from '../../customHooks/CartProvider.jsx'
-import { CurrencyContext } from '../../customHooks/CurrencyProvider.jsx'
+import { useCurrency } from '../../customHooks/CurrencyProvider.jsx'
 
 //images
 import logo from '../../assets/logo.png'
@@ -16,7 +16,7 @@ import user_icon from '../../assets/user_icon.png'
 function Header() {    
     const {cart, getQuantity} = useCart()
     const [quantity, setQuantity] = useState(0)
-    const {currency, changeCurrency, supportedCurrencies} = useContext(CurrencyContext)
+    const {currency, changeCurrency, supportedCurrencies} = useCurrency()
     const [currencySelectors, setCurrencySelectors] = useState()
 
     //update cart quantity display

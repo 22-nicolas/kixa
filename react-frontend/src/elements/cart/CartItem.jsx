@@ -1,6 +1,6 @@
 import { use, useContext, useEffect, useState } from "react"
 import { useCart } from "../../customHooks/CartProvider"
-import { CurrencyContext } from "../../customHooks/CurrencyProvider"
+import { useCurrency } from "../../customHooks/CurrencyProvider"
 import styles from "../../styles/cart.module.css"
 import { Link } from "react-router-dom"
 import { shoeAssetsPath } from "../../modules/utils"
@@ -11,7 +11,7 @@ export default function CartItem({ itemData }) {
     const {cart, removeFromCart, updateCart} = useCart()
     const {id, name, color, size, quantity} = itemData
     const [price, setPrice] = useState(itemData.price)
-    const {currency, conversionRates} = useContext(CurrencyContext)
+    const {currency, conversionRates} = useCurrency()
     const [stockStatus, setStockStatus] = useState({stockState: stockStates.inStock, productStock: null})
 
     useEffect(() => {

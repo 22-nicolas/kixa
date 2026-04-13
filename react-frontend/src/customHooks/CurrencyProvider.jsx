@@ -1,9 +1,9 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { getConversionRates, getPreferedCurrency } from "../api/currency";
 import { supportedCurrencies } from "../../../packages/shared/index";
 import { getCookie, notNil } from "../modules/utils"
 
-export const CurrencyContext = createContext();
+const CurrencyContext = createContext();
 
 export default function CurrencyProvier({ children }) {
     const [currency, setCurrency] = useState("USD");
@@ -59,4 +59,8 @@ export default function CurrencyProvier({ children }) {
             {children}
         </CurrencyContext.Provider>
     )
+}
+
+export function useCurrency() {
+    return useContext(CurrencyContext);
 }

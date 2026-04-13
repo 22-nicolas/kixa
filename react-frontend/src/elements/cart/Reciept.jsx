@@ -1,12 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 import { useCart } from "../../customHooks/CartProvider";
 import styles from "../../styles/cart.module.css"
-import { CurrencyContext } from "../../customHooks/CurrencyProvider";
+import { useCurrency } from "../../customHooks/CurrencyProvider";
 import { checkStockStatus, stockStates } from "../../modules/stockStatus";
 
 export default function Reciept() {
     const {cart, getQuantity, resolveCart, checkout} = useCart()
-    const {currency, conversionRates} = useContext(CurrencyContext)
+    const {currency, conversionRates} = useCurrency()
     const [quantity, setQuantity] = useState(0)
     const [itemsPrice, setItemsPrice] = useState(0)
     const shipping = 0

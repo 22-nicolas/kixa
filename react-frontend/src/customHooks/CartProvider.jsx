@@ -1,7 +1,7 @@
 import { useState, createContext, useContext } from "react"
 import { getProductById, getProductStock } from "../api/productData";
 import { getBaseApiUrl } from "../modules/utils";
-import { CurrencyContext } from "./CurrencyProvider";
+import { useCurrency } from "./CurrencyProvider";
 
 const API_BASE_URL = getBaseApiUrl();
 const CartContext = createContext()
@@ -14,7 +14,7 @@ export default function CartProvider({ children }) {
         return stored ? JSON.parse(stored) : [];
     })
 
-    const {currency} = useContext(CurrencyContext)
+    const {currency} = useCurrency()
 
     const updateCart = (updater) => {
         setCart(prev => {

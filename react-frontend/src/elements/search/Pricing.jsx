@@ -1,6 +1,6 @@
 import { useEffect, useRef, useContext, useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
-import { CurrencyContext } from "../../customHooks/CurrencyProvider"
+import { useCurrency } from "../../customHooks/CurrencyProvider"
 import styles from "../../styles/search.module.css"
 import { notNil } from "../../modules/utils"
 
@@ -16,7 +16,7 @@ export default function Pricing() {
     const [maxValue, setMaxValue] = useState(maxPriceInEuro)
     const range = useRef()
     const navigate = useNavigate()
-    const {currency, conversionRates} = useContext(CurrencyContext)
+    const {currency, conversionRates} = useCurrency()
     const [searchParams] = useSearchParams()
 
     useEffect(reapplyPricing, [maxPrice, searchParams])
