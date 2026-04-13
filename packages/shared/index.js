@@ -10,7 +10,7 @@ export const supportedCurrencies = [
 //only use ISO 3166-1 alpha-2 country codes
 export const supportedCountries = [
     "FR",
-    "GE",
+    "DE",
     "IT",
     "PL",
     "PT",

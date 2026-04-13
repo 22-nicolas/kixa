@@ -1,61 +1,59 @@
 import { Router } from "express";
-import NodeCache from 'node-cache';
+import cache from "../cache.js";
 
-export default function currencyRoutes(cache) {
-    const router = Router();
 
-    if(!cache) {
-        cache = new NodeCache({
-          stdTTL: 3600,
-          checkperiod: 3600
-        });
+const router = Router();
+
+router.get("/conversion-rates", async (req, res) => {
+    const currencyData = await getConversionRates();
+    //console.log(currencyData)
+    res.send(currencyData);
+});
+
+router.get("/user-preference", async (req, res) => {
+    const ip = req.ip;
+    const cacheKey = 'preference_' + ip;
+
+    //check cache
+    const cached = cache.get(cacheKey);
+    if (cached) {
+        res.send(cached);
+        return;
     }
 
-    router.get("/conversion-rates", async (req, res) => {
-        const cacheKey = 'currency'
+    const response = await fetch("https://apip.cc/json")
+    const data = await response.json();
 
-        //check cache
-        const cached = cache.get(cacheKey);
-        if (cached) {
-            res.send(cached);
-            return;
-        }
+    const currencyData = { currency: data.Currency };
 
-        // Construct URL with query parameters for a GET request
-        const url = new URL(process.env.CURRENCY_API_URL);
-        url.searchParams.append('app_id', process.env.CURRENCY_TOKEN);
+    //store in cache
+    cache.set(cacheKey, currencyData, 3600);
+    
+    res.send(currencyData);
+})
 
-        const response = await fetch(url);
-        
-        const currencyData = await response.json();
-        
-        //store in cache
-        cache.set(cacheKey, currencyData, 3600);
+export default router;
 
-        res.send(currencyData);
-    });
+export async function getConversionRates() {
+    const cacheKey = 'currency'
 
-    router.get("/user-preference", async (req, res) => {
-        const ip = req.ip;
-        const cacheKey = 'preference_' + ip;
+    //check cache
+    const cached = cache.get(cacheKey);
+    if (cached) {
+        return cached;
+    }
 
-        //check cache
-        const cached = cache.get(cacheKey);
-        if (cached) {
-            res.send(cached);
-            return;
-        }
+    // Construct URL with query parameters for a GET request
+    const url = new URL(process.env.CURRENCY_API_URL);
+    url.searchParams.append('app_id', process.env.CURRENCY_TOKEN);
 
-        const response = await fetch("https://apip.cc/json")
-        const data = await response.json();
+    const response = await fetch(url);
+    
+    const currencyData = await response.json();
+    const conversionRates = currencyData.rates;
+    
+    //store in cache
+    cache.set(cacheKey, conversionRates, 3600);
 
-        const currencyData = { currency: data.Currency };
-
-        //store in cache
-        cache.set(cacheKey, currencyData, 3600);
-        
-        res.send(currencyData);
-    })
-
-    return router
-};
+    return conversionRates;
+}

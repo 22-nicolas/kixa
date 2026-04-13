@@ -1,7 +1,6 @@
 import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
-import NodeCache from 'node-cache';
 import productRoutes from "./routes/products.js";
 import userRoutes from "./routes/users.js";
 import cartRoutes from "./routes/cart.js";
@@ -9,20 +8,10 @@ import countriesRoutes from "./routes/countries.js";
 import { sessionsCleanup } from './sql/users.js';
 import { checkPool } from './sql/db.js';
 import currencyRoutes from './routes/currency.js';
-import { getProductStock } from './sql/products.js';
 
 const SESSIONS_CLEANUP_INTERVAL = 10*60*1000;
 
 dotenv.config({ path: "backend/.env" });
-
-const countriesCache = new NodeCache({
-  stdTTL: 0,
-});
-
-const currencyCache = new NodeCache({
-  stdTTL: 3600,
-  checkperiod: 3600
-});
 
 const app = express();
 app.use(cors());
@@ -44,8 +33,8 @@ if (err) {
   setInterval(sessionsCleanup, SESSIONS_CLEANUP_INTERVAL)
 }
 
-app.use("/api/countries", countriesRoutes(countriesCache));
-app.use("/api/currency", currencyRoutes(currencyCache));
+app.use("/api/countries", countriesRoutes);
+app.use("/api/currency", currencyRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

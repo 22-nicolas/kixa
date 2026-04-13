@@ -5,7 +5,7 @@ import { CurrencyContext } from "../../customHooks/CurrencyProvider";
 import { checkStockStatus, stockStates } from "../../modules/stockStatus";
 
 export default function Reciept() {
-    const {cart, getQuantity, resolveCart} = useCart()
+    const {cart, getQuantity, resolveCart, checkout} = useCart()
     const {currency, conversionRates} = useContext(CurrencyContext)
     const [quantity, setQuantity] = useState(0)
     const [itemsPrice, setItemsPrice] = useState(0)
@@ -65,7 +65,7 @@ export default function Reciept() {
                 <p>Subtotal</p>
                 <p>{itemsPrice+shipping} {currency}</p>
             </div>
-            <div className={styles.checkoutBtn}><p>Go to checkout</p></div>
+            <div className={styles.checkoutBtn} onClick={checkout}><p>Go to checkout</p></div>
         </div>
     )
 }

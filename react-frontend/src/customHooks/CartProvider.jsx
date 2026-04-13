@@ -1,6 +1,7 @@
 import { useState, createContext, useContext } from "react"
 import { getProductById, getProductStock } from "../api/productData";
 import { getBaseApiUrl } from "../modules/utils";
+import { CurrencyContext } from "./CurrencyProvider";
 
 const API_BASE_URL = getBaseApiUrl();
 const CartContext = createContext()
@@ -13,12 +14,18 @@ export default function CartProvider({ children }) {
         return stored ? JSON.parse(stored) : [];
     })
 
+    const {currency} = useContext(CurrencyContext)
+
     const updateCart = (updater) => {
         setCart(prev => {
             const newVal = typeof updater === "function" ? updater(prev) : updater;
             localStorage.setItem(key, JSON.stringify(newVal));
             return newVal;
         });
+    }
+
+    const clearCart = () => {
+        updateCart([]);
     }
 
     const addToCart = async (id, color, size, amount = 1) => {
@@ -104,8 +111,37 @@ export default function CartProvider({ children }) {
         return resolvedCart;
     }
 
+    const checkout = async () => {
+        if (cart.length === 0) {
+            alert("Your cart is empty.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/cart/create-checkout-session`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ items: cart, currency: currency })
+            });
+
+            const session = await response.json();
+
+            if (session.url) {
+                // Redirect the user to the Stripe Checkout page
+                window.location.href = session.url;
+            } else {
+                throw new Error(session.error || "Failed to create checkout session");
+            }
+        } catch (error) {
+            console.error("Stripe Checkout error:", error);
+            alert("An error occurred during checkout. Please try again.");
+        }
+    };
+
     return (
-        <CartContext.Provider value={{ cart, updateCart, addToCart, removeFromCart, getQuantity, resolveCart }}>
+        <CartContext.Provider value={{ cart, updateCart, clearCart, addToCart, removeFromCart, getQuantity, resolveCart, checkout }}>
             {children}
         </CartContext.Provider>
     )

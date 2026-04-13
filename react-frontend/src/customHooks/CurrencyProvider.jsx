@@ -44,6 +44,7 @@ export default function CurrencyProvier({ children }) {
 
     async function fetchConversionRates() {
         const rates = await getConversionRates()
+        console.log(rates)
         setConversionRates(rates)
     }
 

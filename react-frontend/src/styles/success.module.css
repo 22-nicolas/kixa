@@ -1,0 +1,23 @@
+.successImg {
+    max-width: 100%;
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2ch;
+    margin-bottom: 2ch;
+    width: 10%;
+}
+
+.successContainer{
+    min-height: 80vh;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: start;
+}
+
+.backToHomeButton {
+    margin-left: auto;
+    margin-right: auto;
+}

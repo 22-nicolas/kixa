@@ -3,6 +3,7 @@ import Index from "./pages/Index.jsx"
 import Search from "./pages/Search.jsx"
 import Item from "./pages/Item.jsx"
 import Cart from "./pages/Cart.jsx"
+import Success from "./pages/Success.jsx"
 
 import "./styles/general.css"
 import { createContext } from "react"
@@ -16,18 +17,19 @@ function App() {
   
   
   return (
-    <CartProvider>
-      <CurrencyProvier>
+    <CurrencyProvier>
+      <CartProvider>
         <Router>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/search" element={<Search />} />
             <Route path="/item" element={<Item />} />
             <Route path="/cart" element={<Cart />} />
+            <Route path="/success" element={<Success />} />
           </Routes>
         </Router>
-      </CurrencyProvier>
-    </CartProvider>
+      </CartProvider>
+    </CurrencyProvier>
   )
 }
 

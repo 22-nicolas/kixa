@@ -4,8 +4,7 @@ const API_BASE_URL = getBaseApiUrl();
 
 export async function getConversionRates() {
     const response = await fetch(`${API_BASE_URL}/currency/conversion-rates`);
-    const data = await response.json();
-    const conversionRates = data.rates;
+    const conversionRates = await response.json();
     return conversionRates;
 }
 
