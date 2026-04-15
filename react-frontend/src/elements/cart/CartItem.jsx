@@ -39,7 +39,7 @@ export default function CartItem({ itemData }) {
         if (status.stockState === stockStates.notEnoughStock && quantity !== status.productStock) {
             // 1. Trigger the side effect (Toast) outside of the state setter
             addToast({
-                title: "Inventory Update",
+                title: "Cart Update",
                 message: `Only ${status.productStock} units of ${name} are available. Your cart has been updated.`,
                 variant: "info"
             })

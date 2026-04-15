@@ -16,21 +16,22 @@ export const CartContext = createContext()
 function App() {
   
   
-  return (<CustomToastsProvider>
-    <CurrencyProvier>
-      <CartProvider>
-        
-          <Router>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/search" element={<Search />} />
-              <Route path="/item" element={<Item />} />
-              <Route path="/cart" element={<Cart />} />
-              <Route path="/success" element={<Success />} />
-            </Routes>
-          </Router>
-      </CartProvider>
-    </CurrencyProvier></CustomToastsProvider>
+  return (
+    <CustomToastsProvider>
+      <CurrencyProvier>
+        <CartProvider>
+            <Router>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/search" element={<Search />} />
+                <Route path="/item" element={<Item />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/success" element={<Success />} />
+              </Routes>
+            </Router>
+        </CartProvider>
+      </CurrencyProvier>
+    </CustomToastsProvider>
   )
 }
 

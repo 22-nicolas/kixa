@@ -2,6 +2,7 @@ import { useState, createContext, useContext } from "react"
 import { getProductById, getProductStock } from "../api/productData";
 import { getBaseApiUrl } from "../modules/utils";
 import { useCurrency } from "./CurrencyProvider";
+import { useToasts } from "./CustomToastsProvider";
 
 const API_BASE_URL = getBaseApiUrl();
 const CartContext = createContext()
@@ -15,6 +16,7 @@ export default function CartProvider({ children }) {
     })
 
     const {currency} = useCurrency()
+    const {addToast} = useToasts()
 
     const updateCart = (updater) => {
         setCart(prev => {
@@ -34,7 +36,10 @@ export default function CartProvider({ children }) {
             if (sizeSelectLabel) {
                 sizeSelectLabel.style.color = "red"
             }
-            alert('Please select a size.')
+            addToast({
+                title: "Please select a size.",
+                variant: "danger"
+            })
             return
         }
 
@@ -113,7 +118,10 @@ export default function CartProvider({ children }) {
 
     const checkout = async () => {
         if (cart.length === 0) {
-            alert("Your cart is empty.");
+            addToast({
+                title: "Your cart is empty.",
+                variant: "danger",
+            })
             return;
         }
 
@@ -135,8 +143,10 @@ export default function CartProvider({ children }) {
                 throw new Error(session.error || "Failed to create checkout session");
             }
         } catch (error) {
-            console.error("Stripe Checkout error:", error);
-            alert("An error occurred during checkout. Please try again.");
+            addToast({
+                title: "An error occurred during checkout. Please try again.",
+                variant: "danger",
+            })
         }
     };
 
