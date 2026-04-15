@@ -9,27 +9,28 @@ import "./styles/general.css"
 import { createContext } from "react"
 import CartProvider from "./customHooks/CartProvider.jsx"
 import CurrencyProvier from "./customHooks/CurrencyProvider.jsx"
-
+import CustomToastsProvider from "./customHooks/CustomToastsProvider.jsx"
 
 export const CartContext = createContext()
 
 function App() {
   
   
-  return (
+  return (<CustomToastsProvider>
     <CurrencyProvier>
       <CartProvider>
-        <Router>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/item" element={<Item />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/success" element={<Success />} />
-          </Routes>
-        </Router>
+        
+          <Router>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/search" element={<Search />} />
+              <Route path="/item" element={<Item />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/success" element={<Success />} />
+            </Routes>
+          </Router>
       </CartProvider>
-    </CurrencyProvier>
+    </CurrencyProvier></CustomToastsProvider>
   )
 }
 

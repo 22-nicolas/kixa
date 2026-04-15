@@ -26,7 +26,7 @@ export default function Cart() {
         <div className={styles.cartList}>
             {items}
 
-            {/* Toast for stock updates */}
+            {/* Toast for stock updates 
             <div className="toast-container position-fixed bottom-0 end-0 p-3" style={{ zIndex: 11 }}>
                 <div id="stockToast" className="toast" role="alert" aria-live="assertive" aria-atomic="true">
                     <div className="toast-header">
@@ -36,7 +36,7 @@ export default function Cart() {
                     <div className="toast-body">
                     </div>
                 </div>
-            </div>
+            </div>*/}
         </div>
     )
 }

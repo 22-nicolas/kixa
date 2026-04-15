@@ -5,6 +5,7 @@ import styles from "../../styles/cart.module.css"
 import { Link } from "react-router-dom"
 import { shoeAssetsPath } from "../../modules/utils"
 import { checkStockStatus, stockStates } from "../../modules/stockStatus"
+import { useToasts } from "../../customHooks/CustomToastsProvider"
 
 
 export default function CartItem({ itemData }) {
@@ -13,6 +14,7 @@ export default function CartItem({ itemData }) {
     const [price, setPrice] = useState(itemData.price)
     const {currency, conversionRates} = useCurrency()
     const [stockStatus, setStockStatus] = useState({stockState: stockStates.inStock, productStock: null})
+    const { addToast } = useToasts()
 
     useEffect(() => {
         convertPrice()
@@ -34,19 +36,20 @@ export default function CartItem({ itemData }) {
         const status = await checkStockStatus(id, color, size, quantity)
         setStockStatus(status)
 
-        if (status.stockState === stockStates.notEnoughStock) {
-            updateCart(prevCart => {
-                const itemIndex = prevCart.findIndex(i => i.id === id && i.color === color && i.size === size);
-                if (itemIndex !== -1 && prevCart[itemIndex].quantity !== status.productStock) {
-                    const toastEl = document.getElementById('stockToast');
-                    if (toastEl && window.bootstrap) {
-                        toastEl.querySelector('.toast-body').textContent = `Only ${status.productStock} units of ${name} are available. Your cart has been updated.`;
-                        window.bootstrap.Toast.getOrCreateInstance(toastEl).show();
-                    }
-                    return prevCart.map((item, idx) => idx === itemIndex ? { ...item, quantity: status.productStock } : item);
-                }
-                return prevCart;
-            });
+        if (status.stockState === stockStates.notEnoughStock && quantity !== status.productStock) {
+            // 1. Trigger the side effect (Toast) outside of the state setter
+            addToast({
+                title: "Inventory Update",
+                message: `Only ${status.productStock} units of ${name} are available. Your cart has been updated.`,
+                variant: "info"
+            })
+
+            // 2. Perform the state update without nested side effects
+            updateCart(prevCart => prevCart.map(item => 
+                (item.id === id && item.color === color && item.size === size) 
+                    ? { ...item, quantity: status.productStock } 
+                    : item
+            ));
         }
     }
 
