@@ -25,22 +25,23 @@ export default function Reciept() {
                 const status = await checkStockStatus(id, color, size, quantity)
 
                 if (status.stockState !== stockStates.outOfStock) {
-                    return Number(item.price) * Number(quantity)
+                    return item.price * quantity
                 }
 
                 return 0
             })
         )
 
-        const prices = results.reduce((sum, value) => sum + conertPrice(value), 0)
+        let price = results.reduce((sum, value) => sum + conertPrice(value), 0)
+        price = Number(price.toFixed(2))
 
-        setItemsPrice(prices)
+        setItemsPrice(price)
     }
     
     function conertPrice(price) {
         if (price && conversionRates && currency) {
             const usdPrice = price / conversionRates["EUR"]
-            const convertedPrice = Number((conversionRates[currency] * usdPrice).toFixed(2))
+            const convertedPrice = conversionRates[currency] * usdPrice
             return convertedPrice
         }
 
