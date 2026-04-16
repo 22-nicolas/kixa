@@ -143,8 +143,10 @@ export default function CartProvider({ children }) {
                 throw new Error(session.error || "Failed to create checkout session");
             }
         } catch (error) {
+            
             addToast({
                 title: "An error occurred during checkout. Please try again.",
+                message: error.message,
                 variant: "danger",
             })
         }

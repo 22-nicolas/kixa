@@ -41,15 +41,19 @@ router.post("/create-checkout-session", async (req, res) => {
                 const stockData = await getProductStock(item.id, item.color, item.size);
                 const conversionRates = await getConversionRates();
                 let convertedPrice = stockData.price;
-                //console.log({currency, conversionRate: conversionRates["eur"], price: stockData.price})
+
                 if (currency && conversionRates && stockData) {
                     const usdPrice = Number(stockData.price) / conversionRates["EUR"]
                     convertedPrice = Number((conversionRates[currency] * usdPrice).toFixed(2))
-                    //console.log({convertedPrice, conversionRate: conversionRates[currency], currency, conversionRates})
                 }
 
                 const toLowercaseCurrency = currency?.toLowerCase();
                 
+                //check stock
+                if (stockData.stock < item.quantity) {
+                    return res.status(400).json({ error: `${item.name} - Out of stock or quantity exceeded stock` });
+                }
+
                 return {
                     price_data: {
                         currency: toLowercaseCurrency || "eur",
