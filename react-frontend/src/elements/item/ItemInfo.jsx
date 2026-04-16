@@ -13,7 +13,7 @@ export default function ItemInfo() {
     const [searchParams, setSearchParams] = useSearchParams()
     const [activeSize, setActiveSize] = useState(getSizeFromParams())
     const [activeColor] = useContext(ActiveColorContext)
-    const {addToCart} = useCart()
+    const {cart, addToCart} = useCart()
     const {currency, conversionRates} = useCurrency()
     const [convertedPrice, setConvertedPrice] = useState(null)
     const [isInStock, setIsInStock] = useState(false)
@@ -32,7 +32,7 @@ export default function ItemInfo() {
 
     if (!itemData) return <h1>Loading...</h1>
 
-    const sizeSelectors = itemData.sizes.map(size => <SizeSelector key={size} size={size} activeSize={activeSize} changeSize={changeSize}/>)
+    const sizeSelectors = itemData.sizes.map(size => <SizeSelector key={size} productId={itemData.id} size={size} sizeState={[activeSize, setActiveSize]} changeSize={changeSize}/>)
     const variantSelectors = itemData.colors.map((color, i) => <VariantSelector key={i} variant={i}/>)
 
     const [show] = useState(window.visualViewport.width > 992)
@@ -49,7 +49,8 @@ export default function ItemInfo() {
 
     async function changeSize(size) {
         //check if active size is in stock, if not set active size to null
-        const isInStock = itemStock?.find(stockItem => stockItem.size == size && stockItem.variant == activeColor)?.stock > 0
+        const itemQuantity = cart.find(item => item.id === itemData.id && item.size === size && item.color === activeColor)?.quantity || 0
+        const isInStock = itemStock?.find(stockItem => stockItem.size == size && stockItem.variant == activeColor)?.stock > itemQuantity
         if (!isInStock && notNil(itemStock) && notNil(size)) {
             changeSize(null)
             return
@@ -104,17 +105,19 @@ export default function ItemInfo() {
     )
 }
 
-function SizeSelector({ size, activeSize, changeSize }) {
+function SizeSelector({ productId, size, sizeState, changeSize }) {
+    const {cart} = useCart()
     const [itemStock] = useContext(ItemStockContext)
     const [activeColor] = useContext(ActiveColorContext)
     const [isInStock, setIsInStock] = useState(false)
+    const [activeSize, setActiveSize] = sizeState
     const tooltipRef = useRef()
 
     const isActive = activeSize === size
 
     useEffect(() => {
         checkStock()
-    }, [itemStock, activeColor])
+    }, [itemStock, activeColor, cart])
 
 
     useEffect(() => {
@@ -129,7 +132,12 @@ function SizeSelector({ size, activeSize, changeSize }) {
     }
 
     async function checkStock() {
-        setIsInStock(itemStock?.find(stockItem => stockItem.size == size && stockItem.variant == activeColor)?.stock > 0)
+        const itemQuantity = cart.find(item => item.id === productId && item.size === size && item.color === activeColor)?.quantity || 0
+        const inStock = itemStock?.find(stockItem => stockItem.size == size && stockItem.variant == activeColor)?.stock > itemQuantity
+        if (!inStock && activeSize === size) {
+            setActiveSize(null)
+        }
+        setIsInStock(inStock)
     }
 
     function handleClick() {
