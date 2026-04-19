@@ -3,6 +3,7 @@ import { getProductStock } from "../sql/products.js";
 import Stripe from 'stripe';
 import { getConversionRates } from "./currency.js";
 import { supportedCountries, checkoutTypes } from "shared";
+import { sendConfirmationEmail } from "../modules/nodemail.js";
 import { createOrder, getOrderById, updateOrderStatus } from "../sql/orders.js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -149,6 +150,7 @@ router.post("/success/paypal", async (req, res) => {
     const order = await getOrderById(id);
     if (order?.status === "payed") return
 
+    sendConfirmationEmail(captureData)
 
     await updateOrderStatus(id, "payed")
 });

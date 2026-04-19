@@ -1,6 +1,7 @@
 import nodemailer from "nodemailer";
+import fs from "fs";
 
-export async function sendEmail( toMail, subject, text ) {
+export async function sendEmail( toMail, subject, body ) {
     try{
         // Create transporter (connects to email service)
         const transporter = nodemailer.createTransport({
@@ -16,7 +17,7 @@ export async function sendEmail( toMail, subject, text ) {
             from: process.env.GMAIL,
             to: toMail,
             subject: subject,
-            text: text,
+            html: body
         };
 
         // Send email
@@ -24,4 +25,16 @@ export async function sendEmail( toMail, subject, text ) {
     } catch (error) {
         console.error("Error sending email:", error);
     }
+}
+
+export async function sendConfirmationEmail(order) {
+    const { id, payer } = order;
+    const email = payer?.email_address;
+
+    let orderConfirmationMail = fs.readFileSync("./backend/modules/orderConfirmationMail.html", "utf-8");
+    orderConfirmationMail = orderConfirmationMail
+                                                .replace("{{ name }}", payer.name?.given_name || "Customer")
+                                                .replace("{{ order_id }}", id)
+
+    sendEmail("teddycraft64@gmail.com", `Order ${id}: Order Confirmation`, orderConfirmationMail)
 }
