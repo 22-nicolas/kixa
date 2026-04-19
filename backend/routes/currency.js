@@ -1,5 +1,5 @@
 import { Router } from "express";
-import cache from "../cache.js";
+import cache from "../modules/cache.js";
 
 
 const router = Router();
