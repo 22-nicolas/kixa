@@ -4,17 +4,33 @@ import Footer from "../elements/general/Footer"
 import Container from "../elements/general/Container";
 import { useCart } from "../customHooks/CartProvider";
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import successCheck from "../assets/success_check.png"
 
 import styles from "../styles/success.module.css"
+import { getBaseApiUrl } from "../modules/utils";
 
 export default function Success() {
     const {clearCart} = useCart()
+    const [searchParams] = useSearchParams();
 
     useEffect(() => {
         clearCart()
+        capturePayPalPayment();
     }, [])
+
+    async function capturePayPalPayment() {
+        const orderToken = searchParams.get("token");
+        if (!orderToken) return
+        const API_BASE_URL = getBaseApiUrl();
+        fetch(`${API_BASE_URL}/cart/success/paypal`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({orderToken: orderToken})
+        })
+    }
 
     return(
         <>

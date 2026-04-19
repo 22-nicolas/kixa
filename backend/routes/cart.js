@@ -3,6 +3,7 @@ import { getProductStock } from "../sql/products.js";
 import Stripe from 'stripe';
 import { getConversionRates } from "./currency.js";
 import { supportedCountries, checkoutTypes } from "shared";
+import { createOrder, getOrderById, updateOrderStatus } from "../sql/orders.js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -110,12 +111,46 @@ router.post("/create-checkout-session/paypal", async (req, res) => {
         if (!approvalUrl) {
             throw new Error("Failed to create PayPal checkout session");
         }
+        
+        await createOrder({
+            id: order.id,
+            items: lineItems,
+        })
 
         res.json({ url: approvalUrl });
     } catch (error) {
         console.error("PayPal session error:", error);
         res.status(500).json({ error: "Internal server error" });
     }
+});
+
+router.post("/success/paypal", async (req, res) => {
+    const { orderToken } = req.body;
+    const accessToken = await getPayPalAccessToken();
+
+    const captureResponse = await fetch(
+        `${process.env.PAYPAL_API_URL}/v2/checkout/orders/${orderToken}/capture`,
+        {
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+            },
+        }
+    );
+
+    const captureData = await captureResponse.json();
+
+    const { id, status } = captureData;
+
+    if (status !== "COMPLETED") return
+
+    // Check if order already exists to prevent duplicate emails/orders
+    const order = await getOrderById(id);
+    if (order?.status === "payed") return
+
+
+    await updateOrderStatus(id, "payed")
 });
 
 export default router;
