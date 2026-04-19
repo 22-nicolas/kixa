@@ -8,6 +8,7 @@ import countriesRoutes from "./routes/countries.js";
 import { sessionsCleanup } from './sql/users.js';
 import { checkPool } from './sql/db.js';
 import currencyRoutes from './routes/currency.js';
+import checkoutRoutes from './routes/checkout-session-routes/checkout.js';
 
 const SESSIONS_CLEANUP_INTERVAL = 10*60*1000;
 
@@ -28,6 +29,7 @@ if (err) {
   app.use("/api/products", productRoutes);
   app.use("/api/users", userRoutes);
   app.use("/api/cart", cartRoutes);
+  app.use("/api/checkout", checkoutRoutes);
 
   sessionsCleanup()
   setInterval(sessionsCleanup, SESSIONS_CLEANUP_INTERVAL)

@@ -23,7 +23,7 @@ export default function Success() {
         const orderToken = searchParams.get("token");
         if (!orderToken) return
         const API_BASE_URL = getBaseApiUrl();
-        fetch(`${API_BASE_URL}/cart/success/paypal`, {
+        fetch(`${API_BASE_URL}/checkout/success/paypal`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

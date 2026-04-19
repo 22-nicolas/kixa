@@ -126,7 +126,7 @@ export default function CartProvider({ children }) {
         }
 
         try {
-            const response = await fetch(`${API_BASE_URL}/cart/create-checkout-session/${checkoutType}`, {
+            const response = await fetch(`${API_BASE_URL}/checkout/create/${checkoutType}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
