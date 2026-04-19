@@ -16,6 +16,10 @@
     padding: 3ch;
 }
 
+.default{
+    width: 40ch;
+}
+
 .hidden{
     display: none;
 }
@@ -26,6 +30,7 @@
 
 .separator {
   display: flex;
+  width: 100%;
   align-items: center;
   text-align: center;
   margin-top: 1ch;
@@ -33,9 +38,13 @@
   color: #666;       /*    text color */
 }
 
-.account-popup .line{
+.separator span{
+    min-width: fit-content;
+}
+
+.line{
     height: 0;
-    width: 20ch;
+    width: 100%;
     border-bottom: 1px solid #666;
     margin-left: 0.5ch;
     margin-right: 0.5ch;
@@ -51,6 +60,8 @@
     border-radius: 5ch;
     cursor: pointer;
     transition: 200ms;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .account-popup .register-btn:hover,  .account-popup .login-btn:hover, .sumbit-register-btn:hover, .sumbit-login-btn:hover{
@@ -80,4 +91,16 @@
     /*color: gray;*/
     border-style: dashed;
     filter: opacity(0.7);
+}
+
+.paypalBtn{
+    height: 38px;
+}
+
+.paypalLogo{
+    max-width: 100%;
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    width: auto;
 }

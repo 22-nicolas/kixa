@@ -116,7 +116,7 @@ export default function CartProvider({ children }) {
         return resolvedCart;
     }
 
-    const checkout = async () => {
+    const checkout = async (checkoutType) => {
         if (cart.length === 0) {
             addToast({
                 title: "Your cart is empty.",
@@ -126,7 +126,7 @@ export default function CartProvider({ children }) {
         }
 
         try {
-            const response = await fetch(`${API_BASE_URL}/cart/create-checkout-session`, {
+            const response = await fetch(`${API_BASE_URL}/cart/create-checkout-session/${checkoutType}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

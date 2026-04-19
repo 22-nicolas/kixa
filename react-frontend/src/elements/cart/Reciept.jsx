@@ -1,8 +1,10 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useCart } from "../../customHooks/CartProvider";
 import styles from "../../styles/cart.module.css"
 import { useCurrency } from "../../customHooks/CurrencyProvider";
 import { checkStockStatus, stockStates } from "../../modules/stockStatus";
+import { checkoutTypes } from "../../../../packages/shared";
+import PayPalBtn from "./PayPalBtn";
 
 export default function Reciept() {
     const {cart, getQuantity, resolveCart, checkout} = useCart()
@@ -66,7 +68,15 @@ export default function Reciept() {
                 <p>Subtotal</p>
                 <p>{itemsPrice+shipping} {currency}</p>
             </div>
-            <div className={styles.checkoutBtn} onClick={checkout}><p>Go to checkout</p></div>
+            <div className="d-flex flex-column">
+                <div className="btn btn-dark text-center w-75" onClick={() => checkout(checkoutTypes.STRIPE)}><p className="text-white m-auto">Go to Checkout</p></div>
+                <div className="separator">
+                    <div className="line"></div>
+                    <span>or continue with</span>
+                    <div className="line"></div>
+                </div>
+                <PayPalBtn className="w-75" onClick={() => checkout(checkoutTypes.PAYPAL)} />
+            </div>
         </div>
     )
 }

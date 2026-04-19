@@ -4,7 +4,7 @@ export default function Default() {
     const {isVisible, setInterface} = getIsVisible('default')
 
     return(
-        <div className={`${isVisible ? "" : "hidden"}`}>
+        <div className={`${isVisible ? "" : "hidden"} default`}>
             <div className="register-btn" onMouseDown={() => setInterface('register')}><p>register</p></div>
             <div className="separator">
                 <div className="line"></div>
