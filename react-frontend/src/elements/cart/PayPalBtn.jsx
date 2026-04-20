@@ -1,4 +1,4 @@
-import logo from "../../assets/paypal.png"
+import logo from "../../assets/PayPal.png"
 
 export default function PayPalBtn({ className, onClick }) {
     return (
