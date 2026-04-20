@@ -24,3 +24,13 @@ export async function updateOrderStatus(id, status) {
         where id = ?
     `, [status, id])
 }
+
+export async function createOrderId() {
+    let id = Math.random().toString(36).substring(2, 10).toLocaleUpperCase();
+    const order = await getOrderById(id);
+    if (order) {
+        return createOrderId();
+    } else {
+        return id;
+    }
+}

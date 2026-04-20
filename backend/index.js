@@ -9,12 +9,16 @@ import { sessionsCleanup } from './sql/users.js';
 import { checkPool } from './sql/db.js';
 import currencyRoutes from './routes/currency.js';
 import checkoutRoutes from './routes/checkout-session-routes/checkout.js';
+import webhookRouter from './routes/checkout-session-routes/stripeWebhook.js';
 
 const SESSIONS_CLEANUP_INTERVAL = 10*60*1000;
 
 dotenv.config({ path: "backend/.env" });
 
 const app = express();
+
+app.use("/api", webhookRouter);
+
 app.use(cors());
 app.use(express.json());
 app.set('trust proxy', true);
