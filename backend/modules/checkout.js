@@ -76,3 +76,23 @@ function convertPrice(price, currency, conversionRates) {
 
     return convertedPrice
 }
+
+export async function handleCompleteCheckout(sessionData, checkoutType) {
+    let id;
+    let email;
+    let name;
+
+    if (checkoutType === checkoutTypes.STRIPE) {
+        id = sessionData.metadata.orderId;
+        email = sessionData.customer_details?.email;
+        name = sessionData.customer_details?.name?.split(" ")[0];
+    } else if (checkoutType === checkoutTypes.PAYPAL) {
+        id = sessionData.id;
+        email = sessionData.payer?.email_address;
+        name = sessionData.payer?.name?.given_name;
+    }
+
+    sendConfirmationEmail(id, email, name);
+    
+    await updateOrderStatus(id, "payed");
+}

@@ -2,6 +2,8 @@ import express from "express";
 import Stripe from "stripe";
 import { sendConfirmationEmail } from "../../modules/nodemail.js";
 import { updateOrderStatus } from "../../sql/orders.js";
+import { handleCompleteCheckout } from "../../modules/checkout.js";
+import { checkoutTypes } from "shared";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -32,11 +34,7 @@ webhookRouter.post(
       try {
         const session = event.data.object;
 
-        const id = session.metadata.orderId;
-        session.id = id;
-        sendConfirmationEmail(session)
-    
-        await updateOrderStatus(id, "payed")
+        handleCompleteCheckout(session, checkoutTypes.STRIPE);
       } catch (error) {
         console.error("Error processing checkout session:", error);
       }

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { validateCart, getPayPalAccessToken, checkoutTypes } from "../../modules/checkout.js";
+import { validateCart, getPayPalAccessToken, checkoutTypes, handleCompleteCheckout } from "../../modules/checkout.js";
 import { createOrder, getOrderById, updateOrderStatus } from "../../sql/orders.js";
 import { sendConfirmationEmail } from "../../modules/nodemail.js";
 
@@ -92,14 +92,12 @@ router.post("/success/paypal", async (req, res) => {
     const { id, status } = captureData;
 
     if (status !== "COMPLETED") return
-
+    
     // Check if order already exists to prevent duplicate emails/orders
     const order = await getOrderById(id);
     if (order?.status === "payed") return
 
-    sendConfirmationEmail(captureData)
-
-    await updateOrderStatus(id, "payed")
+    handleCompleteCheckout(captureData, checkoutTypes.PAYPAL);
 });
 
 export default router;

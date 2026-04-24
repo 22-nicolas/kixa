@@ -27,11 +27,7 @@ export async function sendEmail( toMail, subject, body ) {
     }
 }
 
-export async function sendConfirmationEmail(order) {
-    const { id } = order;
-    const email = order.payer?.email_address || order.customer_details?.email;
-    const name = order.payer?.name?.given_name || order.customer_details?.name?.split(" ")[0] || "Customer";
-
+export async function sendConfirmationEmail(id, email, name) {
     let orderConfirmationMail = fs.readFileSync("./backend/modules/orderConfirmationMail.html", "utf-8");
     orderConfirmationMail = orderConfirmationMail
                                                 .replace("{{ name }}", name || "Customer")
