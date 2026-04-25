@@ -10,17 +10,18 @@ import { createContext } from "react"
 import CartProvider from "./customHooks/CartProvider.jsx"
 import CurrencyProvier from "./customHooks/CurrencyProvider.jsx"
 import CustomToastsProvider from "./customHooks/CustomToastsProvider.jsx"
+import { ScrollToTop } from "./customHooks/ScrollToTop.jsx"
 
 export const CartContext = createContext()
 
 function App() {
-  
   
   return (
     <CustomToastsProvider>
       <CurrencyProvier>
         <CartProvider>
             <Router>
+              <ScrollToTop />
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/search" element={<Search />} />
