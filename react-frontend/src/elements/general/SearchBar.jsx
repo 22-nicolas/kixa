@@ -1,22 +1,21 @@
 import { useRef, useEffect } from 'react'
 import search_icon from '../../assets/search_icon.png'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 export default function SearchBar() {
     const searchbar = useRef()
     const navigate = useNavigate();
+    const [params] = useSearchParams()
     
     useEffect(reapplySearchText, [])
 
     function reapplySearchText() {
-        const params = new URLSearchParams(window.location.search)
         const searchText = params.get("searchText")
         
         searchbar.current.value = searchText
     }
     
     function search() {
-        const params = new URLSearchParams(window.location.search)
         params.set("searchText", searchbar.current.value) 
 
         navigate("/search?" + params)
