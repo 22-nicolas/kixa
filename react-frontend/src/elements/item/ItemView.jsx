@@ -87,6 +87,7 @@ function Slider() {
 
     function handleTouchStart(e) {
         startX.current = e.touches[0].clientX
+        scrollY.current = window.scrollY
     }
 
     function handleToucheEnd(e) {
