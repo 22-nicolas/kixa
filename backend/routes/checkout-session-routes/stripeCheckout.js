@@ -17,7 +17,7 @@ router.post("/create/stripe", async (req, res) => {
         }
 
         // Validate and build line items using database prices
-        const lineItems = await validateCart(items, currency, checkoutTypes.STRIPE);
+        const {lineItems, orderItems} = await validateCart(items, currency, checkoutTypes.STRIPE);
 
         const orderId = await createOrderId();
 
@@ -38,7 +38,7 @@ router.post("/create/stripe", async (req, res) => {
 
         await createOrder({
             id: orderId,
-            items: lineItems,
+            items: orderItems,
         })
 
         res.json({ url: session.url });

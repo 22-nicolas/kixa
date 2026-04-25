@@ -1,6 +1,5 @@
 import express from "express";
 import Stripe from "stripe";
-import { sendConfirmationEmail } from "../../modules/nodemail.js";
 import { updateOrderStatus } from "../../sql/orders.js";
 import { handleCompleteCheckout } from "../../modules/checkout.js";
 import { checkoutTypes } from "shared";

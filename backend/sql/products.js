@@ -53,3 +53,11 @@ export async function getProductStock(productId, variant, size) {
 
     return stock;
 }
+
+export async function reduceStock(productId, variant, size, quantity) {
+    await pool.query(`
+        update stock
+        set stock = stock - ?
+        where product_id = ? and variant = ? and size = ?
+    `, [quantity, productId, variant, size]); 
+}

@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { validateCart, getPayPalAccessToken, checkoutTypes, handleCompleteCheckout } from "../../modules/checkout.js";
 import { createOrder, getOrderById, updateOrderStatus } from "../../sql/orders.js";
-import { sendConfirmationEmail } from "../../modules/nodemail.js";
 
 const router = Router();
 
@@ -14,7 +13,7 @@ router.post("/create/paypal", async (req, res) => {
         }
 
         let totalAmount = 0;
-        const lineItems = await validateCart(items, currency, checkoutTypes.PAYPAL)
+        const {lineItems, orderItems} = await validateCart(items, currency, checkoutTypes.PAYPAL)
 
         // Validate and build line items using database prices to prevent tampering
         for (const item of lineItems) {
@@ -62,7 +61,7 @@ router.post("/create/paypal", async (req, res) => {
         
         await createOrder({
             id: order.id,
-            items: lineItems,
+            items: orderItems,
         })
 
         res.json({ url: approvalUrl });
@@ -73,31 +72,31 @@ router.post("/create/paypal", async (req, res) => {
 });
 
 router.post("/success/paypal", async (req, res) => {
-    const { orderToken } = req.body;
-    const accessToken = await getPayPalAccessToken();
+        const { orderToken } = req.body;
+        const accessToken = await getPayPalAccessToken();
 
-    const captureResponse = await fetch(
-        `${process.env.PAYPAL_API_URL}/v2/checkout/orders/${orderToken}/capture`,
-        {
-            method: "POST",
-            headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-            },
-        }
-    );
+        const captureResponse = await fetch(
+            `${process.env.PAYPAL_API_URL}/v2/checkout/orders/${orderToken}/capture`,
+            {
+                method: "POST",
+                headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`,
+                },
+            }
+        );
 
-    const captureData = await captureResponse.json();
+        const captureData = await captureResponse.json();
 
-    const { id, status } = captureData;
+        const { id, status } = captureData;
 
     if (status !== "COMPLETED") return
-    
-    // Check if order already exists to prevent duplicate emails/orders
-    const order = await getOrderById(id);
-    if (order?.status === "payed") return
+        
+        // Check if order already exists to prevent duplicate emails/orders
+        const order = await getOrderById(id);
+        if (order?.status === "payed") return
 
-    handleCompleteCheckout(captureData, checkoutTypes.PAYPAL);
+        handleCompleteCheckout(captureData, checkoutTypes.PAYPAL);
 });
 
 export default router;
