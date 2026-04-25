@@ -1,4 +1,5 @@
 import express from 'express'
+import rateLimit from 'express-rate-limit'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import productRoutes from "./routes/products.js";
@@ -13,6 +14,19 @@ import webhookRouter from './routes/checkout-session-routes/stripeWebhook.js';
 
 const SESSIONS_CLEANUP_INTERVAL = 10*60*1000;
 
+const checkoutLimiter = rateLimit({
+    windowMs: 10 * 60 * 1000, // 10 min
+    max: 10,
+    message: { error: "Too many checkout attempts, try again later" },
+});
+
+const globalLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100,
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
 dotenv.config({ path: "backend/.env" });
 
 const app = express();
@@ -21,26 +35,21 @@ app.use("/api", webhookRouter);
 
 app.use(cors());
 app.use(express.json());
-app.set('trust proxy', true);
+
+app.use(globalLimiter);
+
+await checkPool();
 
 // mount routers
-const err = await checkPool();
-if (err) {
-  console.error('Pool error:', err.message);
-  console.warn('Continuing without user and product routes');
-
-} else {
-  app.use("/api/products", productRoutes);
-  app.use("/api/users", userRoutes);
-  app.use("/api/cart", cartRoutes);
-  app.use("/api/checkout", checkoutRoutes);
-
-  sessionsCleanup()
-  setInterval(sessionsCleanup, SESSIONS_CLEANUP_INTERVAL)
-}
-
+app.use("/api/products", productRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/cart", cartRoutes);
+app.use("/api/checkout", checkoutLimiter, checkoutRoutes);
 app.use("/api/countries", countriesRoutes);
 app.use("/api/currency", currencyRoutes);
+
+sessionsCleanup()
+setInterval(sessionsCleanup, SESSIONS_CLEANUP_INTERVAL)
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

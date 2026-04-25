@@ -72,6 +72,7 @@ router.post("/create/paypal", async (req, res) => {
 });
 
 router.post("/success/paypal", async (req, res) => {
+    try {
         const { orderToken } = req.body;
         const accessToken = await getPayPalAccessToken();
 
@@ -88,15 +89,25 @@ router.post("/success/paypal", async (req, res) => {
 
         const captureData = await captureResponse.json();
 
+        if (!captureResponse.ok) {
+            return res.status(500).json({ error: "PayPal capture failed" });
+        }
+
         const { id, status } = captureData;
 
-    if (status !== "COMPLETED") return
+        if (status !== "COMPLETED") {
+            return res.status(400).json({ error: "Payment not completed" });
+        }
         
         // Check if order already exists to prevent duplicate emails/orders
         const order = await getOrderById(id);
         if (order?.status === "payed") return
 
         handleCompleteCheckout(captureData, checkoutTypes.PAYPAL);
+    } catch (error) {
+        console.error("PayPal success error:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
 });
 
 export default router;
