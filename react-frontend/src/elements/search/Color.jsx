@@ -28,7 +28,7 @@ export default function Color({ colors }) {
     useEffect(() => {
         //forward searchParams
         searchParams.set("colors", activeColors.join("a")) 
-        navigate("/search?" + searchParams)
+        navigate("/search?" + searchParams, { replace: true })
     }, [activeColors])
 
     function applyColors(colorId, checked) {

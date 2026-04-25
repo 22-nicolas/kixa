@@ -88,7 +88,7 @@ export default function Pricing() {
         searchParams.set("min", minSlider.current.value) 
         searchParams.set("max", maxSlider.current.value)
 
-        navigate("/search?" + searchParams)
+        navigate("/search?" + searchParams, { replace: true })
     }
 
     function reapplyPricing() {

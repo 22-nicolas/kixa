@@ -31,7 +31,7 @@ export default function Brand({ brands }) {
     useEffect(() => {
         //forward searchParams
         searchParams.set("brands", activeBrands.join("a")) 
-        navigate("/search?" + searchParams)
+        navigate("/search?" + searchParams, { replace: true })
     }, [activeBrands])
 
     function applyBrands(brandId, checked) {

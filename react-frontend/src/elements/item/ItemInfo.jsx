@@ -66,7 +66,7 @@ export default function ItemInfo() {
                 params.delete("size")
             }
             return params
-        })
+        }, { replace: true })
 
         handlePrice()
     }
