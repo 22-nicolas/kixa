@@ -21,8 +21,8 @@ const checkoutLimiter = rateLimit({
 });
 
 const globalLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100,
+    windowMs: 30 * 1000, // 30 seconds
+    max: 200,
     standardHeaders: true,
     legacyHeaders: false,
 });
@@ -30,10 +30,13 @@ const globalLimiter = rateLimit({
 dotenv.config({ path: "backend/.env" });
 
 const app = express();
+app.set('trust proxy', 1);
 
 app.use("/api", webhookRouter);
 
-app.use(cors());
+app.use(cors({
+    exposedHeaders: ['RateLimit-Reset']
+}));
 app.use(express.json());
 
 app.use(globalLimiter);

@@ -1,0 +1,17 @@
+let linkedFns = []
+
+export function fireErrorEvent(err) {
+	linkedFns.forEach(fn => fn(err))
+}
+
+export function suscribeToErrorEvent(fn) {
+	if (!linkedFns.includes(fn)) {
+		linkedFns.push(fn)
+	}
+}
+
+export function unSuscribe(fn) {
+	for (let i = 0; i < linkedFns.length; i++) {
+		if (linkedFns[i] == fn) linkedFns.splice(i, 1)
+	}
+}

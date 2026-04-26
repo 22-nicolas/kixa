@@ -9,6 +9,7 @@ import successCheck from "../assets/success_check.png"
 
 import styles from "../styles/success.module.css"
 import { getBaseApiUrl } from "../modules/utils";
+import { apiFetch } from "../api/apiFetch";
 
 export default function Success() {
     const {clearCart} = useCart()
@@ -23,7 +24,7 @@ export default function Success() {
         const orderToken = searchParams.get("token");
         if (!orderToken) return
         const API_BASE_URL = getBaseApiUrl();
-        fetch(`${API_BASE_URL}/checkout/success/paypal`, {
+        apiFetch(`${API_BASE_URL}/checkout/success/paypal`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

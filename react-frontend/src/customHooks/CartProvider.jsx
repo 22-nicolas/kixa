@@ -3,6 +3,7 @@ import { getProductById, getProductStock } from "../api/productData";
 import { getBaseApiUrl } from "../modules/utils";
 import { useCurrency } from "./CurrencyProvider";
 import { useToasts } from "./CustomToastsProvider";
+import { apiFetch } from "../api/apiFetch";
 
 const API_BASE_URL = getBaseApiUrl();
 const CartContext = createContext()
@@ -103,7 +104,7 @@ export default function CartProvider({ children }) {
     }
 
     const resolveCart = async () => {
-        const response = await fetch(`${API_BASE_URL}/cart/resolve`, {
+        const response = await apiFetch(`${API_BASE_URL}/cart/resolve`, {
             method: "POST",
             headers: {
             "Content-Type": "application/json"
@@ -126,7 +127,7 @@ export default function CartProvider({ children }) {
         }
 
         try {
-            const response = await fetch(`${API_BASE_URL}/checkout/create/${checkoutType}`, {
+            const response = await apiFetch(`${API_BASE_URL}/checkout/create/${checkoutType}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

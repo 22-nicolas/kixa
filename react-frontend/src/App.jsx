@@ -10,6 +10,7 @@ import { createContext } from "react"
 import CartProvider from "./customHooks/CartProvider.jsx"
 import CurrencyProvier from "./customHooks/CurrencyProvider.jsx"
 import CustomToastsProvider from "./customHooks/CustomToastsProvider.jsx"
+import ErrorToasts from "./elements/general/ErrorToasts.jsx"
 import { ScrollToTop } from "./customHooks/ScrollToTop.jsx"
 
 export const CartContext = createContext()
@@ -18,6 +19,7 @@ function App() {
   
   return (
     <CustomToastsProvider>
+      <ErrorToasts />
       <CurrencyProvier>
         <CartProvider>
             <Router>
