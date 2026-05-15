@@ -9,7 +9,7 @@ export default function TextInput({label, id, small, i, type, required, ref }) {
     const isHighlightedFields = highlightedFields.includes(id);
 
     return(
-        <div style={{ ...(i !== 2 && { marginRight: '4ch' }) }}>
+        <div>
             <label htmlFor={id} className={styles.inputLabel}>{label}{required ? " *" : ""}</label>
             <input ref={ref} id={id} type={type} 
                    className={`${styles.input} ${small ? styles.smallInput : ""}`} 

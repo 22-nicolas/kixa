@@ -98,20 +98,23 @@ export default function Register() {
     }
     return (
         <>
-            <div className={`register ${isVisible ? "" : "hidden"}`}>
+            <div className={`register row ${isVisible ? "" : "hidden"}`}>
                 <p>Please enter your details to create an account</p>
 
                 {/*
                     Inputs will default to type: "text", small: false and required: true.
                 */}
-                <FormInput inputData={[{label: "First Name"}, {label: "Last Name"}]} inputRefs={inputRefs}/>
-                <FormInput inputData={[{label: "Country"}]} inputRefs={inputRefs}/>
-                <FormInput inputData={[{label: "City"}, {label: "ZIP code", small: true}]} inputRefs={inputRefs}/>
-                <FormInput inputData={[{label: "Street"}, {label: "House Number", small: true}]} inputRefs={inputRefs}/>
-                <FormInput inputData={[{label: "Email", type: "email"}]} inputRefs={inputRefs}/>
-                <FormInput inputData={[{label: "Phone Number", type: "phone number", required: false}]} inputRefs={inputRefs}/>
-                <FormInput inputData={[{label: "Password", type: "password"}]} inputRefs={inputRefs}/>
-                <FormInput inputData={[{label: "Repeat Password", type: "password"}]} inputRefs={inputRefs}/>
+                <FormInput className="col-12 col-lg-6" inputData={{label: "First Name"}} inputRefs={inputRefs}/>
+                <FormInput className="col-12 col-lg-6" inputData={{label: "Last Name"}} inputRefs={inputRefs}/>
+                <FormInput className="col-12" inputData={{label: "Country"}} inputRefs={inputRefs}/>
+                <FormInput className="col-12 col-lg-6" inputData={{label: "City"}} inputRefs={inputRefs}/>
+                <FormInput className="col-12 col-lg-6" inputData={{label: "ZIP code", small: true}} inputRefs={inputRefs}/>
+                <FormInput className="col-12 col-lg-6" inputData={{label: "Street"}} inputRefs={inputRefs}/>
+                <FormInput className="col-12 col-lg-6" inputData={{label: "House Number", small: true}} inputRefs={inputRefs}/>
+                <FormInput className="col-12" inputData={{label: "Email", type: "email"}} inputRefs={inputRefs}/>
+                <FormInput className="col-12" inputData={{label: "Phone Number", type: "phone number", required: false}} inputRefs={inputRefs}/>
+                <FormInput className="col-12" inputData={{label: "Password", type: "password"}} inputRefs={inputRefs}/>
+                <FormInput className="col-12" inputData={{label: "Repeat Password", type: "password"}} inputRefs={inputRefs}/>
 
                 <p className={styles.errorMessage}>{errorMessage}</p>
                 <div className={styles.sumbitRegisterBtn} onClick={handleSubmit}>register</div>

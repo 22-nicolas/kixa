@@ -64,8 +64,8 @@ export default function Login() {
         <>
             <div className={`login ${isVisible ? "" : "hidden"}`}>
                 <p>Please enter your details to login</p>
-                <FormInput inputData={[{label: "Email", type: "email"}]} inputRefs={inputRefs}/>
-                <FormInput inputData={[{label: "Password", type: "password"}]} inputRefs={inputRefs}/>
+                <FormInput inputData={{label: "Email", type: "email"}} inputRefs={inputRefs}/>
+                <FormInput inputData={{label: "Password", type: "password"}} inputRefs={inputRefs}/>
 
                 <p className={styles.errorMessage}>{errorMessage}</p>
                 <div className={styles.sumbitRegisterBtn} onClick={handleSubmit}>login</div>

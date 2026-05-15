@@ -78,7 +78,7 @@ export default function PhoneNumberInput({ label, id, small, i, ref }) {
     }
     
     return(
-        <div style={{ ...(i !== 2 && { marginRight: '4ch' }) }}>
+        <div>
             <label htmlFor={id} className={styles.inputLabel}>{label}</label>
             <div 
                 className={styles.phoneNumber}
