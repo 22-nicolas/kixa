@@ -1,19 +1,16 @@
-import { useContext, useEffect, useRef, useState } from "react"
+import { use, useContext, useEffect, useRef, useState } from "react"
 import { ActiveCountryContext as CountryContext } from "../AccountPopup"
 import { InterfaceContext } from "../AccountPopup"
 import styles from "../../../../styles/register.module.css"
 import { getCountriesData } from "../../../../api/countriesData"
 import { HighlightedFieldsContext } from "../AccountPopup"
+import { supportedCountries } from "../../../../../../packages/shared"
 
 export default function PhoneNumberInput({ label, id, small, i, ref }) {
     const [currentInterface] = useContext(InterfaceContext)
-    //let CountryContext
-
     const [highlightedFields] = useContext(HighlightedFieldsContext)
-
-
-    const countryContextValue = useContext(CountryContext || InterfaceContext); // Use a dummy context when CountryContext is null
-    let [activeCountry, setActiveCountry] = CountryContext ? countryContextValue : [];
+    const [supportedCountriesData, setSupportedCountriesData] = useState(null)
+    const [activeCountry, setActiveCountry] = useContext(CountryContext);
 
     const countryInput = useRef()
     const [countryComponents, setCountryComponents] = useState(<p>Loading...</p>)
@@ -26,21 +23,25 @@ export default function PhoneNumberInput({ label, id, small, i, ref }) {
 
     const isHighlightedFields = highlightedFields.includes(id)
     useEffect(() => {
-        mapCountryComponents()
+        fetchSupportedCountriesData()
     }, [])
 
     useEffect(() => {
-        mapActiveCountryComponent()
-    }, [activeCountry])
-    
+        mapCountryComponents()
+    }, [supportedCountriesData])
+
     useEffect(() => {
-        [activeCountry, setActiveCountry] = CountryContext ? countryContextValue : [];
-    }, [currentInterface])
+        mapActiveCountryComponent()
+    }, [activeCountry, supportedCountriesData])
+    
+    async function fetchSupportedCountriesData() {
+        const data = await getCountriesData()
+        setSupportedCountriesData(data)
+    }
 
     async function mapActiveCountryComponent(){
-        if (!activeCountry) return
-        const data = await getCountriesData()
-        const countryData = data?.find(item => item.country_code === activeCountry)
+        if (!activeCountry || !supportedCountriesData) return
+        const countryData = supportedCountriesData.find(item => item.country_code === activeCountry)
         setActiveCountryComponent(
             <label className={styles.countrySelector} htmlFor="country-dropdown-input">
                 <p className={styles.arrow}>▴</p>
@@ -57,11 +58,10 @@ export default function PhoneNumberInput({ label, id, small, i, ref }) {
 
 
     async function mapCountryComponents() {
-        //fetch country data
-        const countryData = await getCountriesData()
+        if (!supportedCountriesData) return
 
         //map to components
-        const components = countryData.map((data, i) => {
+        const components = supportedCountriesData.map((data, i) => {
             if(!data.name) return
             return(
                 <div key={i} className={styles.country} onMouseDown={() => onCountryClick(data.country_code)}>

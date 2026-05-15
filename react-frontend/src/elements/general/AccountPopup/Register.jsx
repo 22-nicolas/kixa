@@ -1,10 +1,10 @@
 import styles from "../../../styles/register.module.css"
-import { useContext, useEffect, useRef, useState } from "react"
+import { act, useContext, useEffect, useRef, useState } from "react"
 import { getUserRegionName} from "../../../modules/utils"
 import { getCountriesData } from "../../../api/countriesData"
 import { registerUser } from "../../../api/users"
 import FormInput from "./FormInputs/FormInput"
-import { HighlightedFieldsContext, InterfaceContext } from "./AccountPopup"
+import { ActiveCountryContext, HighlightedFieldsContext, InterfaceContext } from "./AccountPopup"
 import { supportedCountries } from "../../../../../packages/shared/index"
 
 
@@ -16,7 +16,7 @@ export default function Register() {
     const [isVisible, setIsVisible] = useState(currentInterface === "register")
     const [errorMessage, setErrorMessage] = useState("")
     const userRegionName = getUserRegionName() //get userRegion to set as default prefix
-    const [activeCountry, setActiveCountry] = useState(userRegionName || supportedCountries[0]) //default back to first supported country (france)
+    const [activeCountry, setActiveCountry] = useContext(ActiveCountryContext)
     const [highlightedFields, setHighlightedFields] = useContext(HighlightedFieldsContext)
 
     useEffect(() => {
@@ -44,8 +44,14 @@ export default function Register() {
     }
 
     async function handleSubmit() {
-        const formValues = await getFormValues();
-        const result = await registerUser(formValues)
+        let result;
+        try {
+            const formValues = await getFormValues();
+            result = await registerUser(formValues)
+        } catch (error) {
+            setErrorMessage("An error occurred while trying to register. Please try again later.")
+            return
+        }
         
         if (result.ok) {
             //Dehighlight fields and clear error message

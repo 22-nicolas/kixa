@@ -10,6 +10,7 @@
     border-radius: 2ch;
     padding: 0.7ch;
     display: block;
+    height: 3ch;
 }
 
 .registerDetail input{
@@ -31,9 +32,9 @@
     border-radius: 2ch;
     padding: 0.7ch;
     display: flex;
+    height: 3ch;
     align-items: center;
     justify-content: left;
-    height: 2ch;
     width: fit-content;
     position: relative;
 }
@@ -42,6 +43,7 @@
     border: none;
     border-radius: 0;
     padding: none;
+    background-color: transparent;
 }
 
 .countrySelector{
@@ -49,6 +51,7 @@
     align-items: center;
     justify-content: left;
     gap: 0.5ch;
+    height: 3ch;
     border-right: 1px solid;
     padding-right: 1ch;
     cursor: pointer;
@@ -106,9 +109,9 @@
     border-radius: 2ch;
     padding: 0.7ch;
     display: flex;
+    height: 3ch;
     align-items: center;
     justify-content: left;
-    height: 2ch;
     width: fit-content;
     position: relative;
     overflow: hidden;

@@ -49,15 +49,7 @@ export function getUserRegionName() {
     const navigator = window.navigator
     const locale = new Intl.Locale(navigator.language)
     const userRegionCode = locale.region
-
-    if (!userRegionCode) return
-
-    const regionNames = new Intl.DisplayNames(
-        ["en-US"],
-        { type: 'region'}
-    )
-
-    return regionNames.of(userRegionCode)
+    return userRegionCode
 }
 
 export function format(str) {
