@@ -1,5 +1,6 @@
 import { getBaseApiUrl } from "../modules/utils";
 import { apiFetch } from "./apiFetch";
+import { getUserLocationData } from "./countriesData";
 
 const API_BASE_URL = getBaseApiUrl();
 
@@ -10,10 +11,8 @@ export async function getConversionRates() {
 }
 
 export async function getPreferedCurrency() {
-    const response = await apiFetch(`${API_BASE_URL}/currency/user-preference`);
-
-    const data = await response.json();
-    const preferedCurrency = data.currency;
+    const locationData = await getUserLocationData();
+    const preferedCurrency = locationData.currency;
     
     return preferedCurrency;
 }

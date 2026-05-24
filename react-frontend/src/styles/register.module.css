@@ -28,7 +28,7 @@
     max-width: 8ch;
 }
 
-.phoneNumber{
+.phoneNumber, .countryInput{
     border: 1px solid;
     border-radius: 2ch;
     padding: 0.7ch;
@@ -47,23 +47,25 @@
     background-color: transparent;
 }
 
-.countrySelector{
+.prefixSelector, .countrySelector{
     display: flex;
     align-items: center;
     justify-content: left;
     gap: 0.5ch;
     height: 3ch;
-    border-right: 1px solid;
-    padding-right: 1ch;
     cursor: pointer;
-    
+    padding-right: 1ch;
 }
 
-.countrySelector img, .country img{
+.prefixSelector{
+    border-right: 1px solid;
+}
+
+.prefixSelector img, .prefix img{
     width: 2ch;
 }
 
-.countryDropdown{
+.prefixDropdown, .countryDropdown{
     display: none;
     background-color: white;
     z-index: 2;
@@ -71,7 +73,7 @@
     max-height: 15ch;
 }
 
-.countryDropdownInput:checked ~ .countryDropdown{
+.prefixDropdownInput:checked ~ .prefixDropdown, .countryDropdownInput:checked ~ .countryDropdown{
     display: block;
     position: absolute;
     /* bottom: 0;*/
@@ -83,11 +85,11 @@
 }
 
 
-.countryDropdownInput:checked ~ .countrySelector .arrow{
+.prefixDropdownInput:checked ~ .prefixSelector .arrow, .countryDropdownInput:checked ~ .countrySelector .arrow{
     transform: rotateZ(180deg);
 }
 
-.country {
+.prefix, .country{
     display: flex;
     align-items: center;
     justify-content: left;
@@ -101,7 +103,7 @@
     cursor: pointer;
 }
 
-.country:hover{
+.prefix:hover, .country:hover{
     background-color: #dddddd;
 }   
 

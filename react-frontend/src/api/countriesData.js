@@ -10,3 +10,21 @@ export async function getCountriesData() {
     const countriesData = await response.json();
     return countriesData;
 }
+
+export async function getUserLocationData() {
+    const response = await apiFetch(`${API_BASE_URL}/countries/locate`);
+    const locationData = await response.json();
+    return locationData;
+}
+
+export async function getUserCountryName() {
+    const locationData = await getUserLocationData();
+    const countryName = locationData.countryName;
+    return countryName;
+}
+
+export async function getUserPhonePrefix() {
+    const locationData = await getUserLocationData();
+    const phonePrefix = locationData.phonePrefix;
+    return phonePrefix;
+}

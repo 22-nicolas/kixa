@@ -12,7 +12,7 @@ import UserData from "./UserData";
 
 export const InterfaceContext = createContext()
 export const HighlightedFieldsContext = createContext()
-export const ActiveCountryContext = createContext()
+export const ActivePrefixContext = createContext()
 
 export default function AccountPopup() {
     const loginPopup = useRef(null)
@@ -21,7 +21,7 @@ export default function AccountPopup() {
     const [currentInterface, setInterface] = useState('default')
     const [highlightedFields, setHighlightedFields] = useState([])
     const userRegionName = getUserRegionName() //get userRegion to set as default prefix
-    const [activeCountry, setActiveCountry] = useState(userRegionName || supportedCountries[0]) //default back to first supported country (france)
+    const [activePrefix, setActivePrefix] = useState(userRegionName || supportedCountries[0]) //default back to first supported Prefix (france)
     const [userData, setUserData] = useState({})
     
     //link/disconnect toggleIsOpen to account btn
@@ -80,7 +80,7 @@ export default function AccountPopup() {
 
     return(
         <div className={`account-popup${isOpen ? " show" : ""}`} ref={loginPopup}>
-            <ActiveCountryContext.Provider value={[activeCountry, setActiveCountry]}>
+            <ActivePrefixContext.Provider value={[activePrefix, setActivePrefix]}>
                 <HighlightedFieldsContext.Provider value={[highlightedFields, setHighlightedFields]}>
                     <InterfaceContext.Provider value={[currentInterface, setInterface]}>
                         <Default/>
@@ -89,7 +89,7 @@ export default function AccountPopup() {
                         <UserData userData={userData}/>
                     </InterfaceContext.Provider>
                 </HighlightedFieldsContext.Provider>
-            </ActiveCountryContext.Provider>
+            </ActivePrefixContext.Provider>
         </div>
     );
 }

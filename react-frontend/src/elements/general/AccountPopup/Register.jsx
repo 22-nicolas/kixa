@@ -4,7 +4,7 @@ import { getUserRegionName} from "../../../modules/utils"
 import { getCountriesData } from "../../../api/countriesData"
 import { registerUser } from "../../../api/users"
 import FormInput from "./FormInputs/FormInput"
-import { ActiveCountryContext, HighlightedFieldsContext, InterfaceContext } from "./AccountPopup"
+import { ActivePrefixContext, HighlightedFieldsContext, InterfaceContext } from "./AccountPopup"
 import { supportedCountries } from "../../../../../packages/shared/index"
 
 
@@ -16,7 +16,8 @@ export default function Register() {
     const [isVisible, setIsVisible] = useState(currentInterface === "register")
     const [errorMessage, setErrorMessage] = useState("")
     const userRegionName = getUserRegionName() //get userRegion to set as default prefix
-    const [activeCountry, setActiveCountry] = useContext(ActiveCountryContext)
+    const [activePrefix, setActivePrefix] = useContext(ActivePrefixContext)
+    const [activeCountry, setActiveCountry] = useState()
     const [highlightedFields, setHighlightedFields] = useContext(HighlightedFieldsContext)
 
     useEffect(() => {
@@ -31,12 +32,18 @@ export default function Register() {
         for (const id in inputRefs.current) {
             if (inputRefs.current[id].current) {
                 // add prefix for phone number
-                if (id === "phone_number") {
-                    const countriesData = await getCountriesData()
-                    const {phone_international_prefix} = countriesData?.find(data => data.country_code === activeCountry)
-                    values[id] = `+${phone_international_prefix}${inputRefs.current[id].current.value}`
-                } else {
-                    values[id] = inputRefs.current[id].current.value;
+                switch (id) {
+                    case "phone_number":
+                        const countriesData = await getCountriesData()
+                        const {phone_international_prefix} = countriesData?.find(data => data.country_code === activePrefix)
+                        values[id] = `+${phone_international_prefix}${inputRefs.current[id].current.value}`
+                        break;
+                    case "country":
+                        values[id] = activeCountry
+                        break;
+                    default:
+                        values[id] = inputRefs.current[id].current.value;
+                        break;
                 }
             }
         }
@@ -106,7 +113,8 @@ export default function Register() {
                 */}
                 <FormInput className="col-12 col-lg-6" inputData={{label: "First Name"}} inputRefs={inputRefs}/>
                 <FormInput className="col-12 col-lg-6" inputData={{label: "Last Name"}} inputRefs={inputRefs}/>
-                <FormInput className="col-12" inputData={{label: "Country"}} inputRefs={inputRefs}/>
+                {/*<FormInput className="col-12" inputData={{label: "Country"}} inputRefs={inputRefs}/> */}
+                <FormInput className="col-12" inputData={{label: "Country", type: "country", activeCountry, setActiveCountry}} inputRefs={inputRefs}/>
                 <FormInput className="col-12 col-lg-6" inputData={{label: "City"}} inputRefs={inputRefs}/>
                 <FormInput className="col-12 col-lg-6" inputData={{label: "ZIP code", small: true}} inputRefs={inputRefs}/>
                 <FormInput className="col-12 col-lg-6" inputData={{label: "Street"}} inputRefs={inputRefs}/>

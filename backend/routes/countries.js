@@ -34,4 +34,26 @@ router.get("/", async (req, res, next) => {
     res.send(filteredCountriesData);
 });
 
+router.get("/locate", async (req, res) => {
+    const ip = req.ip;
+    const cacheKey = 'locate_' + ip;
+
+    //check cache
+    const cached = cache.get(cacheKey);
+    if (cached) {
+        res.send(cached);
+        return;
+    }
+
+    const response = await fetch("https://apip.cc/json")
+    const data = await response.json();
+
+    const locationData = { countryName: data.CountryName, phonePrefix: data.PhonePrefix, currency: data.Currency };
+
+    //store in cache
+    cache.set(cacheKey, locationData, 3600);
+    
+    res.send(locationData);
+})
+
 export default router;
