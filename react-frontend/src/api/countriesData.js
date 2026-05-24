@@ -1,3 +1,4 @@
+import { supportedCountries } from "../../../packages/shared";
 import { getBaseApiUrl } from "../modules/utils";
 import { apiFetch } from "./apiFetch";
 
@@ -20,7 +21,11 @@ export async function getUserLocationData() {
 export async function getUserCountryName() {
     const locationData = await getUserLocationData();
     const countryName = locationData.countryName;
-    return countryName;
+    console.log(supportedCountries)
+    if (supportedCountries.includes(locationData.countryCode)) return countryName
+
+    const supportedCountriesData = await getCountriesData();
+    return supportedCountriesData[0].name //default to first supported country if user country is not supported
 }
 
 export async function getUserPhonePrefix() {

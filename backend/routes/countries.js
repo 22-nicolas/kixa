@@ -48,11 +48,11 @@ router.get("/locate", async (req, res) => {
     const response = await fetch("https://apip.cc/json")
     const data = await response.json();
 
-    const locationData = { countryName: data.CountryName, phonePrefix: data.PhonePrefix, currency: data.Currency };
+    const locationData = { countryName: data.CountryName, countryCode: data.CountryCode, phonePrefix: data.PhonePrefix, currency: data.Currency };
 
     //store in cache
     cache.set(cacheKey, locationData, 3600);
-    
+
     res.send(locationData);
 })
 
