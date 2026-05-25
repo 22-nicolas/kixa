@@ -1,5 +1,5 @@
 import { useEffect, useContext, useState, useRef } from "react"
-import { InterfaceContext, HighlightedFieldsContext } from "./AccountPopup"
+import { InterfaceContext,  } from "./AccountPopup"
 import styles from "../../../styles/register.module.css"
 import FormInput from "./FormInputs/FormInput"
 import { loginUser } from "../../../api/users"
@@ -9,7 +9,7 @@ export default function Login() {
     const [succsessMessageVisible, setSuccessMessageVisible] = useState(false)
     const [currentInterface] = useContext(InterfaceContext)
     const [isVisible, setIsVisible] = useState(currentInterface === "login")
-    const [highlightedFields, setHighlightedFields] = useContext(HighlightedFieldsContext)
+    const [highlightedFields, setHighlightedFields] = useState([])
     const inputRefs = useRef({});
     useEffect(() => {
         setSuccessMessageVisible(false)
@@ -64,8 +64,8 @@ export default function Login() {
         <>
             <div className={`login ${isVisible ? "" : "hidden"}`}>
                 <p>Please enter your details to login</p>
-                <FormInput inputData={{label: "Email", type: "email"}} inputRefs={inputRefs}/>
-                <FormInput inputData={{label: "Password", type: "password"}} inputRefs={inputRefs}/>
+                <FormInput inputData={{label: "Email", type: "email"}} highlightedFields={highlightedFields} inputRefs={inputRefs}/>
+                <FormInput inputData={{label: "Password", type: "password"}} highlightedFields={highlightedFields} inputRefs={inputRefs}/>
 
                 <p className={styles.errorMessage}>{errorMessage}</p>
                 <div className={styles.sumbitRegisterBtn} onClick={handleSubmit}>login</div>

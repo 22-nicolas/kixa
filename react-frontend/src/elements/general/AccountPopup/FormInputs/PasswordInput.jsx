@@ -3,12 +3,11 @@ import { InterfaceContext } from "../AccountPopup"
 import styles from "../../../../styles/register.module.css"
 import openEye from "../../../../assets/open_eye.png"
 import closedEye from "../../../../assets/closed_eye.png"
-import { HighlightedFieldsContext } from "../AccountPopup"
+import {  } from "../AccountPopup"
 
-export default function PasswordInput({label, id, small, i, ref }) {
+export default function PasswordInput({label, id, small, i, ref, highlightedFields }) {
     const [isVisible, setIsVisible] = useState(false)
     const [currentInterface] = useContext(InterfaceContext)
-    const [highlightedFields] = useContext(HighlightedFieldsContext)
 
 
     const isHighlightedFields = highlightedFields.includes(id)

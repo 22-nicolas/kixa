@@ -1,11 +1,9 @@
 import { useContext } from "react"
-import { InterfaceContext, HighlightedFieldsContext } from "../AccountPopup"
+import { InterfaceContext,  } from "../AccountPopup"
 import styles from "../../../../styles/register.module.css"
 
 
-export default function TextInput({label, id, small, i, type, required, ref }) {
-    const [highlightedFields] = useContext(HighlightedFieldsContext)
-
+export default function TextInput({label, id, small, i, type, required, ref, highlightedFields }) {
     const isHighlightedFields = highlightedFields.includes(id);
 
     return(

@@ -4,7 +4,7 @@ import { getUserRegionName} from "../../../modules/utils"
 import { getCountriesData } from "../../../api/countriesData"
 import { registerUser } from "../../../api/users"
 import FormInput from "./FormInputs/FormInput"
-import { ActivePrefixContext, HighlightedFieldsContext, InterfaceContext } from "./AccountPopup"
+import { ActivePrefixContext, InterfaceContext } from "./AccountPopup"
 import { supportedCountries } from "../../../../../packages/shared/index"
 
 
@@ -18,7 +18,7 @@ export default function Register() {
     const userRegionName = getUserRegionName() //get userRegion to set as default prefix
     const [activePrefix, setActivePrefix] = useContext(ActivePrefixContext)
     const [activeCountry, setActiveCountry] = useState()
-    const [highlightedFields, setHighlightedFields] = useContext(HighlightedFieldsContext)
+    const [highlightedFields, setHighlightedFields] = useState([])
 
     useEffect(() => {
         setSuccessMessageVisible(false)
@@ -111,18 +111,18 @@ export default function Register() {
                 {/*
                     Inputs will default to type: "text", small: false and required: true.
                 */}
-                <FormInput className="col-12 col-lg-6" inputData={{label: "First Name"}} inputRefs={inputRefs}/>
-                <FormInput className="col-12 col-lg-6" inputData={{label: "Last Name"}} inputRefs={inputRefs}/>
-                {/*<FormInput className="col-12" inputData={{label: "Country"}} inputRefs={inputRefs}/> */}
-                <FormInput className="col-12" inputData={{label: "Country", type: "country", activeCountry, setActiveCountry}} inputRefs={inputRefs}/>
-                <FormInput className="col-12 col-lg-6" inputData={{label: "City"}} inputRefs={inputRefs}/>
-                <FormInput className="col-12 col-lg-6" inputData={{label: "ZIP code", small: true}} inputRefs={inputRefs}/>
-                <FormInput className="col-12 col-lg-6" inputData={{label: "Street"}} inputRefs={inputRefs}/>
-                <FormInput className="col-12 col-lg-6" inputData={{label: "House Number", small: true}} inputRefs={inputRefs}/>
-                <FormInput className="col-12" inputData={{label: "Email", type: "email"}} inputRefs={inputRefs}/>
-                <FormInput className="col-12" inputData={{label: "Phone Number", type: "phone number", required: false}} inputRefs={inputRefs}/>
-                <FormInput className="col-12" inputData={{label: "Password", type: "password"}} inputRefs={inputRefs}/>
-                <FormInput className="col-12" inputData={{label: "Repeat Password", type: "password"}} inputRefs={inputRefs}/>
+                <FormInput className="col-12 col-lg-6" inputData={{label: "First Name"}} highlightedFields={highlightedFields} inputRefs={inputRefs}/>
+                <FormInput className="col-12 col-lg-6" inputData={{label: "Last Name"}} highlightedFields={highlightedFields} inputRefs={inputRefs}/>
+                {/*<FormInput className="col-12" inputData={{label: "Country"}} highlightedFields={highlightedFields} inputRefs={inputRefs}/> */}
+                <FormInput className="col-12" inputData={{label: "Country", type: "country", activeCountry, setActiveCountry}} highlightedFields={highlightedFields} inputRefs={inputRefs}/>
+                <FormInput className="col-12 col-lg-6" inputData={{label: "City"}} highlightedFields={highlightedFields} inputRefs={inputRefs}/>
+                <FormInput className="col-12 col-lg-6" inputData={{label: "ZIP code", small: true}} highlightedFields={highlightedFields} inputRefs={inputRefs}/>
+                <FormInput className="col-12 col-lg-6" inputData={{label: "Street"}} highlightedFields={highlightedFields} inputRefs={inputRefs}/>
+                <FormInput className="col-12 col-lg-6" inputData={{label: "House Number", small: true}} highlightedFields={highlightedFields} inputRefs={inputRefs}/>
+                <FormInput className="col-12" inputData={{label: "Email", type: "email"}} highlightedFields={highlightedFields} inputRefs={inputRefs}/>
+                <FormInput className="col-12" inputData={{label: "Phone Number", type: "phone number", required: false}} highlightedFields={highlightedFields} inputRefs={inputRefs}/>
+                <FormInput className="col-12" inputData={{label: "Password", type: "password"}} highlightedFields={highlightedFields} inputRefs={inputRefs}/>
+                <FormInput className="col-12" inputData={{label: "Repeat Password", type: "password"}} highlightedFields={highlightedFields} inputRefs={inputRefs}/>
 
                 <p className={styles.errorMessage}>{errorMessage}</p>
                 <div className={styles.sumbitRegisterBtn} onClick={handleSubmit}>register</div>

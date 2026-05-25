@@ -11,7 +11,6 @@ import UserData from "./UserData";
 
 
 export const InterfaceContext = createContext()
-export const HighlightedFieldsContext = createContext()
 export const ActivePrefixContext = createContext()
 
 export default function AccountPopup() {
@@ -81,14 +80,12 @@ export default function AccountPopup() {
     return(
         <div className={`account-popup${isOpen ? " show" : ""}`} ref={loginPopup}>
             <ActivePrefixContext.Provider value={[activePrefix, setActivePrefix]}>
-                <HighlightedFieldsContext.Provider value={[highlightedFields, setHighlightedFields]}>
-                    <InterfaceContext.Provider value={[currentInterface, setInterface]}>
-                        <Default/>
-                        <Register/>
-                        <Login/>
-                        <UserData userData={userData}/>
-                    </InterfaceContext.Provider>
-                </HighlightedFieldsContext.Provider>
+                <InterfaceContext.Provider value={[currentInterface, setInterface]}>
+                    <Default/>
+                    <Register/>
+                    <Login/>
+                    <UserData userData={userData}/>
+                </InterfaceContext.Provider>
             </ActivePrefixContext.Provider>
         </div>
     );

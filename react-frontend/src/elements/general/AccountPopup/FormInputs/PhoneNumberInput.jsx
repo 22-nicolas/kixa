@@ -3,13 +3,12 @@ import { ActivePrefixContext as PrefixContext } from "../AccountPopup"
 import { InterfaceContext } from "../AccountPopup"
 import styles from "../../../../styles/register.module.css"
 import { getCountriesData } from "../../../../api/countriesData"
-import { HighlightedFieldsContext } from "../AccountPopup"
+import {  } from "../AccountPopup"
 import { supportedCountries } from "../../../../../../packages/shared"
 import ErrorDropdown from "./ErrorDropdown"
 
-export default function PhoneNumberInput({ label, id, small, i, ref }) {
+export default function PhoneNumberInput({ label, id, small, i, ref, highlightedFields }) {
     const [currentInterface] = useContext(InterfaceContext)
-    const [highlightedFields] = useContext(HighlightedFieldsContext)
     const [supportedCountriesData, setSupportedCountriesData] = useState(null)
     const [activePrefix, setActivePrefix] = useContext(PrefixContext);
 

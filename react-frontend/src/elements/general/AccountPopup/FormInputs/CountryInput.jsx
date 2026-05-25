@@ -1,12 +1,11 @@
 import { useState, useContext, useRef, useEffect } from "react"
 import styles from "../../../../styles/register.module.css"
-import { HighlightedFieldsContext } from "../AccountPopup"
+import {  } from "../AccountPopup"
 import { supportedCountries } from "../../../../../../packages/shared"
 import { getCountriesData, getUserCountryName } from "../../../../api/countriesData"
 import ErrorDropdown from "./ErrorDropdown"
 
-export default function CountryInput({ label, id, small, i, ref, activeCountry, setActiveCountry }) {
-    const [highlightedFields] = useContext(HighlightedFieldsContext)
+export default function CountryInput({ label, id, small, i, ref, highlightedFields, activeCountry, setActiveCountry }) {
     const [countryComponents, setCountryComponents] = useState(<p>Loading...</p>)
     const [supportedCountriesData, setSupportedCountriesData] = useState(null)
     const isHighlightedFields = highlightedFields.includes(id)
