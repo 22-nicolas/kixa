@@ -4,7 +4,7 @@ import { createOrder, getOrderById, updateOrderStatus } from "../../sql/orders.j
 
 const router = Router();
 
-router.post("/create/paypal", async (req, res) => {
+router.post("/paypal", async (req, res) => {
     try {
         const { items, currency } = req.body;
         
@@ -12,10 +12,10 @@ router.post("/create/paypal", async (req, res) => {
             return res.status(400).json({ error: "Cart is empty" });
         }
 
-        let totalAmount = 0;
+        // Validate and build line items using database prices to prevent tampering
         const {lineItems, orderItems} = await validateCart(items, currency, checkoutTypes.PAYPAL)
 
-        // Validate and build line items using database prices to prevent tampering
+        let totalAmount = 0;
         for (const item of lineItems) {
             totalAmount += item.unit_amount.value * item.quantity;
         }

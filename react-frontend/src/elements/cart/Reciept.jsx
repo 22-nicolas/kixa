@@ -5,12 +5,16 @@ import { useCurrency } from "../../customHooks/CurrencyProvider";
 import { checkStockStatus, stockStates } from "../../modules/stockStatus";
 import { checkoutTypes } from "../../../../packages/shared";
 import PayPalBtn from "./PayPalBtn";
+import { useToasts } from "../../customHooks/CustomToastsProvider";
+import { useNavigate } from "react-router-dom";
 
 export default function Reciept() {
-    const {cart, getQuantity, resolveCart, checkout} = useCart()
+    const {cart, getQuantity, resolveCart, validateCart} = useCart()
     const {currency, conversionRates} = useCurrency()
     const [quantity, setQuantity] = useState(0)
     const [itemsPrice, setItemsPrice] = useState(0)
+    const {addToast} = useToasts()
+    const navigate = useNavigate()
     const shipping = 0
     
     useEffect(() => {
@@ -50,6 +54,20 @@ export default function Reciept() {
         return 0
     }
 
+    async function handleCheckout() {
+        const result = await validateCart()
+        if (!result.success) {
+            addToast({
+                title: "An error occurred please try again later.",
+                message: result.msg,
+                variant: "danger"
+            })
+            return
+        }
+
+        navigate("/address-form")
+    }
+
     return (
         <div className={styles.reciept}>
             <div>
@@ -69,13 +87,13 @@ export default function Reciept() {
                 <p>{itemsPrice+shipping} {currency}</p>
             </div>
             <div className="d-flex flex-column">
-                <div className="btn btn-dark text-center w-75" onClick={() => checkout(checkoutTypes.STRIPE)}><p className="text-white m-auto">Go to Checkout</p></div>
-                <div className="separator">
+                <div className="btn btn-dark text-center w-75" onClick={handleCheckout}><p className="text-white m-auto">Go to Checkout</p></div>
+                {/*<div className="separator">
                     <div className="line"></div>
                     <span>or continue with</span>
                     <div className="line"></div>
                 </div>
-                <PayPalBtn className="w-75" onClick={() => checkout(checkoutTypes.PAYPAL)} />
+                <PayPalBtn className="w-75" onClick={() => checkout(checkoutTypes.PAYPAL)} />*/}
             </div>
         </div>
     )

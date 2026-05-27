@@ -4,7 +4,6 @@ import stripeCheckoutRoutes from "./stripeCheckout.js";
 
 const router = Router();
 
-router.use("/", paypalCheckoutRoutes);
-router.use("/", stripeCheckoutRoutes);
+router.use("/create-payment-session", paypalCheckoutRoutes, stripeCheckoutRoutes);
 
 export default router;

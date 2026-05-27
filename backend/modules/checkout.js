@@ -30,21 +30,26 @@ export async function validateCart(items, currency, checkoutType) {
 
     if (!Array.isArray(items)) throw new Error("Invalid items");
 
+    if(items.length === 0) throw new Error("Cart is empty");
+
     for (const item of items) {
         if (item.quantity <= 0) throw new Error("Invalid quantity");
         
         const stockData = await getProductStock(item.id, item.color, item.size);
 
         if (!stockData) throw new Error("Product not found");
-
-        let price = stockData.price;
-        if (currency && conversionRates && stockData) {
-            price = convertPrice(stockData.price, currency, conversionRates)
-        }
         
         //check stock
         if (stockData.stock < item.quantity) {
             throw new Error(`${item.name} - Out of stock or quantity exceeded stock`);
+        }
+
+        //return early so function can also be used for validating cart without checkout
+        if (!checkoutType) return;
+
+        let price = stockData.price;
+        if (currency && conversionRates && stockData) {
+            price = convertPrice(stockData.price, currency, conversionRates)
         }
 
 

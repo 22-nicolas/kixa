@@ -8,7 +8,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const router = Router();
 
-router.post("/create/stripe", async (req, res) => {
+router.post("/stripe", async (req, res) => {
     try {
         const { items, currency } = req.body;
 

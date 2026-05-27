@@ -117,6 +117,23 @@ export default function CartProvider({ children }) {
         return resolvedCart;
     }
 
+    const validateCart = async () => {
+        const response = await apiFetch(`${API_BASE_URL}/cart/validate-cart`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({cart, currency})
+        });
+        
+        if (!response.ok) {
+            const errorData = await response.json();
+            return {msg: errorData?.error || "Failed to validate cart", success: false}
+        }
+
+        return {success: true};
+    }
+
     const checkout = async (checkoutType) => {
         if (cart.length === 0) {
             addToast({
@@ -127,7 +144,7 @@ export default function CartProvider({ children }) {
         }
 
         try {
-            const response = await apiFetch(`${API_BASE_URL}/checkout/create/${checkoutType}`, {
+            const response = await apiFetch(`${API_BASE_URL}/checkout/create-payment-session/${checkoutType}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -154,7 +171,7 @@ export default function CartProvider({ children }) {
     };
 
     return (
-        <CartContext.Provider value={{ cart, updateCart, clearCart, addToCart, removeFromCart, getQuantity, resolveCart, checkout }}>
+        <CartContext.Provider value={{ cart, updateCart, clearCart, addToCart, removeFromCart, getQuantity, resolveCart, validateCart, checkout }}>
             {children}
         </CartContext.Provider>
     )
