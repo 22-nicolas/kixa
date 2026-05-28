@@ -12,6 +12,7 @@ import CurrencyProvier from "./customHooks/CurrencyProvider.jsx"
 import CustomToastsProvider from "./customHooks/CustomToastsProvider.jsx"
 import ErrorToasts from "./elements/general/ErrorToasts.jsx"
 import { ScrollToTop } from "./customHooks/ScrollToTop.jsx"
+import AddressForm from "./pages/AddressForm.jsx"
 
 export const CartContext = createContext()
 
@@ -29,6 +30,7 @@ function App() {
                 <Route path="/search" element={<Search />} />
                 <Route path="/item" element={<Item />} />
                 <Route path="/cart" element={<Cart />} />
+                <Route path="/address-form" element={<AddressForm />} />
                 <Route path="/success" element={<Success />} />
               </Routes>
             </Router>

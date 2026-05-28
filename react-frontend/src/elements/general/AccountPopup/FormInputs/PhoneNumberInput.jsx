@@ -11,11 +11,12 @@ export default function PhoneNumberInput({ label, id, small, i, ref, highlighted
     const [currentInterface] = useContext(InterfaceContext)
     const [supportedCountriesData, setSupportedCountriesData] = useState(null)
     const [activePrefix, setActivePrefix] = useContext(PrefixContext);
+    const dropdownId = `${id}-prefix-dropdown-input-${Math.random().toString(36).substr(2, 9)}`
 
     const prefixInput = useRef()
     const [prefixComponents, setPrefixComponents] = useState(<p>Loading...</p>)
     const [activePrefixComponent, setActivePrefixComponent] = useState(
-        <label className={styles.prefixSelector} htmlFor="prefix-dropdown-input">
+        <label className={styles.prefixSelector} htmlFor={dropdownId}>
             <p className={styles.arrow}>▴</p>
             <p>...</p>
         </label>
@@ -43,7 +44,7 @@ export default function PhoneNumberInput({ label, id, small, i, ref, highlighted
         if (!activePrefix || !supportedCountriesData) return
         const prefixData = supportedCountriesData.find(item => item.country_code === activePrefix)
         setActivePrefixComponent(
-            <label className={styles.prefixSelector} htmlFor="prefix-dropdown-input">
+            <label className={styles.prefixSelector} htmlFor={dropdownId}>
                 <p className={styles.arrow}>▴</p>
                 <p>{prefixData?.flag}</p>
                 <p>+{prefixData?.phone_international_prefix}</p>
@@ -84,7 +85,7 @@ export default function PhoneNumberInput({ label, id, small, i, ref, highlighted
                 className={styles.phoneNumber}
                 style={{ ...(isHighlightedFields && { borderColor: 'red' }) }}
             >
-                <input ref={prefixInput} type="checkbox" id="prefix-dropdown-input" className={styles.prefixDropdownInput} style={{display: "none"}}/>
+                <input ref={prefixInput} type="checkbox" id={dropdownId} className={styles.prefixDropdownInput} style={{display: "none"}}/>
                 {activePrefixComponent}
 
                 <div className={styles.prefixDropdown}>

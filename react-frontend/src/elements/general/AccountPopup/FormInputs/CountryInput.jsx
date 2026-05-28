@@ -10,6 +10,7 @@ export default function CountryInput({ label, id, small, i, ref, highlightedFiel
     const [supportedCountriesData, setSupportedCountriesData] = useState(null)
     const isHighlightedFields = highlightedFields.includes(id)
     const countryInput = useRef()
+    const dropdownId = `${id}-dropdown-input-${Math.random().toString(36).substr(2, 9)}`
     
     useEffect(() => {
         fetchSupportedCountriesData()
@@ -57,12 +58,12 @@ export default function CountryInput({ label, id, small, i, ref, highlightedFiel
     return(
         <div>
             <label htmlFor={id} className={styles.inputLabel}>{label}</label>
-            <div 
-                className={styles.countryInput}
+            <div
+                className={styles.phoneNumber}
                 style={{ ...(isHighlightedFields && { borderColor: 'red' }) }}
             >
-                <input ref={countryInput} type="checkbox" id="country-dropdown-input" className={styles.countryDropdownInput} style={{display: "none"}}/>
-                <label className={styles.countrySelector} htmlFor="country-dropdown-input">
+                <input ref={countryInput} type="checkbox" id={dropdownId} className={styles.countryDropdownInput} style={{display: "none"}}/>
+                <label className={styles.countrySelector} htmlFor={dropdownId}>
                     <p className={styles.arrow}>▴</p>
                     <p ref={ref}>{activeCountry ? activeCountry : "..."}</p>
                 </label>

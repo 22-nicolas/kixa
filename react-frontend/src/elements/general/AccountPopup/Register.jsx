@@ -4,6 +4,7 @@ import { getUserRegionName} from "../../../modules/utils"
 import { getCountriesData } from "../../../api/countriesData"
 import { registerUser } from "../../../api/users"
 import FormInput from "./FormInputs/FormInput"
+import { getFormValues } from "../../../modules/forms"
 import { ActivePrefixContext, InterfaceContext } from "./AccountPopup"
 import { supportedCountries } from "../../../../../packages/shared/index"
 
@@ -27,33 +28,10 @@ export default function Register() {
         setErrorMessage("")
     }, [currentInterface])
 
-    async function getFormValues() {
-        const values = {};
-        for (const id in inputRefs.current) {
-            if (inputRefs.current[id].current) {
-                // add prefix for phone number
-                switch (id) {
-                    case "phone_number":
-                        const countriesData = await getCountriesData()
-                        const {phone_international_prefix} = countriesData?.find(data => data.country_code === activePrefix)
-                        values[id] = `+${phone_international_prefix}${inputRefs.current[id].current.value}`
-                        break;
-                    case "country":
-                        values[id] = activeCountry
-                        break;
-                    default:
-                        values[id] = inputRefs.current[id].current.value;
-                        break;
-                }
-            }
-        }
-        return values;
-    }
-
     async function handleSubmit() {
         let result;
         try {
-            const formValues = await getFormValues();
+            const formValues = await getFormValues(inputRefs, activeCountry, activePrefix);
             result = await registerUser(formValues)
         } catch (error) {
             setErrorMessage("An error occurred while trying to register. Please try again later.")

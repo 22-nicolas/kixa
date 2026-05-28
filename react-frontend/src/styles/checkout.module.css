@@ -1,0 +1,23 @@
+.errorMessage{
+    color: red;
+    margin-top: 2ch;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/*
+.checkoutContainer{
+    margin: auto;
+    display: grid;
+    width: 80%;
+    column-gap: 20%;
+    grid-template-columns: 40% 40%;
+}
+
+.media (max-width: 768px){
+    .checkoutContainer{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 2ch;
+    }
+}*/

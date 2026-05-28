@@ -9,7 +9,7 @@ export const validateForms = {
     ],
     address: [
         'first_name', 'last_name', 'country', 'city', 'zip_code', 
-        'street', 'house_number', 'email'
+        'street', 'house_number', 
     ]
 }
 
@@ -23,6 +23,9 @@ export async function validateForm(userData, requiredFields) {
     if (missingFields.length > 0) {
         return { error: `Missing required fields`, missing: missingFields };
     }
+
+    // Return early for address validation.
+    if (requiredFields === validateForms.address) return null;
 
     // Validate email format using a regular expression
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
