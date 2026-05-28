@@ -12,6 +12,15 @@ export default function FormInput({ className, inputData, highlightedFields, inp
     if (!type) type = "text"
     if (required === undefined) required = true
 
+    inputData = {
+        ...inputData,
+        label,
+        id,
+        small,
+        type,
+        required
+    }
+
     const ref = createRef();
     inputRefs.current[id] = ref;
 
@@ -19,16 +28,16 @@ export default function FormInput({ className, inputData, highlightedFields, inp
 
     switch (type) {
         case "phone number":
-            inputComponent = <PhoneNumberInput label={label} id={id} small={small} ref={ref} highlightedFields={highlightedFields} />
+            inputComponent = <PhoneNumberInput inputData={inputData} ref={ref} highlightedFields={highlightedFields} />
                 break;
         case "password":
-            inputComponent = <PasswordInput label={label} id={id} small={small} ref={ref} highlightedFields={highlightedFields} />
+            inputComponent = <PasswordInput inputData={inputData} ref={ref} highlightedFields={highlightedFields} />
                 break;
         case "country":
-            inputComponent = <CountryInput label={label} type="text" id={id} small={small} required={required} ref={ref} highlightedFields={highlightedFields} activeCountry={inputData.activeCountry} setActiveCountry={inputData.setActiveCountry} /> 
+            inputComponent = <CountryInput inputData={inputData} ref={ref} highlightedFields={highlightedFields} activeCountry={inputData.activeCountry} setActiveCountry={inputData.setActiveCountry} /> 
                 break;
         default:
-            inputComponent = <TextInput label={label} type={type} id={id} small={small} required={required} ref={ref} highlightedFields={highlightedFields} />
+            inputComponent = <TextInput inputData={inputData} ref={ref} highlightedFields={highlightedFields} />
                 break;
     }
 

@@ -7,7 +7,8 @@ import {  } from "../AccountPopup"
 import { supportedCountries } from "../../../../../../packages/shared"
 import ErrorDropdown from "./ErrorDropdown"
 
-export default function PhoneNumberInput({ label, id, small, i, ref, highlightedFields }) {
+export default function PhoneNumberInput({ inputData, ref, highlightedFields }) {
+    const {label, id, small, type, required} = inputData
     const [currentInterface] = useContext(InterfaceContext)
     const [supportedCountriesData, setSupportedCountriesData] = useState(null)
     const [activePrefix, setActivePrefix] = useContext(PrefixContext);
@@ -80,7 +81,7 @@ export default function PhoneNumberInput({ label, id, small, i, ref, highlighted
     
     return(
         <div>
-            <label htmlFor={id} className={styles.inputLabel}>{label}</label>
+            <label htmlFor={id} className={styles.inputLabel}>{label}{required ? " *" : ""}</label>
             <div 
                 className={styles.phoneNumber}
                 style={{ ...(isHighlightedFields && { borderColor: 'red' }) }}

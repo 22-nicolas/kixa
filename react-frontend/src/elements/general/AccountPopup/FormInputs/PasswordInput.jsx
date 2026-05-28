@@ -5,11 +5,11 @@ import openEye from "../../../../assets/open_eye.png"
 import closedEye from "../../../../assets/closed_eye.png"
 import {  } from "../AccountPopup"
 
-export default function PasswordInput({label, id, small, i, ref, highlightedFields }) {
+export default function PasswordInput({inputData, ref, highlightedFields }) {
     const [isVisible, setIsVisible] = useState(false)
     const [currentInterface] = useContext(InterfaceContext)
 
-
+    const {label, id, small, type, required} = inputData
     const isHighlightedFields = highlightedFields.includes(id)
 
     function toggleVisible() {
@@ -18,7 +18,7 @@ export default function PasswordInput({label, id, small, i, ref, highlightedFiel
 
     return(
         <div>
-            <label htmlFor={id} className={styles.inputLabel}>{label} *</label>
+            <label htmlFor={id} className={styles.inputLabel}>{label}{required ? " *" : ""}</label>
             <div 
                 className={styles.password} 
                 style={{ ...(isHighlightedFields && { borderColor: 'red' }) }}

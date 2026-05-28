@@ -3,7 +3,8 @@ import { InterfaceContext,  } from "../AccountPopup"
 import styles from "../../../../styles/register.module.css"
 
 
-export default function TextInput({label, id, small, i, type, required, ref, highlightedFields }) {
+export default function TextInput({ inputData, ref, highlightedFields }) {
+    const {label, id, small, type, required} = inputData
     const isHighlightedFields = highlightedFields.includes(id);
 
     return(

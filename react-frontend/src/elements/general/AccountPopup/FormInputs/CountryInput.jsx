@@ -5,9 +5,10 @@ import { supportedCountries } from "../../../../../../packages/shared"
 import { getCountriesData, getUserCountryName } from "../../../../api/countriesData"
 import ErrorDropdown from "./ErrorDropdown"
 
-export default function CountryInput({ label, id, small, i, ref, highlightedFields, activeCountry, setActiveCountry }) {
+export default function CountryInput({ inputData, ref, highlightedFields, activeCountry, setActiveCountry }) {
     const [countryComponents, setCountryComponents] = useState(<p>Loading...</p>)
     const [supportedCountriesData, setSupportedCountriesData] = useState(null)
+    const {label, id, small, type, required} = inputData
     const isHighlightedFields = highlightedFields.includes(id)
     const countryInput = useRef()
     const dropdownId = `${id}-dropdown-input-${Math.random().toString(36).substr(2, 9)}`
@@ -57,7 +58,7 @@ export default function CountryInput({ label, id, small, i, ref, highlightedFiel
 
     return(
         <div>
-            <label htmlFor={id} className={styles.inputLabel}>{label}</label>
+            <label htmlFor={id} className={styles.inputLabel}>{label}{required ? " *" : ""}</label>
             <div
                 className={styles.phoneNumber}
                 style={{ ...(isHighlightedFields && { borderColor: 'red' }) }}
