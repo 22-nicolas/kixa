@@ -44,14 +44,12 @@ export async function validateCart(items, currency, checkoutType) {
             throw new Error(`${item.name} - Out of stock or quantity exceeded stock`);
         }
 
-        //return early so function can also be used for validating cart without checkout
-        if (!checkoutType) return;
-
-        let price = stockData.price;
-        if (currency && conversionRates && stockData) {
-            price = convertPrice(stockData.price, currency, conversionRates)
+        if (checkoutType) {
+            let price = stockData.price;
+            if (currency && conversionRates && stockData) {
+                price = convertPrice(stockData.price, currency, conversionRates)
+            }
         }
-
 
         if (checkoutType === checkoutTypes.STRIPE) {
             lineItems.push({

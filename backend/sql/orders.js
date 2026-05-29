@@ -1,11 +1,11 @@
 import pool from "./db.js";
 
 export async function createOrder(order) {
-    const { id, items } = order;
+    const { id, items, address } = order;
     await pool.query(`
-        insert into orders (id, items)
-        values (?, ?)
-    `, [id, JSON.stringify(order.items)]);
+        insert into orders (id, items, shipping_address)
+        values (?, ?, ?)
+    `, [id, JSON.stringify(order.items), JSON.stringify(order.address)]);
 }
 
 export async function getOrderById(id) {

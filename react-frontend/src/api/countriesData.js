@@ -33,3 +33,12 @@ export async function getUserPhonePrefix() {
     const phonePrefix = locationData.phonePrefix;
     return phonePrefix;
 }
+
+export async function getUserCountryCode() {
+    const locationData = await getUserLocationData();
+    const countryCode = locationData.countryCode;
+    if (supportedCountries.includes(countryCode)) return countryCode
+
+    const supportedCountriesData = await getCountriesData();
+    return supportedCountriesData[0].country_code //default to first supported country if user country is not supported
+}

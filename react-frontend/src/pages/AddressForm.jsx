@@ -6,19 +6,22 @@ import FormInput from "../elements/general/AccountPopup/FormInputs/FormInput";
 import styles from "../styles/register.module.css"
 import { useRef, useState } from "react";
 import { getFormValues } from "../modules/forms";
-import { validateAddressForm } from "../api/checkout";
+import { createOrder, getShippingCost, validateAddressForm } from "../api/checkout";
+import { useCart } from "../customHooks/CartProvider";
 
 export default function Checkout() {
     const [activeCountry, setActiveCountry] = useState();
     const [highlightedFields, setHighlightedFields] = useState([]);
     const [errorMessage, setErrorMessage] = useState("");
+    const {cart} = useCart();
     const inputRefs = useRef({});
 
     async function handleSubmit() {
         let result;
+        let formValues;
         try {
-            const formValues = await getFormValues(inputRefs, activeCountry);
-            result = await validateAddressForm(formValues)
+            formValues = await getFormValues(inputRefs, activeCountry);
+            result = await createOrder(cart, formValues)
         } catch (error) {
             setErrorMessage(error.message)//"An error occurred while trying to register. Please try again later.")
             return

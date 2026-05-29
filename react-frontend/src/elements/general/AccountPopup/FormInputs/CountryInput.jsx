@@ -2,7 +2,7 @@ import { useState, useContext, useRef, useEffect } from "react"
 import styles from "../../../../styles/register.module.css"
 import {  } from "../AccountPopup"
 import { supportedCountries } from "../../../../../../packages/shared"
-import { getCountriesData, getUserCountryName } from "../../../../api/countriesData"
+import { getCountriesData, getUserLocationData } from "../../../../api/countriesData"
 import ErrorDropdown from "./ErrorDropdown"
 
 export default function CountryInput({ inputData, ref, highlightedFields, activeCountry, setActiveCountry }) {
@@ -20,11 +20,17 @@ export default function CountryInput({ inputData, ref, highlightedFields, active
 
     useEffect(() => {
         mapCountryComponents()
+        fetchUserLocationCountryName()
     }, [supportedCountriesData])
 
     async function fetchUserLocationCountryName() {
-        const name = await getUserCountryName()
-        setActiveCountry(name)
+        const locationData = await getUserLocationData()
+        if (!supportedCountries.includes(locationData.countryCode) && supportedCountriesData) {
+            const {name, country_code} = supportedCountriesData[0] //default to first supported country if user country is not supported
+            setActiveCountry({name, country_code})
+        } else if(supportedCountries.includes(locationData.countryCode)) {
+            setActiveCountry({name: locationData.countryName, country_code: locationData.countryCode})
+        }
     }
 
     async function fetchSupportedCountriesData() {
@@ -39,7 +45,7 @@ export default function CountryInput({ inputData, ref, highlightedFields, active
         const components = supportedCountriesData.map(data => {
             if(!data.name) return
             return(
-                <div key={data.name} className={styles.country} onClick={() => onCountryClick(data.name)}>
+                <div key={data.country_code} className={styles.country} onClick={() => onCountryClick({name: data.name, country_code: data.country_code})}>
                     {data.name}
                 </div>
             )
@@ -66,7 +72,7 @@ export default function CountryInput({ inputData, ref, highlightedFields, active
                 <input ref={countryInput} type="checkbox" id={dropdownId} className={styles.countryDropdownInput} style={{display: "none"}}/>
                 <label className={styles.countrySelector} htmlFor={dropdownId}>
                     <p className={styles.arrow}>▴</p>
-                    <p ref={ref}>{activeCountry ? activeCountry : "..."}</p>
+                    <p ref={ref}>{activeCountry ? activeCountry.name : "..."}</p>
                 </label>
 
                 <div className={styles.countryDropdown}>
