@@ -17,12 +17,7 @@ export const supportedCountries = [
     "ES",
     "GB",
     "US"
-]
-
-export const checkoutTypes = {
-    STRIPE: "stripe",
-    PAYPAL: "paypal"
-}
+];
 
 /*export const supportedCountries = [
   "AF","AL","DZ","AS","AD","AO","AI","AQ","AG","AR","AM","AW","AU","AT","AZ",

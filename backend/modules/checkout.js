@@ -1,12 +1,7 @@
 import { getConversionRates } from "../routes/currency.js";
-import { getOrderById, updateOrderStatus } from "../sql/orders.js";
+import { getOrderById, updateOrderStatus, createOrder, addOrderAddress } from "../sql/orders.js";
 import { getProductById, getProductStock, reduceStock } from "../sql/products.js";
 import { sendConfirmationEmail } from "./nodemail.js";
-
-export const checkoutTypes = {
-    STRIPE: "stripe",
-    PAYPAL: "paypal",
-};
 
 export async function getPayPalAccessToken() {
     const auth = Buffer.from(`${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_CLIENT_SECRET}`).toString("base64");
@@ -22,7 +17,7 @@ export async function getPayPalAccessToken() {
     return data.access_token;
 }
 
-export async function validateCart(items, currency, checkoutType) {
+export async function validateCart(items, currency, buildItems = false) {
     const conversionRates = await getConversionRates();
 
     let lineItems = []
@@ -44,36 +39,30 @@ export async function validateCart(items, currency, checkoutType) {
             throw new Error(`${item.name} - Out of stock or quantity exceeded stock`);
         }
 
+
+        if (!buildItems) return;
+
         let price
 
-        if (currency && conversionRates && stockData && checkoutType) {
+        if (currency && conversionRates && stockData) {
             price = stockData.price;
             price = convertPrice(stockData.price, currency, conversionRates)
+        } else {
+            throw new Error("Currency data is not available");
         }
 
 
-        if (checkoutType === checkoutTypes.STRIPE) {
-            lineItems.push({
-                price_data: {
-                    currency: currency?.toLowerCase() || "eur",
-                    product_data: {
-                        name: item.name,
-                    },
-                    // Stripe expects unit_amount in cents (integer)
-                    unit_amount: Math.round(Number(price) * 100),
+        lineItems.push({
+            price_data: {
+                currency: currency?.toLowerCase() || "eur",
+                product_data: {
+                    name: item.name,
                 },
-                quantity: item.quantity,
-            });
-        } else if(checkoutType === checkoutTypes.PAYPAL) {
-            lineItems.push({
-                name: item.name,
-                unit_amount: {
-                    currency_code: currency?.toUpperCase() || "EUR",
-                    value: price,
-                },
-                quantity: item.quantity.toString(),
-            });
-        }
+                // Stripe expects unit_amount in cents (integer)
+                unit_amount: Math.round(Number(price) * 100),
+            },
+            quantity: item.quantity,
+        });
         
         let orderItem = {...stockData, quantity: item.quantity, id: item.id}
         delete orderItem.stock;
@@ -91,21 +80,18 @@ function convertPrice(price, currency, conversionRates) {
     return convertedPrice
 }
 
-export async function handleCompleteCheckout(sessionData, checkoutType) {
+export async function handleCompleteCheckout(sessionData) {
     let id;
     let email;
     let name;
+    let address;
 
-    if (checkoutType === checkoutTypes.STRIPE) {
-        id = sessionData.metadata.orderId;
-        email = sessionData.customer_details?.email;
-        name = sessionData.customer_details?.name?.split(" ")[0];
-    } else if (checkoutType === checkoutTypes.PAYPAL) {
-        id = sessionData.id;
-        email = sessionData.payer?.email_address;
-        name = sessionData.payer?.name?.given_name;
-    }
+    id = sessionData.metadata.orderId;
+    email = sessionData.customer_details.email;
+    name = sessionData.customer_details.name?.split(" ")[0];
+    address = sessionData.collected_information.shipping_details;
 
+    await addOrderAddress(id, address);
     await updateOrderStatus(id, "payed");
 
     const orderInfo = await getOrderById(id);

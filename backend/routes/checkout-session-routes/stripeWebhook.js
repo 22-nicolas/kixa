@@ -2,7 +2,6 @@ import express from "express";
 import Stripe from "stripe";
 import { updateOrderStatus } from "../../sql/orders.js";
 import { handleCompleteCheckout } from "../../modules/checkout.js";
-import { checkoutTypes } from "shared";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -33,7 +32,7 @@ webhookRouter.post(
       try {
         const session = event.data.object;
 
-        handleCompleteCheckout(session, checkoutTypes.STRIPE);
+        handleCompleteCheckout(session);
       } catch (error) {
         console.error("Error processing checkout session:", error);
       }

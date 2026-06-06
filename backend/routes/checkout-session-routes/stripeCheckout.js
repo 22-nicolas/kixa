@@ -1,6 +1,6 @@
 import { Router } from "express";
 import Stripe from "stripe";
-import { validateCart, checkoutTypes } from "../../modules/checkout.js";
+import { validateCart } from "../../modules/checkout.js";
 import { supportedCountries } from "shared";
 import { createOrder, createOrderId } from "../../sql/orders.js";
 
@@ -8,7 +8,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const router = Router();
 
-router.post("/stripe", async (req, res) => {
+router.post("/", async (req, res) => {
     try {
         const { items, currency } = req.body;
 
@@ -17,7 +17,7 @@ router.post("/stripe", async (req, res) => {
         }
 
         // Validate and build line items using database prices
-        const {lineItems, orderItems} = await validateCart(items, currency, checkoutTypes.STRIPE);
+        const {lineItems, orderItems} = await validateCart(items, currency, true);
 
         const orderId = await createOrderId();
 

@@ -25,6 +25,15 @@ export async function updateOrderStatus(id, status) {
     `, [status, id])
 }
 
+export async function addOrderAddress(id, address) {
+    await pool.query(`
+        update orders
+        set address = ?
+        where id = ?
+    `, [JSON.stringify(address), id])
+}
+
+
 export async function createOrderId() {
     let id = Math.random().toString(36).substring(2, 10).toLocaleUpperCase();
     const order = await getOrderById(id);

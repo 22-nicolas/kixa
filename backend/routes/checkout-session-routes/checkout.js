@@ -1,5 +1,4 @@
 import { Router } from "express";
-import paypalCheckoutRoutes from "./paypalCheckout.js";
 import stripeCheckoutRoutes from "./stripeCheckout.js";
 import { validateForm, validateForms } from "../../modules/validateForms.js";
 import { getShippingCost } from "../../sql/shipping.js";
@@ -8,7 +7,7 @@ import { validateCart } from "../../modules/checkout.js";
 
 const router = Router();
 
-router.use("/create-payment-session", paypalCheckoutRoutes, stripeCheckoutRoutes);
+router.use("/create-payment-session", stripeCheckoutRoutes);
 
 router.post("/validate-address-form", async (req, res) => {
     const formData = req.body;

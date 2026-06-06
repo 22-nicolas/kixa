@@ -134,7 +134,7 @@ export default function CartProvider({ children }) {
         return {success: true};
     }
 
-    const checkout = async (checkoutType) => {
+    const checkout = async () => {
         const result = await validateCart()
         if (!result.success) {
             addToast({
@@ -146,7 +146,7 @@ export default function CartProvider({ children }) {
         }
 
         try {
-            const response = await apiFetch(`${API_BASE_URL}/checkout/create-payment-session/${checkoutType}`, {
+            const response = await apiFetch(`${API_BASE_URL}/checkout/create-payment-session`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -165,7 +165,7 @@ export default function CartProvider({ children }) {
         } catch (error) {
             
             addToast({
-                title: "An error occurred during checkout. Please try again.",
+                title: "An error occurred during checkout. Please try again later.",
                 message: error.message,
                 variant: "danger",
             })

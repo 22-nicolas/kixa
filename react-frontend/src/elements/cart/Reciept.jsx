@@ -3,7 +3,6 @@ import { useCart } from "../../customHooks/CartProvider";
 import styles from "../../styles/cart.module.css"
 import { useCurrency } from "../../customHooks/CurrencyProvider";
 import { checkStockStatus, stockStates } from "../../modules/stockStatus";
-import { checkoutTypes } from "../../../../packages/shared";
 import PayPalBtn from "./PayPalBtn";
 import { useToasts } from "../../customHooks/CustomToastsProvider";
 import { useNavigate } from "react-router-dom";
@@ -87,13 +86,7 @@ export default function Reciept() {
                 <p>{itemsPrice+shipping} {currency}</p>
             </div>
             <div className="d-flex flex-column">
-                <div className="btn btn-dark text-center w-75" onClick={() => checkout(checkoutTypes.STRIPE)}><p className="text-white m-auto">Go to Checkout</p></div>
-                <div className="separator">
-                    <div className="line"></div>
-                    <span>or continue with</span>
-                    <div className="line"></div>
-                </div>
-                <PayPalBtn className="w-75" onClick={() => checkout(checkoutTypes.PAYPAL)} />
+                <div className="btn btn-dark text-center w-75" onClick={() => checkout()}><p className="text-white m-auto">Go to Checkout</p></div>
             </div>
         </div>
     )
