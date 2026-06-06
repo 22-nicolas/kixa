@@ -135,12 +135,14 @@ export default function CartProvider({ children }) {
     }
 
     const checkout = async (checkoutType) => {
-        if (cart.length === 0) {
+        const result = await validateCart()
+        if (!result.success) {
             addToast({
-                title: "Your cart is empty.",
-                variant: "danger",
+                title: "An error occurred please try again later.",
+                message: result.msg,
+                variant: "danger"
             })
-            return;
+            return
         }
 
         try {

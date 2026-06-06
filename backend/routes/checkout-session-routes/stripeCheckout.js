@@ -23,7 +23,6 @@ router.post("/stripe", async (req, res) => {
 
         // Create a Stripe checkout session
         const session = await stripe.checkout.sessions.create({
-            payment_method_types: ["card"],
             line_items: lineItems,
             mode: "payment",
             shipping_address_collection: {
