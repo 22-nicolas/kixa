@@ -2,7 +2,6 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { useCart } from "../../customHooks/CartProvider";
 import styles from "../../styles/cart.module.css"
 import { useCurrency } from "../../customHooks/CurrencyProvider";
-import { checkStockStatus, stockStates } from "../../modules/stockStatus";
 import PayPalBtn from "./PayPalBtn";
 import { useToasts } from "../../customHooks/CustomToastsProvider";
 import { useNavigate } from "react-router-dom";
@@ -24,47 +23,24 @@ export default function Reciept() {
     async function loadPrices() {
         const resolvedCart = await resolveCart()
         
-        const results = await Promise.all(
-            resolvedCart.map(async (item) => {
-                const { id, color, size, quantity } = item
-                const status = await checkStockStatus(id, color, size, quantity)
+        const totalPrice = resolvedCart.reduce((sum, item) => {
+            if (item.price && item.quantity) {
+                return sum + convertPrice(item.price * item.quantity)
+            }
+            return sum
+        }, 0)
 
-                if (status.stockState !== stockStates.outOfStock) {
-                    return item.price * quantity
-                }
-
-                return 0
-            })
-        )
-
-        let price = results.reduce((sum, value) => sum + conertPrice(value), 0)
-        price = Number(price.toFixed(2))
-
-        setItemsPrice(price)
+        setItemsPrice(Number(totalPrice.toFixed(2)))
     }
     
-    function conertPrice(price) {
-        if (price && conversionRates && currency) {
+    function convertPrice(price) {
+        if (price && conversionRates && conversionRates["EUR"] && currency) {
             const usdPrice = price / conversionRates["EUR"]
             const convertedPrice = conversionRates[currency] * usdPrice
             return convertedPrice
         }
 
         return 0
-    }
-
-    async function handleCheckout() {
-        const result = await validateCart()
-        if (!result.success) {
-            addToast({
-                title: "An error occurred please try again later.",
-                message: result.msg,
-                variant: "danger"
-            })
-            return
-        }
-
-        navigate("/address-form")
     }
 
     return (
