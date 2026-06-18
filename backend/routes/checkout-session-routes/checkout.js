@@ -1,7 +1,6 @@
 import { Router } from "express";
 import stripeCheckoutRoutes from "./stripeCheckout.js";
 import { validateForm, validateForms } from "../../modules/validateForms.js";
-import { getShippingCost } from "../../sql/shipping.js";
 import { createOrder, createOrderId } from "../../sql/orders.js";
 import { validateCart } from "../../modules/checkout.js";
 
@@ -20,15 +19,6 @@ router.post("/validate-address-form", async (req, res) => {
         return;
     }
     res.status(200).send();
-});
-
-router.get("/get-shipping-cost/:country_code", async (req, res) => {
-    const country_code = req.params.country_code;
-    const shippingCost = await getShippingCost(country_code);
-    if (!shippingCost) {
-        return res.status(404).send("Shipping cost not found for the specified country");
-    }
-    res.status(200).send({ cost: shippingCost });
 });
 
 router.post("/create-order", async (req, res) => {

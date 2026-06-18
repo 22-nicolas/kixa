@@ -6,7 +6,7 @@ import PayPalBtn from "./PayPalBtn";
 import { useToasts } from "../../customHooks/CustomToastsProvider";
 import { useNavigate } from "react-router-dom";
 import CountryInput from "../general/AccountPopup/FormInputs/CountryInput";
-import { getShippingCost } from "../../api/checkout";
+import { getShippingCost } from "../../api/shipping";
 
 export default function Reciept() {
     const {cart, getQuantity, resolveCart, checkout} = useCart()

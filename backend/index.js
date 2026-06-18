@@ -11,6 +11,7 @@ import { checkPool } from './sql/db.js';
 import currencyRoutes from './routes/currency.js';
 import checkoutRoutes from './routes/checkout-session-routes/checkout.js';
 import webhookRouter from './routes/checkout-session-routes/stripeWebhook.js';
+import shippingRoutes from './routes/shipping.js';
 
 const SESSIONS_CLEANUP_INTERVAL = 10*60*1000;
 
@@ -50,6 +51,7 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/checkout", checkoutLimiter, checkoutRoutes);
 app.use("/api/countries", countriesRoutes);
 app.use("/api/currency", currencyRoutes);
+app.use("/api/shipping", shippingRoutes);
 
 sessionsCleanup()
 setInterval(sessionsCleanup, SESSIONS_CLEANUP_INTERVAL)

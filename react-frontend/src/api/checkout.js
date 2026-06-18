@@ -32,12 +32,3 @@ export async function createOrder(cartItems, addressForm) {
         return {error: "Internal Server error"}
     }
 }
-
-export async function getShippingCost(country_code) {
-    const response = await apiFetch(`${API_BASE_URL}/checkout/get-shipping-cost/${country_code}`);
-    if (response.ok) {
-        const data = await response.json();
-        return data;
-    }
-    return null;
-}
