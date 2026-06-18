@@ -73,7 +73,7 @@ export async function validateCart(items, currency, buildItems = false) {
     return {lineItems, orderItems};
 }
 
-function convertPrice(price, currency, conversionRates) {
+export function convertPrice(price, currency, conversionRates) {
     const usdPrice = Number(price) / conversionRates["EUR"]
     const convertedPrice = Number((conversionRates[currency] * usdPrice).toFixed(2))
 

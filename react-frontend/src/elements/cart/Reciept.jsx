@@ -79,7 +79,7 @@ export default function Reciept() {
                 <p>{Number((itemsPrice + shipping).toFixed(2))} {currency}</p>
             </div>
             <div className="d-flex flex-column">
-                <div className="btn btn-dark text-center w-75" onClick={() => checkout()}><p className="text-white m-auto">Go to Checkout</p></div>
+                <div className="btn btn-dark text-center w-75" onClick={() => checkout(activeCountry?.country_code)}><p className="text-white m-auto">Go to Checkout</p></div>
             </div>
         </div>
     )

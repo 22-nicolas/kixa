@@ -134,7 +134,7 @@ export default function CartProvider({ children }) {
         return {success: true};
     }
 
-    const checkout = async () => {
+    const checkout = async (shippingCountry) => {
         const result = await validateCart()
         if (!result.success) {
             addToast({
@@ -151,7 +151,7 @@ export default function CartProvider({ children }) {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ items: cart, currency: currency })
+                body: JSON.stringify({ items: cart, currency: currency, shippingCountry: shippingCountry})
             });
 
             const session = await response.json();
