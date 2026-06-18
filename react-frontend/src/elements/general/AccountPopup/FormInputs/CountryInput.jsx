@@ -9,7 +9,7 @@ export default function CountryInput({ inputData, ref, highlightedFields, active
     const [countryComponents, setCountryComponents] = useState(<p>Loading...</p>)
     const [supportedCountriesData, setSupportedCountriesData] = useState(null)
     const {label, id, small, type, required} = inputData
-    const isHighlightedFields = highlightedFields.includes(id)
+    const isHighlightedFields = highlightedFields?.includes(id)
     const countryInput = useRef()
     const dropdownId = `${id}-dropdown-input-${Math.random().toString(36).substr(2, 9)}`
     

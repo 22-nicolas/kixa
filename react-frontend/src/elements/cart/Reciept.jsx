@@ -5,20 +5,27 @@ import { useCurrency } from "../../customHooks/CurrencyProvider";
 import PayPalBtn from "./PayPalBtn";
 import { useToasts } from "../../customHooks/CustomToastsProvider";
 import { useNavigate } from "react-router-dom";
+import CountryInput from "../general/AccountPopup/FormInputs/CountryInput";
+import { getShippingCost } from "../../api/checkout";
 
 export default function Reciept() {
     const {cart, getQuantity, resolveCart, checkout} = useCart()
     const {currency, conversionRates} = useCurrency()
     const [quantity, setQuantity] = useState(0)
     const [itemsPrice, setItemsPrice] = useState(0)
+    const [activeCountry, setActiveCountry] = useState()
     const {addToast} = useToasts()
     const navigate = useNavigate()
-    const shipping = 0
+    const [shipping, setShipping] = useState(0)
     
     useEffect(() => {
         setQuantity(getQuantity())
         loadPrices()
     }, [cart, currency, conversionRates])
+
+    useEffect(() => {
+        loadShipping()
+    }, [activeCountry, currency, conversionRates])
 
     async function loadPrices() {
         const resolvedCart = await resolveCart()
@@ -31,6 +38,13 @@ export default function Reciept() {
         }, 0)
 
         setItemsPrice(Number(totalPrice.toFixed(2)))
+    }
+
+    async function loadShipping() {
+        if (!activeCountry) return
+        const { cost } = await getShippingCost(activeCountry.country_code)
+        const convertedShippingCost = convertPrice(cost)
+        setShipping(Number(convertedShippingCost.toFixed(2)))
     }
     
     function convertPrice(price) {
@@ -50,7 +64,10 @@ export default function Reciept() {
                 <p>{itemsPrice} {currency}</p>
             </div>
             <div>
-                <p>Shipping</p>
+                <div>
+                    <p>Shipping to:</p>
+                    <CountryInput inputData={{type: "country"}} activeCountry={activeCountry} setActiveCountry={setActiveCountry} />
+                </div>
                 <p>{shipping} {currency}</p>
             </div>
             <div>
@@ -59,7 +76,7 @@ export default function Reciept() {
             </div>
             <div className={styles.subtotal}>
                 <p>Subtotal</p>
-                <p>{itemsPrice+shipping} {currency}</p>
+                <p>{Number((itemsPrice + shipping).toFixed(2))} {currency}</p>
             </div>
             <div className="d-flex flex-column">
                 <div className="btn btn-dark text-center w-75" onClick={() => checkout()}><p className="text-white m-auto">Go to Checkout</p></div>
