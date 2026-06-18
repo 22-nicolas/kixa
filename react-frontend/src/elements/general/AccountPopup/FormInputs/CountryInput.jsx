@@ -4,6 +4,7 @@ import {  } from "../AccountPopup"
 import { supportedCountries } from "../../../../../../packages/shared"
 import { getCountriesData, getUserLocationData } from "../../../../api/countriesData"
 import ErrorDropdown from "./ErrorDropdown"
+import { getCookie } from "../../../../modules/utils"
 
 export default function CountryInput({ inputData, ref, highlightedFields, activeCountry, setActiveCountry }) {
     const [countryComponents, setCountryComponents] = useState(<p>Loading...</p>)
@@ -15,21 +16,29 @@ export default function CountryInput({ inputData, ref, highlightedFields, active
     
     useEffect(() => {
         fetchSupportedCountriesData()
-        fetchUserLocationCountryName()
+        initActiveCountry()
     }, [])
 
     useEffect(() => {
         mapCountryComponents()
-        fetchUserLocationCountryName()
+        initActiveCountry()
     }, [supportedCountriesData])
+
+    function initActiveCountry() {
+        if (getCookie(`${id}-country-code`) && getCookie(`${id}-country-name`)) {
+            setActiveCountry({country_code: getCookie(`${id}-country-code`), name: getCookie(`${id}-country-name`)})
+        } else {
+            fetchUserLocationCountryName()
+        }
+    }
 
     async function fetchUserLocationCountryName() {
         const locationData = await getUserLocationData()
         if (!supportedCountries.includes(locationData.countryCode) && supportedCountriesData) {
             const {name, country_code} = supportedCountriesData[0] //default to first supported country if user country is not supported
-            setActiveCountry({name, country_code})
+            updateActiveCountry({name, country_code})
         } else if(supportedCountries.includes(locationData.countryCode)) {
-            setActiveCountry({name: locationData.countryName, country_code: locationData.countryCode})
+            updateActiveCountry({name: locationData.countryName, country_code: locationData.countryCode})
         }
     }
 
@@ -59,6 +68,12 @@ export default function CountryInput({ inputData, ref, highlightedFields, active
 
     function onCountryClick(country) {
         countryInput.current.checked = false
+        updateActiveCountry(country)
+    }
+
+    function updateActiveCountry(country) {
+        document.cookie = `${id}-country-code=${country.country_code};`
+        document.cookie = `${id}-country-name=${country.name};`
         setActiveCountry(country)
     }
 
