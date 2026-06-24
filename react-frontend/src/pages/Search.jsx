@@ -1,4 +1,5 @@
 import { useEffect , useState} from "react"
+import { useSearchParams } from "react-router-dom"
 import Footer from "../elements/general/Footer"
 import Header from "../elements/general/Header"
 import LoginPopup from "../elements/general/AccountPopup/AccountPopup"
@@ -10,26 +11,60 @@ import Item from "../elements/search/Item"
 import { Colors } from "../modules/colors"
 import { Brands } from "../modules/brands"
 import { getProductData } from "../api/productData"
+import { matchesSearchText } from "../modules/searchMatcher"
 import styles from "../styles/search.module.css"
 
 function Search() {
+    const [searchParams] = useSearchParams()
     const [itemsData, setItemsData] = useState([])
-    const [items, setItems] = useState([])
+    const searchText = searchParams.get("searchText") || ""
+    const hasSearchText = searchText.trim().length > 0
+    let searchResultsCount = 0
+    const items = getItemsToShow()
     
     useEffect(() => {
         getItems()
     }, [])
 
-    useEffect(() => {
-        if (itemsData.length === 0) return
-        setItems(itemsData.map(itemData => <Item key={itemData.id} itemData={itemData}/>))
-    }, [itemsData])
-
     async function getItems() {
         const itemsData = await getProductData()
         setItemsData(itemsData)
     }
-    //${styles.itemContainer}
+
+    function getItemsToShow() {
+        if (!hasSearchText) {
+            return itemsData.map(itemData => <Item key={itemData.id} itemData={itemData}/>)
+        }
+
+        const matchingItems = []
+        const otherItems = []
+
+        for (const itemData of itemsData) {
+            if (matchesSearchText(itemData.name, searchText)) {
+                searchResultsCount++
+                matchingItems.push(itemData)
+            } else {
+                otherItems.push(itemData)
+            }
+        }
+
+        const itemsToShow = matchingItems.map(itemData => <Item key={itemData.id} itemData={itemData}/>)
+
+        if (otherItems.length > 0) {
+            itemsToShow.push(
+                <div key="other-products-separator" className={`${styles.searchSeparator} col-12`}>
+                    <span>Other products</span>
+                </div>
+            )
+        }
+
+        return [
+            ...itemsToShow,
+            ...otherItems.map(itemData => <Item key={itemData.id} itemData={itemData} ignoreSearchText/>)
+        ]
+    }
+
+    console.log(searchResultsCount)
     return(
         <>
             <Header/>
@@ -49,6 +84,7 @@ function Search() {
                             </button>
                         </div>
                         <div className={` row`}>
+                            {searchResultsCount === 0 && hasSearchText ? <div className={`${styles.noMatches} col-12`}>No products found for: "{searchText}"</div> : null}
                             {items}
                         </div>
                     </div>

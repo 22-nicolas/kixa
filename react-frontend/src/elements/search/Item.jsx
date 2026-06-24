@@ -1,14 +1,14 @@
-import { useEffect, useState, useContext } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
-import { format, notNil } from "../../modules/utils"
+import { notNil } from "../../modules/utils"
 import { shoeAssetsPath } from "../../modules/utils"
 import { string } from "../../modules/colors"
 import styles from "../../styles/search.module.css"
 import { useCurrency } from "../../customHooks/CurrencyProvider"
-import { getConversionRates } from "../../api/currency"
 import { getProductStock } from "../../api/productData"
+import { matchesSearchText } from "../../modules/searchMatcher"
 
-export default function Item({ itemData }) {
+export default function Item({ itemData, ignoreSearchText = false }) {
 
     const [searchParams] = useSearchParams()
     const navigate = useNavigate()
@@ -83,8 +83,8 @@ export default function Item({ itemData }) {
     function matchParamsWithData(params) {
         const {searchText, min, max, activeColors, activeBrands} = params
         
-        if (searchText && searchText.length != 0) {
-            if(!format(name).includes(format(searchText))) return false
+        if (!ignoreSearchText && searchText && searchText.length != 0) {
+            if(!matchesSearchText(name, searchText)) return false
         }
         
         if (min && !(price >= parseFloat(min) && price <= parseFloat(max))) {
