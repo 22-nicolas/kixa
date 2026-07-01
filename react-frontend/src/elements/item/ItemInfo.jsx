@@ -13,8 +13,8 @@ export default function ItemInfo() {
     const [searchParams, setSearchParams] = useSearchParams()
     const [activeSize, setActiveSize] = useState(getSizeFromParams())
     const [activeColor] = useContext(ActiveColorContext)
-    const {cart, addToCart} = useCart()
-    const {currency, conversionRates} = useCurrency()
+    const { cart, addToCart } = useCart()
+    const { currency, conversionRates } = useCurrency()
     const [convertedPrice, setConvertedPrice] = useState(null)
     const [isInStock, setIsInStock] = useState(false)
 
@@ -22,18 +22,18 @@ export default function ItemInfo() {
         determineIfInStock()
     }, [itemStock])
 
-    useEffect(() => { 
+    useEffect(() => {
         changeSize(getSizeFromParams())
     }, [searchParams, itemStock, activeColor])
 
-    useEffect(() => { 
+    useEffect(() => {
         handlePrice()
     }, [currency, conversionRates])
 
     if (!itemData) return <h1>Loading...</h1>
 
-    const sizeSelectors = itemData.sizes.map(size => <SizeSelector key={size} productId={itemData.id} size={size} sizeState={[activeSize, setActiveSize]} changeSize={changeSize}/>)
-    const variantSelectors = itemData.colors.map((color, i) => <VariantSelector key={i} variant={i}/>)
+    const sizeSelectors = itemData.sizes.map(size => <SizeSelector key={size} productId={itemData.id} size={size} sizeState={[activeSize, setActiveSize]} changeSize={changeSize} />)
+    const variantSelectors = itemData.colors.map((color, i) => <VariantSelector key={i} variant={i} />)
 
     const [show] = useState(window.visualViewport.width > 992)
 
@@ -83,11 +83,11 @@ export default function ItemInfo() {
         setConvertedPrice(null)
     }
 
-    return(
+    return (
         <div className={styles.itemInfo}>
             <div>
                 <h1>{itemData.name}</h1>
-                <p>{itemData.description}</p>  
+                <p>{itemData.description}</p>
                 <div className={styles.colorways}>
                     {variantSelectors}
                 </div>
@@ -96,17 +96,17 @@ export default function ItemInfo() {
                     {sizeSelectors}
                 </div>
                 <p className={styles.price}>{convertedPrice ? convertedPrice + " " + currency : "Please select a size to see the respective price."}</p>
-                <div onMouseDown={() => isInStock ?  addToCart(itemData.id, activeColor, activeSize) : null} className={`${styles.addCartButton} ${isInStock ? "" : styles.outOfStock}`}>
+                <div onMouseDown={() => isInStock ? addToCart(itemData.id, activeColor, activeSize) : null} className={`${styles.addCartButton} ${isInStock ? "" : styles.outOfStock}`}>
                     <p>{isInStock ? "Add to cart" : "Out of stock"}</p>
-                    <img src={cart_icon}/>
+                    <img src={cart_icon} />
                 </div>
             </div>
-        </div> 
+        </div>
     )
 }
 
 function SizeSelector({ productId, size, sizeState, changeSize }) {
-    const {cart} = useCart()
+    const { cart } = useCart()
     const [itemStock] = useContext(ItemStockContext)
     const [activeColor] = useContext(ActiveColorContext)
     const [isInStock, setIsInStock] = useState(false)
@@ -121,7 +121,7 @@ function SizeSelector({ productId, size, sizeState, changeSize }) {
 
 
     useEffect(() => {
-        if(!isInStock) {
+        if (!isInStock) {
             const tooltip = initTooltip()
             return () => tooltip?.dispose()
         }
@@ -151,13 +151,13 @@ function SizeSelector({ productId, size, sizeState, changeSize }) {
     }
 
     return <div ref={tooltipRef}
-                className={`${styles.size} ${isActive ? styles.active : ""} ${isInStock ? "" : styles.outOfStock} col-5 col-lg-3 m-1 p-1`} 
-                onClick={isInStock ? handleClick : undefined}
-                data-bs-toggle="tooltip" data-bs-placement="top"
-                data-bs-custom-class="out-of-stock-tooltip"
-                data-bs-title="out of stock">
-                EU {size}
-            </div>
+        className={`${styles.size} ${isActive ? styles.active : ""} ${isInStock ? "" : styles.outOfStock} col-5 col-lg-3 m-1 p-1`}
+        onClick={isInStock ? handleClick : undefined}
+        data-bs-toggle="tooltip" data-bs-placement="top"
+        data-bs-custom-class="out-of-stock-tooltip"
+        data-bs-title="out of stock">
+        EU {size}
+    </div>
 }
 
 function VariantSelector({ variant }) {
@@ -165,9 +165,9 @@ function VariantSelector({ variant }) {
     const [activeColor, changeActiveColor] = useContext(ActiveColorContext)
     const isActive = activeColor === variant
 
-    return(
+    return (
         <div className={`${styles.colorway} ${isActive ? styles.active : ""}`} onClick={() => changeActiveColor(variant)}>
-            <img src={`${shoeAssetsPath}/${itemData.id}/${itemData.id}_${variant+1}_1.png`}/>
+            <img src={`${shoeAssetsPath}/${itemData.id}/${itemData.id}_${variant + 1}_1.png`} />
         </div>
     )
 }

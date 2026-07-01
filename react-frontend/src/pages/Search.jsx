@@ -64,7 +64,6 @@ function Search() {
         ]
     }
 
-    console.log(searchResultsCount)
     return(
         <>
             <Header/>

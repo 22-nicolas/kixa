@@ -34,7 +34,7 @@ export default function Item() {
     }, [activeColor])
 
     useEffect(() => {
-        const paramsColor = Number(params.get("c"))
+        const paramsColor = Number(params.get("v"))
         if (paramsColor !== null && paramsColor !== undefined) {
             setActiveColor(paramsColor)
         }
@@ -64,46 +64,46 @@ export default function Item() {
         setActiveColor(color)
     }
 
-    return(
+    return (
         <>
-            <Header/>
-            <LoginPopup/>
-                <Container>
-                    <ItemStockContext.Provider value={[itemStock]}>
-                        <ItemDataContext.Provider value={[itemData, setItemData]}>
-                                <ActiveColorContext.Provider value={[activeColor, setActiveColor]}>
-                                <div className={styles.productContainer}>
-                                    {itemData ? <ItemView/> : <LoadingItemView/>}
-                                    {itemData ? <ItemInfo/> : <h1>Loading...</h1>}
-                                </div>
-                            </ActiveColorContext.Provider>
-                        </ItemDataContext.Provider>
-                    </ItemStockContext.Provider>
-                </Container>
-            <Footer/>
+            <Header />
+            <LoginPopup />
+            <Container>
+                <ItemStockContext.Provider value={[itemStock]}>
+                    <ItemDataContext.Provider value={[itemData, setItemData]}>
+                        <ActiveColorContext.Provider value={[activeColor, setActiveColor]}>
+                            <div className={styles.productContainer}>
+                                {itemData ? <ItemView /> : <LoadingItemView />}
+                                {itemData ? <ItemInfo /> : <h1>Loading...</h1>}
+                            </div>
+                        </ActiveColorContext.Provider>
+                    </ItemDataContext.Provider>
+                </ItemStockContext.Provider>
+            </Container>
+            <Footer />
         </>
     )
 }
 
 export function LoadingItemView() {
-    return(
+    return (
         <div className={styles.itemView}>
             <LoadingSlider />
             <div className={styles.thumbnails}>
-                <div className={styles.thumbnail}><img src={loadingGif} alt="Loading..."/></div>
+                <div className={styles.thumbnail}><img src={loadingGif} alt="Loading..." /></div>
             </div>
         </div>
     )
 }
 
 function LoadingSlider() {
-    return(
+    return (
         <div className={styles.sliderContainer}>
             <div className={styles.slider}>
-                <img src={loadingGif} className={styles.placeholder}/>
+                <img src={loadingGif} className={styles.placeholder} />
                 <div className={styles.track}>
                     <div className={styles.slide}>
-                        <img src={loadingGif} alt="Loading..."/>
+                        <img src={loadingGif} alt="Loading..." />
                     </div>
                 </div>
             </div>

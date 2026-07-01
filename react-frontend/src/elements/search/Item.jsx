@@ -13,20 +13,19 @@ export default function Item({ itemData, ignoreSearchText = false }) {
     const [searchParams] = useSearchParams()
     const navigate = useNavigate()
     const [visible, setVisible] = useState(true)
-    const {id, name, colors, brand, variants} = itemData
+    const { id, name, colors, brand, variants } = itemData
     const [itemStock, setItemStock] = useState()
     const [price, setPrice] = useState()
     const [isInStock, setIsInStock] = useState(false)
-    const [colorway, setColorway] = useState({selectorIndex: 0, colorId: colors[0]})
-    const colorways = colors.map((colorId, selectorIndex) => <ColorwaySelector
-                                                key={selectorIndex}
-                                                selectorIndex={selectorIndex}
-                                                color={colorId}
-                                                id={id}
-                                                colorway={colorway}
-                                                onClick={setColorway}/>)
-    const {currency, conversionRates} = useCurrency()
-
+    const [variant, setVariant] = useState(0)
+    const variantSelectors = Array.from({ length: variants }, (_, i) => <VariantSelector
+        key={i}
+        variant={i}
+        colors={colors[i]}
+        id={id}
+        variantState={variant}
+        onClick={setVariant} />)
+    const { currency, conversionRates } = useCurrency()
 
     useEffect(() => {
         getStock()
@@ -43,12 +42,12 @@ export default function Item({ itemData, ignoreSearchText = false }) {
 
     useEffect(() => {
         const params = getParams()
-        
+
         const isVisible = matchParamsWithData(params)
         setVisible(isVisible)
         if (!isVisible) return
 
-        selectSearchedColorway(params)
+        selectSearchedColor(params)
     }, [searchParams, price])
 
     async function getStock() {
@@ -68,7 +67,7 @@ export default function Item({ itemData, ignoreSearchText = false }) {
 
         const stockSortedByPrice = [...itemStock].sort((a, b) => a.price - b.price)
 
-        if(!notNil(stockSortedByPrice)) return
+        if (!notNil(stockSortedByPrice)) return
 
         const price = stockSortedByPrice[0]?.price
 
@@ -81,35 +80,33 @@ export default function Item({ itemData, ignoreSearchText = false }) {
     }
 
     function matchParamsWithData(params) {
-        const {searchText, min, max, activeColors, activeBrands} = params
-        
+        const { searchText, min, max, activeColors, activeBrands } = params
+
         if (!ignoreSearchText && searchText && searchText.length != 0) {
-            if(!matchesSearchText(name, searchText)) return false
+            if (!matchesSearchText(name, searchText)) return false
         }
-        
+
         if (min && !(price >= parseFloat(min) && price <= parseFloat(max))) {
-            console.log({message: "doesn't match price",price: price})
+            console.log({ message: "doesn't match price", price: price })
             return false
         }
-        
-        if (activeColors && !activeColors.some(activeColor => colors.includes(Number(activeColor)))) {
+
+        if (activeColors && !activeColors.some(activeColor => Object.values(colors).some(variant => variant.includes(activeColor)))) {
             return false
         }
-        
+
         if (activeBrands && !activeBrands.includes(String(brand))) return false
         return true
     }
 
-    function selectSearchedColorway(params) {
+    function selectSearchedColor(params) {
         if (!params.activeColors) {
-            setColorway({selectorIndex: 0, colorId: colors[0]});
+            setVariant(0);
         } else {
-            for (let i = 0; i < variants; i++) {
-                if (params.activeColors.includes(String(colors[i]))) { 
-                    setColorway({selectorIndex: i, colorId: colors[i]});
-                    return
-                }
-            }
+            const key = Number(Object.entries(colors).find(([_, variant]) =>
+                params.activeColors.some(activeColor => variant.includes(activeColor))
+            )?.[0])
+            setVariant(key)
         }
     }
 
@@ -120,45 +117,45 @@ export default function Item({ itemData, ignoreSearchText = false }) {
         const max = searchParams.get("max")
         let colors = searchParams.get("colors")
         let brands = searchParams.get("brands")
-        
+
         //format
         if (colors) {
-            colors = colors.split("a")
+            colors = colors.split("1")
         }
         if (brands) {
-            brands = brands.split("a")
+            brands = brands.split("1")
         }
-        
-        return {searchText: searchText, min: min, max: max, activeColors: colors, activeBrands: brands}
+
+        return { searchText: searchText, min: min, max: max, activeColors: colors, activeBrands: brands }
     }
 
     function redirect() {
         const params = new URLSearchParams
         params.set("id", id)
-        params.set("c", colorway.selectorIndex)
+        params.set("v", variant)
         navigate("/item?" + params)
     }
-    
-    return(
+
+    return (
         <div className={`${styles.item} ${!visible ? styles.hidden : ""} col-6 col-lg-3`} id={id}>
             <div className="href" onClick={redirect}>
                 <div className={styles.imgContainer}>
-                    <img  src={`${shoeAssetsPath}/${id}/${id}_${colorway.selectorIndex + 1}_1.png`} alt={name} />
+                    <img src={`${shoeAssetsPath}/${id}/${id}_${variant + 1}_1.png`} alt={name} />
                 </div>
                 <p className={styles.name}>{name}</p>
                 <p className={styles.price}>{isInStock ? `${price ? price : "..."} ${currency}` : "Out of stock"}</p>
             </div>
             <div className={styles.colorways}>
-                {colorways}
+                {variantSelectors}
             </div>
         </div>
     )
 }
 
-function ColorwaySelector({ selectorIndex, colorId, onClick, id, colorway }) {
-    return(
-        <div className={`${styles.colorway} ${(selectorIndex == colorway.selectorIndex) ? styles.active : ""}`} onClick={() => onClick({selectorIndex: selectorIndex, colorId: colorId})}>
-            <img src={`${shoeAssetsPath}/${id}/${id}_${selectorIndex+1}_1.png`} alt={"colorway " + string(colorId)}/>
+function VariantSelector({ variant, colors, onClick, id, variantState }) {
+    return (
+        <div className={`${styles.colorway} ${(variant == variantState) ? styles.active : ""}`} onClick={() => onClick(variant)}>
+            <img src={`${shoeAssetsPath}/${id}/${id}_${variant + 1}_1.png`} alt={"variant " + variant} />
         </div>
     )
 }

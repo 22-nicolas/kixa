@@ -9,11 +9,11 @@ import { useToasts } from "../../customHooks/CustomToastsProvider"
 
 
 export default function CartItem({ itemData }) {
-    const {cart, removeFromCart, updateCart} = useCart()
-    const {id, name, color, size, quantity} = itemData
+    const { cart, removeFromCart, updateCart } = useCart()
+    const { id, name, color, size, quantity } = itemData
     const [price, setPrice] = useState(itemData.price)
-    const {currency, conversionRates} = useCurrency()
-    const [stockStatus, setStockStatus] = useState({stockState: stockStates.inStock, productStock: null})
+    const { currency, conversionRates } = useCurrency()
+    const [stockStatus, setStockStatus] = useState({ stockState: stockStates.inStock, productStock: null })
     const { addToast } = useToasts()
 
     useEffect(() => {
@@ -45,25 +45,25 @@ export default function CartItem({ itemData }) {
             })
 
             // 2. Perform the state update without nested side effects
-            updateCart(prevCart => prevCart.map(item => 
-                (item.id === id && item.color === color && item.size === size) 
-                    ? { ...item, quantity: status.productStock } 
+            updateCart(prevCart => prevCart.map(item =>
+                (item.id === id && item.color === color && item.size === size)
+                    ? { ...item, quantity: status.productStock }
                     : item
             ));
         }
     }
 
-    return(
+    return (
         <div key={`${id}${color}${size}`} className={`${styles.item} ${stockStatus.stockState === stockStates.outOfStock ? "outOfStock" : ""}`}>
             <div className={"d-flex align-items-top justify-content-start"}>
-                <div className={`${styles.imgContainer}`}><img src={`${shoeAssetsPath}/${id}/${id}_${color + 1}_1.png`}/></div>
+                <div className={`${styles.imgContainer}`}><img src={`${shoeAssetsPath}/${id}/${id}_${color + 1}_1.png`} /></div>
                 <div className="row justify-content-start ms-3 w-100">
                     <div className="item-info col-12 col-lg-6">
                         <Link to={`/item?id=${id}&c=${color}&size=${size}`}>{name}</Link>
                         <p className="color-size">{color}, EU {size}</p>
                     </div>
                     <p className="item-qty col-4 col-lg-3">Qty {quantity}</p>
-                    <p className="price col-4 col-lg-3">{stockStatus.stockState === stockStates.outOfStock ? "out of stock" : `${(price*quantity).toFixed(2)} ${currency}`}</p>
+                    <p className="price col-4 col-lg-3">{stockStatus.stockState === stockStates.outOfStock ? "out of stock" : `${(price * quantity).toFixed(2)} ${currency}`}</p>
                 </div>
             </div>
             <p className={styles.removeBtn} onMouseDown={() => removeFromCart(id, color, size)}>Remove</p>

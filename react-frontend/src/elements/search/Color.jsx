@@ -8,17 +8,13 @@ export default function Color({ colors }) {
     const [activeColors, setActiveColors] = useState([])
     const [searchParams] = useSearchParams()
     const navigate = useNavigate()
-    
-    colors = Object.entries(colors)
+
     const colorSelectorsComponents = colors.map(color => {
-        const colorId = color[1]
-        const colorName = color[0]
         return <ColorSelector 
-                    key={colorId} 
-                    colorName={colorName} 
+                    key={color} 
+                    color={color} 
                     activeColors={activeColors} 
-                    colorId={colorId} 
-                    onChange={(e) => applyColors(colorId, e.target.checked)}/>
+                    onChange={(e) => applyColors(color, e.target.checked)}/>
     })
 
     useEffect(() => {
@@ -27,14 +23,14 @@ export default function Color({ colors }) {
 
     useEffect(() => {
         //forward searchParams
-        searchParams.set("colors", activeColors.join("a")) 
+        searchParams.set("colors", activeColors.join("1")) 
         navigate("/search?" + searchParams, { replace: true })
     }, [activeColors])
 
-    function applyColors(colorId, checked) {
+    function applyColors(color, checked) {
         setActiveColors(prev =>{
-            if (checked) return [...prev, colorId] //add colorId
-            return prev.filter(id => id !== String(colorId)) //remove colorId
+            if (checked) return [...prev, color] //add color
+            return prev.filter(id => id !== String(color)) //remove color
         })
     }
 
@@ -43,7 +39,7 @@ export default function Color({ colors }) {
         
         if (!colors) return
 
-        colors = colors.split("a")
+        colors = colors.split("1")
 
         setActiveColors(colors)
     }
@@ -61,18 +57,18 @@ Color.PropTypes = {
     colors: PropTypes.object.isRequired
 }
 
-function ColorSelector({ colorId, colorName, activeColors, onChange }) {
+function ColorSelector({ color, activeColors, onChange }) {
     const span = useRef()
     useEffect(() => {
         //color in span
         span.current.style.backgroundColor = span.current.parentElement.htmlFor;
     }, [])
 
-    const isActive = activeColors.includes(String(colorId))
+    const isActive = activeColors.includes(color)
 
     return(
-        <label htmlFor={colorName}>
-            <input type="checkbox" id={colorName} checked={isActive} onChange={onChange}/>
+        <label htmlFor={color}>
+            <input type="checkbox" id={color} checked={isActive} onChange={onChange}/>
             <span ref={span}></span>
         </label>
     )
