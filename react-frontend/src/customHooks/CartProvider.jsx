@@ -44,7 +44,8 @@ export default function CartProvider({ children }) {
             return
         }
 
-        const {name} = await getProductById(id)
+        const product = await getProductById(id)
+        const name = product?.name || "Shoe"
         /*const stock = await getProductStock(id, color, size)
         const price = Number(stock?.price)*/
 
@@ -104,34 +105,49 @@ export default function CartProvider({ children }) {
     }
 
     const resolveCart = async () => {
-        const response = await apiFetch(`${API_BASE_URL}/cart/resolve`, {
-            method: "POST",
-            headers: {
-            "Content-Type": "application/json"
-            },
-            body: JSON.stringify(cart)
-        });
+        try {
+            const response = await apiFetch(`${API_BASE_URL}/cart/resolve`, {
+                method: "POST",
+                headers: {
+                "Content-Type": "application/json"
+                },
+                body: JSON.stringify(cart)
+            });
 
-        const resolvedCart = await response.json();
+            if (!response.ok) {
+                return cart;
+            }
 
-        return resolvedCart;
+            const resolvedCart = await response.json();
+            return Array.isArray(resolvedCart) ? resolvedCart : cart;
+        } catch {
+            return cart;
+        }
     }
 
     const validateCart = async () => {
-        const response = await apiFetch(`${API_BASE_URL}/cart/validate-cart`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({cart, currency})
-        });
-        
-        if (!response.ok) {
-            const errorData = await response.json();
-            return {msg: errorData?.error || "Failed to validate cart", success: false}
-        }
+        try {
+            const response = await apiFetch(`${API_BASE_URL}/cart/validate-cart`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({cart, currency})
+            });
+            
+            if (response.status === 503) {
+                return {msg: "Database is currently offline or waking up. Please wait 30 seconds and try again.", success: false};
+            }
 
-        return {success: true};
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                return {msg: errorData?.error || "Failed to validate cart", success: false}
+            }
+
+            return {success: true};
+        } catch (err) {
+            return {msg: "Database is currently offline or waking up. Please wait 30 seconds and try again.", success: false};
+        }
     }
 
     const checkout = async (shippingCountry) => {

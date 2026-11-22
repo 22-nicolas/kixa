@@ -54,6 +54,10 @@ export default function Login() {
                     setHighlightedFields(["password"])
                     setErrorMessage("Incorrect password!")
                     break;
+                case "DATABASE_UNAVAILABLE":
+                    setHighlightedFields([])
+                    setErrorMessage("Database is currently waking up or offline. Please wait 30 seconds and try again.")
+                    break;
                 default:
                     setErrorMessage("An error occurred while trying to login. Please try again later.")
             }

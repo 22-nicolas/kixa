@@ -73,8 +73,12 @@ export default function Register() {
                     setHighlightedFields(["password", "repeat_password"])
                     setErrorMessage("Passwords do not match!")
                     break;
+                case "DATABASE_UNAVAILABLE":
+                    setHighlightedFields([])
+                    setErrorMessage("Database is currently waking up or offline. Please wait 30 seconds and try again.")
+                    break;
                 default:
-                    setErrorMessage("An error occurred while trying to login. Please try again later.")
+                    setErrorMessage("An error occurred while trying to register. Please try again later.")
             }
         }
 

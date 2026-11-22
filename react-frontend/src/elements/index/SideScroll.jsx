@@ -38,9 +38,16 @@ function Item({ link, imgSrc }) {
     }, [imgSrc])
 
     async function getHeadline() {
-        const id = await getProductIdFromSrc(imgSrc)
-        const {name} = await getProductById(id)
-        setHeadline(name)
+        try {
+            const id = await getProductIdFromSrc(imgSrc);
+            if (!id) return;
+            const product = await getProductById(id);
+            if (product && product.name) {
+                setHeadline(product.name);
+            }
+        } catch (err) {
+            console.warn("Could not load headline for shoe:", err);
+        }
     }
 
     return(

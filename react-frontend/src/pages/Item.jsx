@@ -1,6 +1,8 @@
-import { createContext, useEffect, useState } from "react"
+import { createContext, useEffect, useState, useCallback } from "react"
 import { getProductById, getProductStock } from "../api/productData"
 import { useNavigate, useSearchParams } from "react-router-dom"
+import { useDbStatus } from "../customHooks/DbStatusProvider"
+import { subscribeToDbReconnected, unsubscribeFromDbReconnected } from "../modules/dbStatus"
 
 import Container from "../elements/general/Container"
 import ItemView from "../elements/item/ItemView"
@@ -20,14 +22,30 @@ export default function Item() {
     const [itemData, setItemData] = useState()
     const [activeColor, setActiveColor] = useState(0)
     const [itemStock, setItemStock] = useState()
+    const [loadFailed, setLoadFailed] = useState(false)
     const [params, setSearchParams] = useSearchParams()
+    const { isConnected, checkConnection, isChecking } = useDbStatus()
 
     const itemId = params.get("id")
 
+    const loadItem = useCallback(async () => {
+        if (!itemId) return;
+        setLoadFailed(false);
+        const data = await getProductById(itemId);
+        if (data && data.id) {
+            setItemData(data);
+            const stock = await getProductStock(itemId);
+            setItemStock(stock);
+        } else {
+            setLoadFailed(true);
+        }
+    }, [itemId]);
+
     useEffect(() => {
-        getItemData(itemId)
-        getItemStock(itemId)
-    }, [itemId])
+        loadItem();
+        subscribeToDbReconnected(loadItem);
+        return () => unsubscribeFromDbReconnected(loadItem);
+    }, [loadItem])
 
     useEffect(() => {
         console.log(activeColor)
@@ -73,8 +91,39 @@ export default function Item() {
                     <ItemDataContext.Provider value={[itemData, setItemData]}>
                         <ActiveColorContext.Provider value={[activeColor, setActiveColor]}>
                             <div className={styles.productContainer}>
-                                {itemData ? <ItemView /> : <LoadingItemView />}
-                                {itemData ? <ItemInfo /> : <h1>Loading...</h1>}
+                                {itemData ? (
+                                    <>
+                                        <ItemView />
+                                        <ItemInfo />
+                                    </>
+                                ) : (!isConnected || loadFailed) ? (
+                                    <div className="db-offline-card w-100">
+                                        <div className="mb-3">
+                                            <span className="db-status-pulse" />
+                                        </div>
+                                        <h4>Unable to load product</h4>
+                                        <div className="d-flex justify-content-center">
+                                            <p className="text-muted text-center me-0">
+                                                The database is currently offline or waking up.
+                                            </p>
+                                        </div>
+                                        <button
+                                            className="btn btn-dark"
+                                            onClick={async () => {
+                                                await checkConnection();
+                                                loadItem();
+                                            }}
+                                            disabled={isChecking}
+                                        >
+                                            {isChecking ? "Checking..." : "Retry"}
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <LoadingItemView />
+                                        <h1>Loading...</h1>
+                                    </>
+                                )}
                             </div>
                         </ActiveColorContext.Provider>
                     </ItemDataContext.Provider>

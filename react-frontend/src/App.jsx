@@ -11,6 +11,8 @@ import CartProvider from "./customHooks/CartProvider.jsx"
 import CurrencyProvier from "./customHooks/CurrencyProvider.jsx"
 import CustomToastsProvider from "./customHooks/CustomToastsProvider.jsx"
 import ErrorToasts from "./elements/general/ErrorToasts.jsx"
+import DbStatusProvider from "./customHooks/DbStatusProvider.jsx"
+import DbStatusBanner from "./elements/general/DbStatusBanner.jsx"
 import { ScrollToTop } from "./customHooks/ScrollToTop.jsx"
 
 export const CartContext = createContext()
@@ -20,20 +22,23 @@ function App() {
   return (
     <CustomToastsProvider>
       <ErrorToasts />
-      <CurrencyProvier>
-        <CartProvider>
-            <Router>
-              <ScrollToTop />
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/search" element={<Search />} />
-                <Route path="/item" element={<Item />} />
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/success" element={<Success />} />
-              </Routes>
-            </Router>
-        </CartProvider>
-      </CurrencyProvier>
+      <DbStatusProvider>
+        <DbStatusBanner />
+        <CurrencyProvier>
+          <CartProvider>
+              <Router>
+                <ScrollToTop />
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/search" element={<Search />} />
+                  <Route path="/item" element={<Item />} />
+                  <Route path="/cart" element={<Cart />} />
+                  <Route path="/success" element={<Success />} />
+                </Routes>
+              </Router>
+          </CartProvider>
+        </CurrencyProvier>
+      </DbStatusProvider>
     </CustomToastsProvider>
   )
 }

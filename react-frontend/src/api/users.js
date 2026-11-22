@@ -4,59 +4,79 @@ import { apiFetch } from "./apiFetch";
 const API_BASE_URL = getBaseApiUrl();
 
 export async function registerUser(userData) {
-    const response = await apiFetch(`${API_BASE_URL}/users/register`, {
-        method: "POST",
-        headers: {
-        "Content-Type": "application/json"
-        },
-        body: JSON.stringify(userData)
-    });
-    
-    if (response.ok) return {ok: true}
+    try {
+        const response = await apiFetch(`${API_BASE_URL}/users/register`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(userData)
+        });
+        
+        if (response.ok) return {ok: true};
 
-    if (response.status === 500) {
-        return {error: "Internal Server error"}
+        if (response.status === 503) {
+            return {error: "DATABASE_UNAVAILABLE"};
+        }
+
+        if (response.status === 500) {
+            return {error: "Internal Server error"};
+        }
+        
+        const data = await response.json();
+        return data;
+    } catch {
+        return {error: "DATABASE_UNAVAILABLE"};
     }
-    
-    const data = await response.json();
-    return data;
 }
 
 export async function loginUser(email, password) {
-    const userData = {email: email, password: password}
-    const response = await apiFetch(`${API_BASE_URL}/users/login`, {
-        method: "POST",
-        headers: {
-        "Content-Type": "application/json"
-        },
-        body: JSON.stringify(userData)
-    });
+    try {
+        const userData = {email: email, password: password};
+        const response = await apiFetch(`${API_BASE_URL}/users/login`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(userData)
+        });
 
-    if (response.ok) {
+        if (response.ok) {
+            const data = await response.json();
+            const sessionId = data.sessionId;
+            document.cookie = `sessionId=${sessionId}`;
+            return {ok: true, sessionId: sessionId};
+        }
+        
+        if (response.status === 503) {
+            return {error: "DATABASE_UNAVAILABLE"};
+        }
+
+        if (response.status === 500) {
+            return {error: "Internal Server error"};
+        }
+        
         const data = await response.json();
-        const sessionId = data.sessionId;
-        document.cookie = `sessionId=${sessionId}`;
-        return {ok: true, sessionId: sessionId}
+        return data;
+    } catch {
+        return {error: "DATABASE_UNAVAILABLE"};
     }
-    
-    if (response.status === 500) {
-        return {error: "Internal Server error"}
-    }
-    
-    const data = await response.json();
-    return data;
 }
 
 export async function getUserDataWithSession(sessionId) {
-    const response = await apiFetch(`${API_BASE_URL}/users/sessions/${sessionId}`, {
-        method: "GET",
-        headers: {
-        "Content-Type": "application/json"
-        }
-    });
+    try {
+        const response = await apiFetch(`${API_BASE_URL}/users/sessions/${sessionId}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
 
-    if(!response.ok) return
+        if(!response.ok) return;
 
-    const userData = await response.json();
-    return userData;
+        const userData = await response.json();
+        return userData;
+    } catch {
+        return null;
+    }
 }

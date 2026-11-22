@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useCart } from "../../customHooks/CartProvider";
+import { subscribeToDbReconnected, unsubscribeFromDbReconnected } from "../../modules/dbStatus";
 import styles from "../../styles/cart.module.css"
 import CartItem from "./CartItem";
 
@@ -9,10 +10,13 @@ export default function Cart() {
 
     useEffect(() => {
         loadItems()
+        subscribeToDbReconnected(loadItems);
+        return () => unsubscribeFromDbReconnected(loadItems);
     }, [cart])
 
     async function loadItems() {
         const resolvedCart = await resolveCart()
+        if (!Array.isArray(resolvedCart)) return;
 
         const items = resolvedCart.map(itemData => {
             const key = `${itemData.id}${itemData.color}${itemData.size}`

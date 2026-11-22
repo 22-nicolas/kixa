@@ -5,6 +5,7 @@ import { supportedCountries } from "shared";
 import { createOrder, createOrderId } from "../../sql/orders.js";
 import { getConversionRates } from "../currency.js";
 import { getShippingCost } from "../../sql/shipping.js";
+import { isDbConnectionError } from "../../sql/db.js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -65,6 +66,12 @@ router.post("/", async (req, res) => {
         res.json({ url: session.url });
     } catch (error) {
         console.error("Stripe session error:", error);
+        if (isDbConnectionError(error)) {
+            return res.status(503).json({
+                error: "DATABASE_UNAVAILABLE",
+                message: "Database is currently offline or waking up. Please try again shortly."
+            });
+        }
         res.status(500).json({ error: "Internal server error" });
     }
 });

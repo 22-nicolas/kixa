@@ -1,4 +1,4 @@
-import { useEffect , useState} from "react"
+import { useEffect, useState } from "react"
 import { useSearchParams } from "react-router-dom"
 import Footer from "../elements/general/Footer"
 import Header from "../elements/general/Header"
@@ -12,28 +12,39 @@ import { Colors } from "../modules/colors"
 import { Brands } from "../modules/brands"
 import { getProductData } from "../api/productData"
 import { matchesSearchText } from "../modules/searchMatcher"
+import { subscribeToDbReconnected, unsubscribeFromDbReconnected } from "../modules/dbStatus"
+import { useDbStatus } from "../customHooks/DbStatusProvider"
 import styles from "../styles/search.module.css"
 
 function Search() {
     const [searchParams] = useSearchParams()
     const [itemsData, setItemsData] = useState([])
+    const [isLoading, setIsLoading] = useState(true)
+    const { isConnected, checkConnection, isChecking } = useDbStatus()
     const searchText = searchParams.get("searchText") || ""
     const hasSearchText = searchText.trim().length > 0
     let searchResultsCount = 0
     const items = getItemsToShow()
-    
+
     useEffect(() => {
         getItems()
+        subscribeToDbReconnected(getItems)
+        return () => unsubscribeFromDbReconnected(getItems)
     }, [])
 
     async function getItems() {
-        const itemsData = await getProductData()
-        setItemsData(itemsData)
+        setIsLoading(true)
+        try {
+            const data = await getProductData()
+            setItemsData(Array.isArray(data) ? data : [])
+        } finally {
+            setIsLoading(false)
+        }
     }
 
     function getItemsToShow() {
         if (!hasSearchText) {
-            return itemsData.map(itemData => <Item key={itemData.id} itemData={itemData}/>)
+            return itemsData.map(itemData => <Item key={itemData.id} itemData={itemData} />)
         }
 
         const matchingItems = []
@@ -48,7 +59,7 @@ function Search() {
             }
         }
 
-        const itemsToShow = matchingItems.map(itemData => <Item key={itemData.id} itemData={itemData}/>)
+        const itemsToShow = matchingItems.map(itemData => <Item key={itemData.id} itemData={itemData} />)
 
         if (otherItems.length > 0) {
             itemsToShow.push(
@@ -60,20 +71,20 @@ function Search() {
 
         return [
             ...itemsToShow,
-            ...otherItems.map(itemData => <Item key={itemData.id} itemData={itemData} ignoreSearchText/>)
+            ...otherItems.map(itemData => <Item key={itemData.id} itemData={itemData} ignoreSearchText />)
         ]
     }
 
-    return(
+    return (
         <>
-            <Header/>
-            <LoginPopup/>
+            <Header />
+            <LoginPopup />
 
             <Container>
                 <div className={styles.searchUi}>
                     <div className={`${styles.filters} collapse d-xl-block`} id="filtersTogglerButton">
-                        <Pricing/>
-                        <Color colors={Colors}/>
+                        <Pricing />
+                        <Color colors={Colors} />
                         <Brand brands={Brands} />
                     </div>
                     <div>
@@ -83,15 +94,39 @@ function Search() {
                             </button>
                         </div>
                         <div className={` row`}>
-                            {searchResultsCount === 0 && hasSearchText ? <div className={`${styles.noMatches} col-12`}>No products found for: "{searchText}"</div> : null}
-                            {items}
+                            {!isConnected && itemsData.length === 0 ? (
+                                <div className="db-offline-card col-12">
+                                    <div className="mb-3">
+                                        <span className="db-status-pulse" />
+                                    </div>
+                                    <h5>Database is offline or waking up</h5>
+                                    <p className="text-muted">
+                                        Free hosting databases spin down after inactivity.
+                                    </p>
+                                    <button
+                                        className="btn btn-dark"
+                                        onClick={async () => {
+                                            await checkConnection();
+                                            getItems();
+                                        }}
+                                        disabled={isChecking || isLoading}
+                                    >
+                                        {isChecking || isLoading ? "Checking..." : "Retry Connection"}
+                                    </button>
+                                </div>
+                            ) : (
+                                <>
+                                    {searchResultsCount === 0 && hasSearchText ? <div className={`${styles.noMatches} col-12`}>No products found for: "{searchText}"</div> : null}
+                                    {items}
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>
             </Container>
-            
 
-            <Footer/>
+
+            <Footer />
         </>
     )
 }

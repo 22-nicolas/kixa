@@ -7,6 +7,7 @@ import { useToasts } from "../../customHooks/CustomToastsProvider";
 import { useNavigate } from "react-router-dom";
 import CountryInput from "../general/AccountPopup/FormInputs/CountryInput";
 import { getShippingCost } from "../../api/shipping";
+import { subscribeToDbReconnected, unsubscribeFromDbReconnected } from "../../modules/dbStatus";
 
 export default function Reciept() {
     const {cart, getQuantity, resolveCart, checkout} = useCart()
@@ -21,6 +22,8 @@ export default function Reciept() {
     useEffect(() => {
         setQuantity(getQuantity())
         loadPrices()
+        subscribeToDbReconnected(loadPrices);
+        return () => unsubscribeFromDbReconnected(loadPrices);
     }, [cart, currency, conversionRates])
 
     useEffect(() => {
@@ -29,6 +32,7 @@ export default function Reciept() {
 
     async function loadPrices() {
         const resolvedCart = await resolveCart()
+        if (!Array.isArray(resolvedCart)) return;
         
         const totalPrice = resolvedCart.reduce((sum, item) => {
             if (item.price && item.quantity) {
@@ -42,9 +46,11 @@ export default function Reciept() {
 
     async function loadShipping() {
         if (!activeCountry) return
-        const { cost } = await getShippingCost(activeCountry.country_code)
-        const convertedShippingCost = convertPrice(cost)
-        setShipping(Number(convertedShippingCost.toFixed(2)))
+        const res = await getShippingCost(activeCountry.country_code)
+        if (res && res.cost !== undefined) {
+            const convertedShippingCost = convertPrice(res.cost)
+            setShipping(Number(convertedShippingCost.toFixed(2)))
+        }
     }
     
     function convertPrice(price) {

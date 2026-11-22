@@ -22,13 +22,14 @@ export function isVideo(src) {
 };
 
 export async function getProductIdFromSrc(src) {
-    const products = await getProductData()
+    const products = await getProductData();
+    if (!Array.isArray(products)) return null;
     for (const { id } of products) {
         if (src.includes(id)) {
-            return id
+            return id;
         }
     }
-    return null
+    return null;
 }
 
 const API_URL_PRODUCTION = import.meta.env.VITE_API_URL_PRODUCTION;

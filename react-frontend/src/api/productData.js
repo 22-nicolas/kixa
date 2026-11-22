@@ -4,23 +4,35 @@ import { apiFetch } from "./apiFetch";
 const API_BASE_URL = getBaseApiUrl();
 
 export async function getProductData() {
-    const response = await apiFetch(`${API_BASE_URL}/products`);
-    const products = await response.json();
-    return products;
+    try {
+        const response = await apiFetch(`${API_BASE_URL}/products`);
+        if (!response.ok) return [];
+        const products = await response.json();
+        return Array.isArray(products) ? products : [];
+    } catch (err) {
+        console.warn("Failed to fetch product data:", err.message);
+        return [];
+    }
 }
 
-export async function  getProductById(id) {
-    const response = await apiFetch(`${API_BASE_URL}/products/${id}`);
-    const product = await response.json();
-    return product;
+export async function getProductById(id) {
+    if (!id) return null;
+    try {
+        const response = await apiFetch(`${API_BASE_URL}/products/${id}`);
+        if (!response.ok) return null;
+        const product = await response.json();
+        return (product && product.id) ? product : null;
+    } catch (err) {
+        console.warn(`Failed to fetch product with id ${id}:`, err.message);
+        return null;
+    }
 }
 
-export async function  createProductData(product) {
-    //const product = {id, name, price, colors, brand, sizes, description, variants, type, imgs_per_colorway}
+export async function createProductData(product) {
     const response = await apiFetch(`${API_BASE_URL}/products`, {
         method: "POST",
         headers: {
-        "Content-Type": "application/json"
+            "Content-Type": "application/json"
         },
         body: JSON.stringify(product)
     });
@@ -34,21 +46,26 @@ export async function deleteProductData(id) {
 }
 
 export async function getProductStock(productId, variant, size) {
-    let stock
-    if (notNil(variant) && notNil(size)) {
-        const response = await apiFetch(`${API_BASE_URL}/products/stock`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({id: productId, variant: variant, size: size})
-        });
+    if (!productId) return null;
+    try {
+        let response;
+        if (notNil(variant) && notNil(size)) {
+            response = await apiFetch(`${API_BASE_URL}/products/stock`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({id: productId, variant: variant, size: size})
+            });
+        } else {
+            response = await apiFetch(`${API_BASE_URL}/products/stock/${productId}`);
+        }
 
-        stock = await response.json();
-    } else {
-        const response = await apiFetch(`${API_BASE_URL}/products/stock/${productId}`);
-        stock = await response.json();
+        if (!response.ok) return null;
+        const stock = await response.json();
+        return stock;
+    } catch (err) {
+        console.warn(`Failed to fetch stock for product ${productId}:`, err.message);
+        return null;
     }
-
-    return stock;
 }

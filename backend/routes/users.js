@@ -1,4 +1,5 @@
 import { getUserById, getUserByEmail, registerUser, createSession, validateSession } from "../sql/users.js";
+import { isDbConnectionError } from "../sql/db.js";
 import { Router } from "express";
 import bcrypt from 'bcrypt';
 import crypto from "crypto";
@@ -54,7 +55,13 @@ router.post("/login", async (req, res) => {
     } else {
       res.status(400).send({error: "Wrong password", missing: ["password"]});
     }
-  } catch {
+  } catch (err) {
+    if (isDbConnectionError(err)) {
+      return res.status(503).json({
+        error: "DATABASE_UNAVAILABLE",
+        message: "Database is currently offline or waking up. Please try again shortly."
+      });
+    }
     res.status(500).send();
   }
 })
