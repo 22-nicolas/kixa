@@ -48,10 +48,6 @@ export default function Item() {
     }, [loadItem])
 
     useEffect(() => {
-        console.log(activeColor)
-    }, [activeColor])
-
-    useEffect(() => {
         const paramsColor = Number(params.get("v"))
         if (paramsColor !== null && paramsColor !== undefined) {
             setActiveColor(paramsColor)

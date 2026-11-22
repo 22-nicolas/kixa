@@ -33,7 +33,10 @@ export default function ItemInfo() {
     if (!itemData) return <h1>Loading...</h1>
 
     const sizeSelectors = itemData.sizes.map(size => <SizeSelector key={size} productId={itemData.id} size={size} sizeState={[activeSize, setActiveSize]} changeSize={changeSize} />)
-    const variantSelectors = itemData.colors.map((color, i) => <VariantSelector key={i} variant={i} />)
+
+    const colorsArray = Object.values(itemData.colors)
+
+    const variantSelectors = colorsArray.map((color, i) => <VariantSelector key={i} variant={i} />)
 
     const [show] = useState(window.visualViewport.width > 992)
 
